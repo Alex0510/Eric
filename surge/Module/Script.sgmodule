@@ -1,7 +1,7 @@
 #!name=Script
 #!desc=js脚本
 
-
+[Script]
 mimo.js = type=http-response,pattern=https://api.getmimo.com/v1/subscriptions,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/mimo.js,script-update-interval=0
 itranslate.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/itranslate.js,script-update-interval=0,pattern=https://(ssl|p43|p16)-(api|buy).(itranslateapp|itunes.apple).com/(accounts|WebObjects)/(v4|MZFinance.woa)/(subscriptions|wa)/(verify/ios|inAppRegrantPurchaseHistory),type=http-response
 yyfyq.js = type=http-response,pattern=https://app.xunjiepdf.com/api/v4/,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/yyfyq.js,script-update-interval=0
