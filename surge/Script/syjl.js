@@ -3,7 +3,7 @@
 https://api1.dobenge.cn/api/user/getuserinfo
 */
 
-var obj = JSON.parse($response.body);
+let obj = JSON.parse($response.body);
 
   obj. data= {
     "user_id": 叫爸爸,
