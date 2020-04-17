@@ -1,6 +1,6 @@
 /*
 拍照取字
-http://pay.maoqilai.com/get_user_info
+http://.*.maoqilai.com/get_user_info
 */
 
 
