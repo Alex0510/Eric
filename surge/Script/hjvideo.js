@@ -1,6 +1,6 @@
 /*
 花椒视频解锁VIP
-http://user.shywck.com/user/userinfo
+https://user.abc123tv.com/user/userinfo
 */
 
 
