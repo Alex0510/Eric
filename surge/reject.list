@@ -1,4 +1,9 @@
-# Update > 2020.4.9 Go advertising rule Integration lhie1 and ConnersHua
+# Apple
+DOMAIN-SUFFIX,updates-http.cdn-apple.com
+DOMAIN-SUFFIX,ocsp.apple.com
+DOMAIN,gdmf.apple.com
+
+#去广告
 DOMAIN,mcupdate.gstarcad.com
 DOMAIN,adx.open-adx.com
 DOMAIN,adservice.sigmob.cn
