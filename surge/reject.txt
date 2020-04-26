@@ -48,13 +48,15 @@ DOMAIN-KEYWORD,wlmonitor
 DOMAIN-KEYWORD,zjtoolbar
 
 #去广告
-
+#趣头条
 DOMAIN-SUFFIX,*.pstatp.com,REJECT
 DOMAIN-SUFFIX,rcv.aiclk.com,REJECT
 DOMAIN-SUFFIX,ulogs.umeng.com,REJECT
 DOMAIN-SUFFIX,adashbc.ut.taobao.com,REJECT
 DOMAIN-SUFFIX,v3-ad.ixigua.com,REJECT
-
+#QQ
+DOMAIN-SUFFIX,adsmind.gdtimg.com
+DOMAIN-SUFFIX,adsmind.tc.qq.com
 #淘宝比价
 IP-CIDR,203.119.144.0/23,no-resolve
 IP-CIDR,203.119.175.0/24,no-resolve
