@@ -53,6 +53,7 @@ DOMAIN-SUFFIX,*.pstatp.com
 DOMAIN-SUFFIX,rcv.aiclk.com
 DOMAIN-SUFFIX,ulogs.umeng.com
 DOMAIN-SUFFIX,adashbc.ut.taobao.com
+DOMAIN-SUFFIX,adashxgc.ut.taobao.com
 DOMAIN-SUFFIX,v3-ad.ixigua.com
 #QQ
 DOMAIN-SUFFIX,adsmind.gdtimg.com
