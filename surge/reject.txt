@@ -57,6 +57,8 @@ DOMAIN-SUFFIX,v3-ad.ixigua.com,REJECT
 #QQ
 DOMAIN-SUFFIX,adsmind.gdtimg.com
 DOMAIN-SUFFIX,adsmind.tc.qq.com
+DOMAIN-SUFFIX,pgdt.gtimg.cn
+DOMAIN-SUFFIX,canvas.gdt.qq.com
 #淘宝比价
 IP-CIDR,203.119.144.0/23,no-resolve
 IP-CIDR,203.119.175.0/24,no-resolve
