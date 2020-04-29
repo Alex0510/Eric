@@ -8,6 +8,7 @@ obj.is_member = true,
 obj.member_expired_at = 4569874528
 }
 if ($request.url.indexOf(path2) != -1){
+obj.data.memberExpiredAt = 4524587455,
 obj.data.memberType = "1",
 obj.data.removeSplashAd = true
 }
