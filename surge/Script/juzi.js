@@ -1,3 +1,8 @@
+/*
+句读和句子控
+https://(api.juzikong|judouapp).com/(api/v9/users/profile|mobi/me/)
+*/
+
 const path1 = "/api/v9/users/profile";
 const path2 = "/mobi/me/";
 
