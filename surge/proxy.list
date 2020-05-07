@@ -789,6 +789,7 @@ IP-CIDR,13.251.24.157/24,no-resolve
 IP-CIDR,13.251.41.203/24,no-resolve
 IP-CIDR,17.252.156.147/24,no-resolve
 IP-CIDR,17.252.157.26/24,no-resolve
+IP-CIDR,3.1.247.245/32,no-resolve
 # 搜同
 IP-CIDR,74.222.26.90/32,no-resolve
 # > SoftLayer
