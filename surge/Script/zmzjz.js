@@ -1,4 +1,6 @@
 /*
+自行在规则[General]添加
+force-http-engine-hosts = *.camera360.com:443
 最美证件照
 https://idphoto-api.camera360.com/settings
 hostname=idphoto-api.camera360.com
