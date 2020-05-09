@@ -1,7 +1,0 @@
-#!name=简书
-#!desc=去重定向
-[MITM]
-hostname = %APPEND% *.jisnshu.com
-
-[Script]
-jianshu = type=http-request,pattern=https:\/\/.*.jianshu.com\/(go\?to=|go-wild\?ac=2&url=)(.*),script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/jianshu.js,script-update-interval=0
