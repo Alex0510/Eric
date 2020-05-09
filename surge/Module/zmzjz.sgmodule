@@ -1,7 +1,6 @@
 #!name=最美证件照
 #!desc=解锁VIP
 
-
 [General]
 force-http-engine-hosts = %APPEND% idphoto-api.camera360.com:443
 
@@ -9,4 +8,4 @@ force-http-engine-hosts = %APPEND% idphoto-api.camera360.com:443
 hostname = %APPEND% idphoto-api.camera360.com
 
 [Script]
-zmzjz.js = type=http-response,pattern=https://idphoto-api.camera360.com/settings,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/zmzjz.js,script-update-interval=0
+zmzjz.js = type=http-response,pattern=https:\/\/idphoto-api\.camera360\.com\/settings,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/zmzjz.js,script-update-interval=0
