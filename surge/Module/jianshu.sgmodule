@@ -4,5 +4,4 @@
 hostname = %APPEND% *.jisnshu.com
 
 [Script]
-jianshu2 = type=http-request,pattern=https?:\/\/www\.jianshu\.com\/go-wild\?ac=2&url=(.*),script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/jianshu/jianshu2.js,script-update-interval=0
-jianshu1 = type=http-request,pattern=https?:\/\/links\.jianshu\.com\/go\?to=(.*),script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/jianshu/jianshu1.js,script-update-interval=0
+jianshu = type=http-request,pattern=https:\/\/.*.jianshu.com\/(go\?to=|go-wild\?ac=2&url=)(.*),script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/jianshu.js,script-update-interval=0
