@@ -1,6 +1,7 @@
 #!name=最美证件照
 #!desc=解锁VIP
 
+
 [General]
 force-http-engine-hosts = %APPEND% idphoto-api.camera360.com:443
 
