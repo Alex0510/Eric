@@ -1,5 +1,5 @@
-#!name=最美证件照
-#!desc=解锁VIP
+#!name=最美证件照解锁VIP
+#!desc=Mr.Eric转载注明出处
 
 [General]
 force-http-engine-hosts = %APPEND% idphoto-api.camera360.com:443
