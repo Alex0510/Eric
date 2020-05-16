@@ -3,6 +3,7 @@
 https://app.xunjiepdf.com/api/v4/memprofile
 */
 
+let obj = JSON.parse($response.body);
 
-body = $response.body.replace(/\"auth_value\":\d+/, "\"auth_value\":4258741258")
-$done({body});
+obj.userinfo.vip = [{"id":11351014,"auth_type":1,"auth_value":4258741258}]
+$done({body: JSON.stringify(obj)});
