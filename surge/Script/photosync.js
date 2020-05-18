@@ -1,7 +1,7 @@
 /*
 photocync解锁premium--Eric
 转载注明出处
-https://api.revenuecat.com/v1/receipts
+photosync.js = type=http-response,pattern=https://api.revenuecat.com/v1/receipts,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/photosync.js,script-update-interval=0
 hostname:api.revenuecat.com
 */
 
