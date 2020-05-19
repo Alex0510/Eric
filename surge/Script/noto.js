@@ -1,6 +1,8 @@
 /*
 noto笔记解锁Pro--Eric转载注明出处
-https://api.revenuecat.com/v1/receipts
+surge
+noto.js = type=http-response,pattern=https://api.revenuecat.com/v1/receipts,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/noto.js,script-update-interval=0
+hostname：api.revenuecat.com
 */
 
 var obj = JSON.parse($response.body);
