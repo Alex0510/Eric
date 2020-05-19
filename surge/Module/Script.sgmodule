@@ -2,21 +2,42 @@
 #!desc=js脚本
 
 [Script]
+#水印精灵
+syjl.js = type=http-response,pattern=https://api1.dobenge.cn/api/user/getuserinfo,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/syjl.js,script-update-interval=0
+#花椒视频
+hjvideovip.js = type=http-response,pattern=https://user.abc123tv.com/user/userinfo,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/hjvideo.js,script-update-interval=0
+#mimo
 mimo.js = type=http-response,pattern=https://api.getmimo.com/v1/subscriptions,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/mimo.js,script-update-interval=0
-itranslate.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/itranslate.js,script-update-interval=0,pattern=https://(ssl|p43|p16)-(api|buy).(itranslateapp|itunes.apple).com/(accounts|WebObjects)/(v4|MZFinance.woa)/(subscriptions|wa)/(verify/ios|inAppRegrantPurchaseHistory),type=http-response
-yyfyq.js = type=http-response,pattern=https://app.xunjiepdf.com/api/v4/,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/yyfyq.js,script-update-interval=0
+#翻译
+itranslate.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/itranslate.js,script-update-interval=0,pattern=https://(ssl|p43|p*)-(api|buy).(itranslateapp|itunes.apple).com/(accounts|WebObjects)/(v4|MZFinance.woa)/(subscriptions|wa)/(verify/ios|inAppRegrantPurchaseHistory),type=http-response
+#语音翻译器
+yyfyq.js = type=http-response,pattern=https://app.xunjiepdf.com/api/v4/memprofile,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/yyfyq.js,script-update-interval=0
+#轻颜相机及蒸汽波相机
 qyvaporcam.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/qyvaporcam.js,script-update-interval=0,pattern=https://(commerce-api|pay).(faceu|wecut).(com|mobi)/(commerce|apple)/(iosAppVerifyReceipt.php|v1/subscription/user_info),type=http-response
+#lightroom
 lightroom.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/lightroom.js,script-update-interval=0,pattern=https://photos.adobe.io/v2/accounts/,type=http-response
+#有道云笔记
 ydybj.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/ydybj.js,script-update-interval=0,pattern=https://note.youdao.com/yws/(mapi/payment|api/self),type=http-response
-wps.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/wps.js,script-update-interval=0,pattern=https://account.wps.cn/api/users/,type=http-response
+#wps
+wps.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/wps.js,script-update-interval=0,pattern=https://(vip|account).wps.cn/(api/users/|userinfo),type=http-response
+#京东比价
 jd_price.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/yichahucha/surge/master/jd_price.js,script-update-interval=0,pattern=https://api\.m\.jd\.com/client\.action\?functionId=(wareBusiness|serverConfig),type=http-response
+#淘宝比价
 tb_price.js = requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/master/tb_price.js,type=http-response,pattern=^https?://amdc\.m\.taobao\.com/amdc/mobileDispatch
 tb_price.js = requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/master/tb_price.js,type=http-response,pattern=^https://trade-acs\.m\.taobao\.com/gw/mtop\.taobao\.detail\.getdetail
-Aweme.js = script-path=https://Choler.github.io/Surge/Script/Aweme.js,script-update-interval=0,pattern=https:\/\/.*\.amemv\.com\/aweme\/v.*\/(feed|post),type=http-request
-Aweme.js = requires-body=1,max-size=0,script-path=https://Choler.github.io/Surge/Script/Aweme.js,script-update-interval=0,pattern=https:\/\/.*\.amemv\.com\/aweme\/v.*\/(feed|post),type=http-response
+#酷我音乐
 Kuwo.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/Kuwo.js,script-update-interval=0,pattern=https?:\/\/vip1\.kuwo\.cn\/(vip\/v2\/user\/vip|vip\/spi/mservice),type=http-response
-KuWoMusicDownload.js = script-path=https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/KuWoMusicDownload.js,script-update-interval=0,pattern=https?:\/\/musicpay\.kuwo.cn\/music\.pay\?uid=\d+,type=http-request
+#adgurad
 adguard.js = type=http-response,pattern=https://mobile-api.adguard.com/api/1.0/ios_validate_receipt,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/adguard.js,script-update-interval=0
+#小小影视去广告
 xxysad.js = type=http-response,pattern=https:\/\/.*\/getGlobalData,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/xxysad.js,script-update-interval=0
-jianshu.js = type=http-request,pattern=https:\/\/.*.jianshu.com\/(go\?to=|go-wild\?ac=2&url=)(.*),script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/jianshu.js,script-update-interval=0
-zmzjz.js = type=http-response,pattern=https://idphoto-api.camera360.com/settings,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/zmzjz.js,script-update-interval=0
+#卧龙影视去广告
+wolongad.js = type=http-response,pattern=http://(w001.tgmmvip.com|api.wolong.tv|.*)/(wolong/ad/(splash|banner)|app/php/api/ad/),requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/wolongad.js,script-update-interval=0
+#荐片播放器
+jpvideo.js = type=http-response,pattern=http://api2.rinhome.com//api/vUser/getUserInfo,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/jpvideo.js,script-update-interval=0
+#PythonAI
+PythonAI.js = type=http-response,pattern=http://ws.60he.com/user.htm,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/python.js,script-update-interval=0
+#photosync
+#photosync.js = type=http-response,pattern=https://api.revenuecat.com/v1/receipts,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/photosync.js,script-update-interval=0
+#noto
+#noto.js = type=http-response,pattern=https://api.revenuecat.com/v1/receipts,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/noto.js,script-update-interval=0
