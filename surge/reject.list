@@ -2,7 +2,7 @@
 DOMAIN-SUFFIX,updates-http.cdn-apple.com
 DOMAIN-SUFFIX,ocsp.apple.com
 DOMAIN,gdmf.apple.com
-
+DOMAIN,mesu.apple.com
 #去广告
 DOMAIN,mcupdate.gstarcad.com
 DOMAIN,adx.open-adx.com
