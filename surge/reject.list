@@ -4,6 +4,14 @@ DOMAIN-SUFFIX,ocsp.apple.com
 DOMAIN,gdmf.apple.com
 DOMAIN,mesu.apple.com
 #去广告
+
+DOMAIN-SUFFIX,mi.gdt.qq.com
+DOMAIN-SUFFIX,*.xdrig.com
+DOMAIN-SUFFIX,*.vungle.com
+DOMAIN-SUFFIX,beacon.sina.com.cn
+DOMAIN-SUFFIX,lddengine.com
+DOMAIN-SUFFIX,cpdad.com
+DOMAIN-SUFFIX,adjucai.com
 DOMAIN,mcupdate.gstarcad.com
 DOMAIN,adx.open-adx.com
 DOMAIN,adservice.sigmob.cn
