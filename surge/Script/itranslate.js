@@ -1,6 +1,6 @@
 /*
 翻译
-https://(ssl|p43|p16)-(api|buy).(itranslateapp|itunes.apple).com/(accounts|WebObjects)/(v4|MZFinance.woa)/(subscriptions|wa)/(verify/ios|inAppRegrantPurchaseHistory)
+https://(ssl|p.*)-(api|buy).(itranslateapp|itunes.apple).com/(accounts|WebObjects)/(v4|MZFinance.woa)/(subscriptions|wa)/(verify/ios|inAppRegrantPurchaseHistory)
 */
 
 const path1 = "/WebObjects/MZFinance.woa/wa/inAppRegrantPurchaseHistory";
