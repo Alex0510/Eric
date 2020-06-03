@@ -7,6 +7,19 @@ DOMAIN-SUFFIX,updates-http.cdn-apple.com
 DOMAIN-SUFFIX,ocsp.apple.com
 DOMAIN,gdmf.apple.com
 DOMAIN,mesu.apple.com
+
+# 证书
+DOMAIN-SUFFIX,crl.apple.com
+DOMAIN-SUFFIX,crl.entrust.net
+DOMAIN-SUFFIX,crl3.digicert.com
+DOMAIN-SUFFIX,crl4.digicert.com
+DOMAIN-SUFFIX,ocsp.digicert.com
+DOMAIN-SUFFIX,ocsp.entrust.net
+DOMAIN-SUFFIX,ocsp.verisign.net
+#ivod
+
+DOMAIN-SUFFIX,adservice.sigmob.cn
+DOMAIN-SUFFIX,jads.co
 #12306
 DOMAIN-SUFFIX,ad.12306.cn
 #百度（可能有多余项）
