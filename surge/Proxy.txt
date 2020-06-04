@@ -4723,7 +4723,6 @@ DOMAIN-SUFFIX,twiggit.org
 DOMAIN-SUFFIX,twilightsex.com
 DOMAIN-SUFFIX,twilog.org
 DOMAIN-SUFFIX,twimbow.com
-DOMAIN-SUFFIX,twimg.com
 DOMAIN-SUFFIX,twindexx.com
 DOMAIN-SUFFIX,twip.me
 DOMAIN-SUFFIX,twipple.jp
