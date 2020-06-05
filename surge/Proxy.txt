@@ -5013,6 +5013,7 @@ DOMAIN-SUFFIX,vrmtr.com
 DOMAIN-SUFFIX,vrsmash.com
 DOMAIN-SUFFIX,vtunnel.com
 DOMAIN-SUFFIX,vuku.cc
+DOMAIN-SUFFIX,video.twimg.com
 DOMAIN-SUFFIX,vultryhw.com
 DOMAIN-SUFFIX,w.idaiwan.com
 DOMAIN-SUFFIX,w3schools.com
