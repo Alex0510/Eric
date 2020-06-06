@@ -3483,6 +3483,7 @@ DOMAIN-SUFFIX,pbs.org
 DOMAIN-SUFFIX,pbwiki.com
 DOMAIN-SUFFIX,pbworks.com
 DOMAIN-SUFFIX,pbxes.com
+DOMAIN-SUFFIX,pbs.twimg.com
 DOMAIN-SUFFIX,pbxes.org
 DOMAIN-SUFFIX,pcanywhere.net
 DOMAIN-SUFFIX,pcc.gov.tw
