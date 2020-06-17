@@ -1,5 +1,12 @@
 
 #代理--Eric
+
+DOMAIN-SUFFIX,vidol.tv
+DOMAIN-SUFFIX,amazonaws.com
+DOMAIN-SUFFIX,akamaized.net
+DOMAIN-SUFFIX,gagaoolala.com
+DOMAIN-SUFFIX,vimeocdn.com
+DOMAIN-SUFFIX,sexgayplus.com
 DOMAIN-SUFFIX,030buy.com
 DOMAIN-SUFFIX,0rz.tw
 DOMAIN-SUFFIX,1-apple.com.tw
@@ -15,6 +22,7 @@ DOMAIN-SUFFIX,12vpn.net
 DOMAIN-SUFFIX,138.com
 IP-CIDR,14.102.250.18/32
 IP-CIDR,14.102.250.19/32
+IP-CIDR,3.1.247.245/32
 DOMAIN-SUFFIX,141hongkong.com
 DOMAIN-SUFFIX,141jj.com
 DOMAIN-SUFFIX,141tube.com
