@@ -20,6 +20,7 @@ DOMAIN-SUFFIX,ocsp.verisign.net
 
 DOMAIN-SUFFIX,adservice.sigmob.cn
 DOMAIN-SUFFIX,jads.co
+DOMAIN-SUFFIX,serve.popads.net
 #12306
 DOMAIN-SUFFIX,ad.12306.cn
 #百度（可能有多余项）
