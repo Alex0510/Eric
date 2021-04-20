@@ -16,8 +16,3 @@ DOMAIN-SUFFIX,crl4.digicert.com
 DOMAIN-SUFFIX,ocsp.digicert.com
 DOMAIN-SUFFIX,ocsp.entrust.net
 DOMAIN-SUFFIX,ocsp.verisign.net
-#ivod
-
-DOMAIN-SUFFIX,adservice.sigmob.cn
-DOMAIN-SUFFIX,jads.co
-DOMAIN-SUFFIX,serve.popads.net
