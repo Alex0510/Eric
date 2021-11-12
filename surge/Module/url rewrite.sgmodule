@@ -95,3 +95,5 @@ http://kandian.qq.com/cgi-bin/detailPage/getMoreShortArticle - reject
 # > 中国联通
 ^https?:\/\/m\.client\.10010\.com\/mobileService\/customer\/accountListData\.htm - reject
 ^https?:\/\/m\.client\.10010\.com\/uniAdmsInterface\/getWelcomeAd - reject
+＃爱思助手启动广告
+URL-REGEX,https://list-app-m.i4.cn/getopfstadinfo.xhtml,Reject
