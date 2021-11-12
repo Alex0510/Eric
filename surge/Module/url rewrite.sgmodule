@@ -96,4 +96,4 @@ http://kandian.qq.com/cgi-bin/detailPage/getMoreShortArticle - reject
 ^https?:\/\/m\.client\.10010\.com\/mobileService\/customer\/accountListData\.htm - reject
 ^https?:\/\/m\.client\.10010\.com\/uniAdmsInterface\/getWelcomeAd - reject
 ＃爱思助手启动广告
-^https:\/\/list-app-m\.i4\.cn\/getopfstadinfo\.xhtml - Reject
+^https:\/\/list-app-m\.i4\.cn\/getopfstadinfo\.xhtml - reject
