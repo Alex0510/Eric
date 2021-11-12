@@ -3,41 +3,37 @@
 
 [Script]
 #水印精灵
-syjl.js = type=http-response,pattern=https://api1.dobenge.cn/api/user/getuserinfo,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/syjl.js,script-update-interval=0
-#花椒视频
-hjvideovip.js = type=http-response,pattern=https://user.abc123tv.com/user/userinfo,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/hjvideo.js,script-update-interval=0
-#mimo
-mimo.js = type=http-response,pattern=https://api.getmimo.com/v1/subscriptions,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/mimo.js,script-update-interval=0
-#翻译
-itranslate.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/itranslate.js,script-update-interval=0,pattern=https://(ssl|p43|p*)-(api|buy).(itranslateapp|itunes.apple).com/(accounts|WebObjects)/(v4|MZFinance.woa)/(subscriptions|wa)/(verify/ios|inAppRegrantPurchaseHistory),type=http-response
+水印精灵 = type=http-response,pattern=https://api1.dobenge.cn/api/user/getuserinfo,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/syjl.js,script-update-interval=0
+
+
 #语音翻译器
-yyfyq.js = type=http-response,pattern=https://app.xunjiepdf.com/api/v4/memprofile,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/yyfyq.js,script-update-interval=0
+语音翻译器= type=http-response,pattern=https://app.xunjiepdf.com/api/v4/memprofile,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/yyfyq.js,script-update-interval=0
+#翻译itranslate
+翻译 = type=http-response,pattern=https://(ssl|p.*)-(api|buy).(itranslateapp|itunes.apple).com/(accounts|WebObjects)/(v4|MZFinance.woa)/(subscriptions|wa)/(verify/ios|inAppRegrantPurchaseHistory),requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/itranslate.js,script-update-interval=0
 #轻颜相机及蒸汽波相机
-qyvaporcam.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/qyvaporcam.js,script-update-interval=0,pattern=https://(commerce-api|pay).(faceu|wecut).(com|mobi)/(commerce|apple)/(iosAppVerifyReceipt.php|v1/subscription/user_info),type=http-response
-#lightroom
-lightroom.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/lightroom.js,script-update-interval=0,pattern=https://photos.adobe.io/v2/accounts/,type=http-response
-#有道云笔记
-ydybj.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/ydybj.js,script-update-interval=0,pattern=https://note.youdao.com/yws/(mapi/payment|api/self),type=http-response
+轻颜蒸汽波相机 = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/qyvaporcam.js,script-update-interval=0,pattern=https://(commerce-api|pay).(faceu|wecut).(com|mobi)/(commerce|apple)/(iosAppVerifyReceipt.php|v1/subscription/user_info),type=http-response
+
 #wps
-wps.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/wps.js,script-update-interval=0,pattern=https://(vip|account).wps.cn/(api/users/|userinfo),type=http-response
+wps = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/wps.js,script-update-interval=0,pattern=https://(vip|account).wps.cn/(api/users/|userinfo),type=http-response
 #京东比价
-jd_price.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/yichahucha/surge/master/jd_price.js,script-update-interval=0,pattern=https://api\.m\.jd\.com/client\.action\?functionId=(wareBusiness|serverConfig),type=http-response
+京东比价 = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Tartarus2014/Script/master/jd_price_lite.js,script-update-interval=0,pattern=https://api\.m\.jd\.com/client\.action\?functionId=(wareBusiness|serverConfig),type=http-response
 #淘宝比价
-tb_price.js = requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/master/tb_price.js,type=http-response,pattern=^https?://amdc\.m\.taobao\.com/amdc/mobileDispatch
-tb_price.js = requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/master/tb_price.js,type=http-response,pattern=^https://trade-acs\.m\.taobao\.com/gw/mtop\.taobao\.detail\.getdetail
-#酷我音乐
-Kuwo.js = requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/Kuwo.js,script-update-interval=0,pattern=https?:\/\/vip1\.kuwo\.cn\/(vip\/v2\/user\/vip|vip\/spi/mservice),type=http-response
+淘宝比价 = requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/master/tb_price.js,type=http-response,pattern=^https?://amdc\.m\.taobao\.com/amdc/mobileDispatch
+淘宝比价 = requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/master/tb_price.js,type=http-response,pattern=^https://trade-acs\.m\.taobao\.com/gw/mtop\.taobao\.detail\.getdetail
+
 #adgurad
-adguard.js = type=http-response,pattern=https://mobile-api.adguard.com/api/1.0/ios_validate_receipt,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/adguard.js,script-update-interval=0
-#小小影视去广告
-xxysad.js = type=http-response,pattern=https:\/\/.*\/getGlobalData,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/xxysad.js,script-update-interval=0
-#卧龙影视去广告
-wolongad.js = type=http-response,pattern=http://(w001.tgmmvip.com|api.wolong.tv|.*)/(wolong/ad/(splash|banner)|app/php/api/ad/),requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/wolongad.js,script-update-interval=0
-#荐片播放器
-jpvideo.js = type=http-response,pattern=http://api2.rinhome.com//api/vUser/getUserInfo,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/jpvideo.js,script-update-interval=0
-#PythonAI
-PythonAI.js = type=http-response,pattern=http://ws.60he.com/user.htm,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/python.js,script-update-interval=0
-#photosync
-#photosync.js = type=http-response,pattern=https://api.revenuecat.com/v1/receipts,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/photosync.js,script-update-interval=0
-#noto
-#noto.js = type=http-response,pattern=https://api.revenuecat.com/v1/receipts,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/noto.js,script-update-interval=0
+adguard = type=http-response,pattern=https://mobile-api.adguard.com/api/1.0/ios_validate_receipt,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/adguard.js,script-update-interval=0
+Sub-Store = type=http-request,pattern=^https?:\/\/sub\.store,script-path=https://raw.githubusercontent.com/Peng-YM/Sub-Store/master/backend/sub-store.min.js,requires-body=true,timeout=120,max-size=131072
+
+百度搜索防跳转 = type=http-response,pattern=^https?\:\/\/boxer\.baidu\.com\/scheme,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/baidu-no-redirect.js
+
+Sub_Info_Panel = type=generic,timeout=10,script-path=https://raw.githubusercontent.com/mieqq/mieqq/master/sub_info_panel.js,script-update-interval=0,argument=url=[https://api.dler.io/sub?target=surge&ver=4&url=https%3A%2F%2Fapi.feixiongzhushou.com%2Flink%2F6fQ0CGI9n9246RU7%3Fsub%3D3%26extend%3D1&emoji=true&list=true&udp=false&tfo=false&scv=false&fdn=false&sort=false]&reset_day=29&title=AmyInfo&icon=icloud&color=#0089A7
+机场信息 = type=http-request,pattern=http://sub\.info,script-path=https://raw.githubusercontent.com/TributePaulWalker/Profiles/main/JavaScript/Surge/Sub_info_lite.js,timeout=10
+
+网络信息 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/TributePaulWalker/Profiles/main/JavaScript/Surge/ipcheck.js
+
+配置重载 = script-path=https://raw.githubusercontent.com/TributePaulWalker/Profiles/main/JavaScript/Surge/Profile-Reload.js,type=generic
+
+
+#流量统计 点击以切换网络界面
+TrafficStatistics = type=generic,timeout=10,script-path= https://raw.githubusercontent.com/fishingworld/something/main/PanelScripts/trafficstatistics.js ,argument=icon=arrow.up.arrow.down.circle&color=#5d84f8
