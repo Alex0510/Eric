@@ -43,6 +43,7 @@ DOMAIN-SUFFIX,github.io
 DOMAIN-SUFFIX,githubusercontent.com
 # > Google
 DOMAIN-SUFFIX,appspot.com
+DOMAIN-SUFFIX,gmail.com
 DOMAIN-SUFFIX,blogger.com
 DOMAIN-SUFFIX,getoutline.org
 DOMAIN-SUFFIX,gvt0.com
