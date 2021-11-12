@@ -4,35 +4,69 @@
 
 
 [Header Rewrite]
-#小小影视
-https:\/\/.*.xiaoxiao(img|apps|appxs).com header-replace Cookie xxx_api_auth=6131333537653261363463323331666265663763396239663835636662373930
+# 强制跳转百度UA
+# ^https?:\/\/.*\.baidu\.com header-replace User-Agent "Mozilla/5.0 (iPhone; CPU iPhone OS 13_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/16C50 Quark/604.1 T7/10.3 SearchCraft/2.6.3 (Baidu; P1 8.0.0)"
+
 
 
 [URL Rewrite]
+# Safari全能搜索
+# 以下为Safari全能搜索、需要把Safari的搜索引擎设置为：DuckDuckGo
+
+# gm (Google图片)
+^https:\/\/duckduckgo.com\/\?q=gm\+([^&]+).+ https://www.google.com/search?&tbm=isch&q=$1 302
+
+# gh (GitHub)
+^https:\/\/duckduckgo.com\/\?q=gh\+([^&]+).+ https://github.com/search?q=$1 302
+
+# tf (Google 搜索 TestFlight)
+^https:\/\/duckduckgo.com\/\?q=tf(\+|%20)([^&]+).+ https://www.google.com/search?as_q=$2&as_sitesearch=testflight.apple.com 302
+
+# wb (微博)
+^https:\/\/duckduckgo.com\/\?q=wb\+([^&]+).+ https://s.weibo.com/weibo/$1 302
+
+# wx (微信)
+^https:\/\/duckduckgo.com\/\?q=wx\+([^&]+).+ https://weixin.sogou.com/weixinwap?query=$1 302
+
+# jd (京东)
+^https:\/\/duckduckgo.com\/\?q=jd\+([^&]+).+ https://so.m.jd.com/ware/search.action?keyword=$1 302
+
+# tb (淘宝)
+^https:\/\/duckduckgo.com\/\?q=tb\+([^&]+).+ https://s.m.taobao.com/h5?q=$1 302
+
+# tm (天猫)
+^https:\/\/duckduckgo.com\/\?q=tm\+([^&]+).+ https://s.m.tmall.com/m/search.htm?q=$1 302
+
+# ytb (YouTube)
+^https:\/\/duckduckgo.com\/\?q=ytb\+([^&]+).+ https://www.youtube.com/results?search_query=$1 302
+
+# ph (PornHub)
+^https:\/\/duckduckgo.com\/\?q=ph\+([^&]+).+ https://cn.pornhub.com/video/search?search=$1 302
+
+# bi (必应)
+^https:\/\/duckduckgo.com\/\?q=bi\+([^&]+).+ https://cn.bing.com/search?q=$1 302
+
+# bd (百度)
+^https:\/\/duckduckgo.com\/\?q=bd\+([^&]+).+ https://www.baidu.com/s?wd=$1 302
+
+# ddg (DuckDuckGo)
+^https:\/\/duckduckgo.com\/\?q=ddg\+([^&]+).+ https://duckduckgo.com/?ia=about&q=$1 302
+
+# 无指令 (Google)
+^https:\/\/duckduckgo.com\/\?q=([^&]+).+ https://www.google.com/search?q=$1 302
+
+# 阻止google.com 跳转到google.com.hk
+^https?:\/\/(www\.)?g\.cn https://www.google.com/ncr 302
+^https?:\/\/(www\.)?google\.cn https://www.google.com/ncr 302
 # > 58同城
 ^https?:\/\/app\.58\.com\/api\/home\/(advertising|appadv)\/ - reject
 ^https?:\/\/app\.58\.com\/api\/home\/invite\/popupAdv - reject
 ^https?:\/\/app\.58\.com\/api\/log\/ - reject
 ^https?:\/\/.+\.58cdn\.com\.cn\/brandads\/ - reject
-# > AbeamTV Unlock
-^https?:\/\/api\.abema\.io\/v\d\/ip\/check - reject
-# >> 闲鱼
-^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.taobao\.idle\.home\.welcome\/ - reject
 # >> 飞猪
 ^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.trip\.activity\.querytmsresources\/ - reject
-# >> 淘票票
-^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.film\.mtopadvertiseapi\.queryadvertise\/ - reject
-# >> 口碑
-^https?:\/\/render\.alipay\.com\/p\/s\/h5data\/prod\/spring-festival-2019-h5data\/popup-h5data\.json - reject
-^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.o2o\.ad\.gateway\.get\/ - reject
-^https?:\/\/guide-acs\.m\.taobao\.com\/gw\/mtop\.taobao\.wireless\.home\.splash\.awesome\.get\/ - reject
 # >> 高德地图
 ^https?:\/\/m\d\.amap\.com\/ws\/valueadded\/alimama\/splash_screen\/ - reject
-# >> 百度网盘
-^https?:\/\/pan\.baidu\.com\/rest\/2.0\/pcs\/adx - reject
-^https?:\/\/pan\.baidu\.com\/act\/api\/activityentry - reject
-^https?:\/\/issuecdn\.baidupcs\.com\/issue\/netdisk\/guanggao\/ - reject
-
 # > Google
 ^https?:\/\/pagead2\.googlesyndication\.com\/pagead\/ - reject
 # > 京东
@@ -56,14 +90,6 @@ http://kandian.qq.com/cgi-bin/detailPage/getMoreShortArticle - reject
 ^https?:\/\/business-cdn\.shouji\.sogou\.com\/wapdl\/hole\/.+\.jpg - reject
 # >> 微信
 ^https:\/\/mp\.weixin\.qq\.com\/mp\/(ad_|advertisement|getappmsgad) - reject
-#U5视频
-http://.*/api/domain/all - reject
-#趣头条
-https://is.snssdk.com/api/ad/ - reject
-https://*.qq.com/getad - reject
-https://wn-x.jd.com/adx/ - reject
-https://api.1sapp.com/content/getFeedTopAd - reject
-https://pangolin.snssdk.com/api/ad/ - reject
 # > 中国移动
 ^https?:\/\/clientaccess\.10086\.cn\/biz-orange\/DN\/init\/startInit - reject
 # > 中国联通
