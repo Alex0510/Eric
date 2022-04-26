@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         手机调试工具
+// @name         iOS-debugging-tool
 // @namespace    http://tampermonkey.net/
 // @version      0.2
 // @description  手机调试工具（eruda或vConsole）
