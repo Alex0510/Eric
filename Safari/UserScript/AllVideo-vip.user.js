@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         全网VIP视频解析|抖音快手视频无水印下载
-// @version      1.2.0
+// @version      1.2.1
 // @author       Eric
 // @description  【视频自动解析，适配PC+移动 】功能有：1、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告；
 // @match           *://laisoyiba.com/*
@@ -42,7 +42,6 @@
 // @grant        GM_notification
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
-// @grant        GM_deleteValue
 // @grant        GM_setClipboard
 // @grant        GM_download
 // @grant        GM_info
@@ -57,10 +56,6 @@
 
 (function() {
     'use strict';
-    //最终用户许可协议 End-User License Agreement
-    // * Copyright (c) 2021-2022 Eric. All Rights Reserved.
-    // * Proprietary and Confidential.
-
    var Insidehtml = "";
 var Outsidehtml = "";
 var selecthtml = "";
@@ -1226,6 +1221,7 @@ function geturlid(url) {
 }
 
 
+
     /*--config--*/
     var Config ={
          couponUrl:window.location.href,
@@ -1340,35 +1336,6 @@ function geturlid(url) {
 
         }
 
-        setCookie(cname,cvalue,exdays){
-
-            var d = new Date();
-
-            d.setTime(d.getTime()+(exdays*24*60*60*1000));
-
-            var expires = "expires="+d.toGMTString();
-
-            document.cookie = cname+"="+cvalue+"; "+expires;
-        }
-
-        getCookie(cname){
-            var name = cname + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0; i<ca.length; i++) {
-                var c = ca[i].trim();
-                if (c.indexOf(name)==0) { return c.substring(name.length,c.length); }
-            }
-            return "";
-        }
-
-        getQueryString(e) {
-            var t = new RegExp("(^|&)" + e + "=([^&]*)(&|$)");
-            var a = window.location.search.substr(1).match(t);
-            if (a != null) return a[2];
-            return "";
-        }
-
-
 
 
         static getElement(css){
@@ -1428,175 +1395,10 @@ function geturlid(url) {
 
     }
 
-    class CouponClass extends BaseClass{
 
 
-        getCouponInfo(node,className){
 
-          setTimeout(()=>{
 
-              let goods_id = this.getQueryString('id');
-
-              if(!goods_id){console.log('goods_id');return};
-
-              node.after(this.divElement);
-
-              this.request('get',`https://www.zuihuimai.net/vrhr/index.php?goods_id=${goods_id}`).then((result)=>{
-
-                  document.getElementById('zhm_div_s').innerHTML=result;
-
-                  document.getElementById('zhm_table').className = 'zhm_tab '+className;
-
-              })
-
-          },couponWaitTime);
-        }
-
-    }
-    class ZhClass extends BaseClass{
-
-        constructor(){
-            super();
-        }
-
-        downloadVideo(){
-
-            window.addEventListener('click',(e)=>{
-
-                if(e.target.innerText == '下载'){
-
-                    var videoId;
-
-                    if(document.querySelector('.ZVideo-player')){
-
-                        let zVideo = document.querySelector('.ZVideo');
-
-                        let videoData = JSON.parse(zVideo.getAttribute('data-za-extra-module'));
-
-                        videoId = videoData.card.content.video_id;
-
-                    }else{
-
-                        let videoUrl = window.location.href;
-
-                        let videoObj = videoUrl.split('?');
-
-                        videoId = videoObj[0].split('/').pop();
-                    }
-
-                    let url = 'https://lens.zhihu.com/api/v4/videos/'+videoId;
-
-                    this.request('get',url).then((result)=>{
-
-                        let data = JSON.parse(result);
-
-                        if(data.playlist != undefined){
-
-                            let play_url = data.playlist.LD.play_url;
-
-                            let videoName = videoId+".mp4";
-
-                            GM_download(play_url,videoName);
-
-                        }else{
-
-                            alert('下载失败！');
-
-                        }
-                    });
-                }
-            })
-
-            document.addEventListener('DOMNodeInserted',(e) => {
-
-                if(!e.relatedNode.querySelector) return;
-
-                var playBar = e.relatedNode.querySelector(':scope > div:last-child > div:first-child > div:nth-of-type(2)');
-
-                if(!playBar || playBar.querySelector('.zhmDownload')) return;
-
-                var playBut = playBar.querySelector(':scope > div:last-child');
-
-                if(!playBut) return;
-
-                var playButLi = playBut.querySelector('div:first-child');
-
-                if(!playButLi) return;
-
-                var downloadBut = playButLi.cloneNode(true);
-
-                downloadBut.className = playButLi.className + ' zhmDownload';
-
-                if(!downloadBut.querySelector('._1tg8oir')) return;
-
-                downloadBut.querySelector('._1tg8oir').innerText='下载';
-
-                playButLi.before(downloadBut);
-
-            })
-
-        }
-
-        removeRight(){
-
-            let zhFullScreen = `.GlobalSideBar {display: none !important;}
-            .Question-sideColumn{display:none !important}
-            .Topstory-mainColumn{width:100% !important}
-            .Question-mainColumn{width:1000px !important}
-            .css-cazg48{margin: 0px 16px 0px 0px !important;}
-            .QuestionWaiting-mainColumn{width:100% !important;}
-            .css-1j5d3ll{padding-left:10px;}
-            .css-yhjwoe{justify-content: space-between !important;}
-            `;
-            domStyle .appendChild(document.createTextNode(zhFullScreen));
-
-            domHead.appendChild(domStyle);
-        }
-        changeLink(){
-
-            if(couponUrl.indexOf('target') != -1){
-
-                let obj = this.getUrlParams(couponUrl);
-
-                if(obj.target == undefined) return;
-
-                let link = decodeURIComponent(obj.target);
-
-                location.href=link;
-            }
-        }
-        removeKeyword(){
-
-            var GMKeyword = GM_getValue('inputZhKeyword','0');
-
-            if(GMKeyword == '0' || GMKeyword == '') return;
-
-            let keyword = GMKeyword.split(',');
-
-            let content = document.querySelectorAll('.ContentItem');
-
-             keyword.forEach(function(item){
-
-                 content.forEach(function(value){
-
-                     let dataZop = JSON.parse(value.getAttribute('data-zop'));
-
-                     if(dataZop.title.indexOf(item) != -1){
-
-                         let itemCard = value.parentNode.parentNode.parentNode;
-
-                         let itemCardClass= itemCard.className;
-
-                        if(itemCardClass.indexOf('TopstoryItem-isRecommend') != -1){
-
-                            itemCard.style='display:none';
-                        }
-                     }
-
-                 })
-             })
-        }
-    }
 
     class VideoDownloadClass extends BaseClass{
 
@@ -2160,6 +1962,7 @@ function geturlid(url) {
             }
             break;
     }
+
 
 
 
