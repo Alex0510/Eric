@@ -2,8 +2,10 @@
 // ==UserScript==
 // @name       网页工具箱
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
+// @namespace   http://payback.bwaq.cn
+// @icon        http://payback.bwaq.cn/logo.png
 // @author      Eric
-// @version     2.0.6
+// @version     2.0.7
 // @include     *
 // @license     MIT License
 // @require     https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js
@@ -12,6 +14,7 @@
 // @require     https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.min.js
 // @require     https://cdn.bootcdn.net/ajax/libs/jszip/3.1.5/jszip.min.js
 // @resource    toastr_css https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.min.css
+// @resource    iconInfo http://payback.bwaq.cn/logo.png
 // @connect     *
 // @grant       GM_log
 // @grant       GM.info
@@ -41,7 +44,7 @@
 // ==/UserScript==
 (function () {
     'use strict';
-    var Utils$2 = {
+ var Utils$2 = {
         removePath: function (path) {
             if (document.querySelector(path) == null) {
                 return;
@@ -100,13 +103,15 @@
     const prepare$5 = {};
 
     const prepare$4 = {};
- 
+
     const prepare$3 = {};
 
     var Constant = {
         getLinkStr: function () {
             return linkStr;
         },
+
+
         getSelectMode: function () {
             return keySelectMode;//记录上次点击的是书签还是搜索模块
         },
@@ -124,6 +129,12 @@
             return bookMarkList;//书签缓存
         },
 
+        getKeyButtonTop: function () {
+            return keyButtonTop;//工具按钮的y坐标的记录点常量
+        },
+        getKeyButtonLeft: function () {
+            return keyButtonLeft;//工具按钮的x坐标的记录点常量
+        },
         getKeyQrcodeSwitch: function () {
             return keyQrcodeSwitch;//二维码的开关记录常量
         },
@@ -163,9 +174,9 @@
 [谷歌搜索] [https://www.google.com/search?q=#keyword#]
 [Bing搜索] [https://cn.bing.com/search?q=#keyword#]
 [雅虎搜索] [https://search.yahoo.com/search?p=#keyword#] (input[name=p])
-[Yandex] [https://yandex.com/search/?text=#keyword#] (input[name=text])
+[Yandex搜] [https://yandex.com/search/?text=#keyword#] (input[name=text])
 [鸭鸭搜索] [https://duckduckgo.com/?q=#keyword#]
-[Ecosia搜索] [https://www.ecosia.org/search?method=index&q=#keyword#]
+[Ecosia搜] [https://www.ecosia.org/search?method=index&q=#keyword#]
 [You搜索] [https://you.com/search?q=#keyword#]
 
 [百度翻译] [https://fanyi.baidu.com/#en/zh/#keyword#] [新窗口]
@@ -174,14 +185,14 @@
 [有道翻译] [http://dict.youdao.com/search?q=#keyword#] [新窗口]
 [Deepl翻译] [https://www.deepl.com/translator#zh/en/#keyword#] [新窗口]
 
-[Quora] [https://www.quora.com/search?q=#keyword#] [新窗口]
+[Quora搜索] [https://www.quora.com/search?q=#keyword#] [新窗口]
 [维基百科] [https://zh.wikipedia.org/wiki/#keyword#] [新窗口]
 [知乎搜索] [https://www.zhihu.com/search?type=content&q=#keyword#]
 [豆瓣搜索] [https://www.douban.com/search?source=suggest&q=#keyword#]
-[简书] [https://www.jianshu.com/search?q=#keyword#] (#q)
+[简书搜索] [https://www.jianshu.com/search?q=#keyword#] (#q)
 
 
-[GitHub] [https://github.com/search?utf8=✓&q=#keyword#]
+[GitHub搜] [https://github.com/search?utf8=✓&q=#keyword#]
 [Stackoverflow] [https://stackoverflow.com/search?q=#keyword#] [新窗口]
 [Segmentfault] [https://segmentfault.com/search?q=#keyword#]
 [博客园] [https://zzk.cnblogs.com/s?w=#keyword#] (input[name=Keywords]) [右侧]
@@ -205,17 +216,15 @@
 [淘宝搜索] [https://s.taobao.com/search?q=#keyword#] [新窗口]
 [天猫搜索] [https://list.tmall.com/search_product.htm?q=#keyword#] [新窗口]
 [京东搜索] [http://search.jd.com/Search?keyword=#keyword#] [新窗口]
-
-
-[亚马逊] [https://www.amazon.cn/s?k=#keyword#] [新窗口]
-[当当网] [http://search.dangdang.com/?key=#keyword#] [新窗口]
-[孔夫子] [http://search.kongfz.com/product_result/?key=#keyword#] [新窗口]
+[亚马逊搜] [https://www.amazon.cn/s?k=#keyword#] [新窗口]
+[当当网搜] [http://search.dangdang.com/?key=#keyword#] [新窗口]
+[孔夫子搜] [http://search.kongfz.com/product_result/?key=#keyword#] [新窗口]
 
 
 [YouTube] [https://www.youtube.com/results?search_query=#keyword#] [新窗口]
-[Bilibili] [http://search.bilibili.com/all?keyword=#keyword#] [新窗口]
+[哔哩搜索] [http://search.bilibili.com/all?keyword=#keyword#] [新窗口]
 [优酷搜索] [https://so.youku.com/search_video/q_#keyword#] [新窗口]
-[爱奇艺搜索] [https://so.iqiyi.com/so/q_#keyword#] [新窗口]
+[爱奇艺搜] [https://so.iqiyi.com/so/q_#keyword#] [新窗口]
 [腾讯搜索] [https://v.qq.com/x/search/?q=#keyword#] [新窗口]
 
 
@@ -644,7 +653,7 @@
             return true
         });
 
-        $j('#maga-better-setting-coupon').click(function () {
+         $j('#maga-better-setting-coupon').click(function () {
             // 百度大全
             GM_openInTab('https://www.baidu.com/more/');
         });
@@ -668,7 +677,7 @@
             // savieo视频
             GM_openInTab('https://savieo.com/');
         });
-        
+
     }
 
     function addattribute($j) {
@@ -1083,9 +1092,8 @@
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 #maga-better-list-search::-webkit-scrollbar {
-    width: 1;
-    height: 12;
-    color: #FFFFFF;
+    width: 0;
+    height: 0;
 }
 
 #maga-better-list-setting {
@@ -1446,9 +1454,9 @@
 }
 `;
 
-   
+
     const prepares = [
-      
+
         prepare$2,
         prepare$1,
         prepare$7,
@@ -1468,4 +1476,3 @@
 
 })();
 
-   
