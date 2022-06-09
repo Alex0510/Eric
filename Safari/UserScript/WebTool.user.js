@@ -1,9 +1,9 @@
 
 // ==UserScript==
 // @name       网页工具箱
-// @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。
+// @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
 // @author      Eric
-// @version     2.0.5
+// @version     2.0.6
 // @include     *
 // @license     MIT License
 // @require     https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js
@@ -162,14 +162,17 @@
 [搜狗搜索] [https://www.sogou.com/web?query=#keyword#]
 [谷歌搜索] [https://www.google.com/search?q=#keyword#]
 [Bing搜索] [https://cn.bing.com/search?q=#keyword#]
-[雅虎] [https://search.yahoo.com/search?p=#keyword#] (input[name=p])
+[雅虎搜索] [https://search.yahoo.com/search?p=#keyword#] (input[name=p])
 [Yandex] [https://yandex.com/search/?text=#keyword#] (input[name=text])
-
+[鸭鸭搜索] [https://duckduckgo.com/?q=#keyword#]
+[Ecosia搜索] [https://www.ecosia.org/search?method=index&q=#keyword#]
+[You搜索] [https://you.com/search?q=#keyword#]
 
 [百度翻译] [https://fanyi.baidu.com/#en/zh/#keyword#] [新窗口]
 [谷歌翻译] [https://translate.google.com/?hl=zh-CN&tab=wT0#view=home&op=translate&sl=auto&tl=zh-CN&text=#keyword#] [新窗口]
 [搜狗翻译] [https://fanyi.sogou.com/?keyword=#keyword#] [新窗口]
-
+[有道翻译] [http://dict.youdao.com/search?q=#keyword#] [新窗口]
+[Deepl翻译] [https://www.deepl.com/translator#zh/en/#keyword#] [新窗口]
 
 [Quora] [https://www.quora.com/search?q=#keyword#] [新窗口]
 [维基百科] [https://zh.wikipedia.org/wiki/#keyword#] [新窗口]
@@ -213,7 +216,7 @@
 [Bilibili] [http://search.bilibili.com/all?keyword=#keyword#] [新窗口]
 [优酷搜索] [https://so.youku.com/search_video/q_#keyword#] [新窗口]
 [爱奇艺搜索] [https://so.iqiyi.com/so/q_#keyword#] [新窗口]
-[腾讯视频] [https://v.qq.com/x/search/?q=#keyword#] [新窗口]
+[腾讯搜索] [https://v.qq.com/x/search/?q=#keyword#] [新窗口]
 
 
 [云盘精灵搜] [https://www.yunpanjingling.com/search/#keyword#]
@@ -642,7 +645,7 @@
         });
 
         $j('#maga-better-setting-coupon').click(function () {
-            // 百度产品大全
+            // 百度大全
             GM_openInTab('https://www.baidu.com/more/');
         });
         $j('#maga-better-setting-video').click(function () {
@@ -893,7 +896,7 @@
             }
 
             function parseConfigMore($j) {
-                let linkHtmlStr = `<a id="maga-better-setting-coupon">百度产品大全</a>`;
+                let linkHtmlStr = `<a id="maga-better-setting-coupon">百度大全</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-video">VIP影视解析</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-zhenbuka-group">真不卡影视</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-greasyfork-group">油猴脚本</a>`;
@@ -1069,7 +1072,7 @@
 }
 
 #maga-better-list-search {
-    padding: 12px 4px;
+    padding: 8px 4px;
     border-radius: 6px;
     background: rgba(28, 35, 35, 0.9);
     display: none;
@@ -1080,8 +1083,9 @@
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 #maga-better-list-search::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+    width: 1;
+    height: 12;
+    color: #FFFFFF;
 }
 
 #maga-better-list-setting {
