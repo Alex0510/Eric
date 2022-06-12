@@ -1,8 +1,9 @@
 // ==UserScript==
-// @name         全网VIP视频自动解析无广告播放
-// @version      1.0.0
+// @name         全网VIP视频自动解析无广告播放，
+// @namespace    http://www.zhihupe.com/
+// @version      1.0.1
 // @author       Eric
-// @description  【❤️ 视频自动解析，体会拥有VIP的感觉❤，适配PC+移动 】功能有：1、支持B站大会员番剧，全网独创自由选择自动解析接口；
+// @description  【❤️ 视频自动解析，体会拥有VIP的感觉❤️，适配PC+移动 】功能有：1、支持B站大会员番剧、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；
 // @icon         https://www.zhihupe.com/favicon.ico
 // @require      https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @require      https://lib.baomitu.com/echarts/4.6.0/echarts.min.js
