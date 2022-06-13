@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         全网VIP视频自动解析无广告播放精简版
-// @version      1.0.0
+// @version      1.0.1
 // @author       Eric
 // @description  【❤️ 视频自动解析，体会拥有VIP的感觉❤️，适配PC+移动 】功能有：1、支持B站大会员番剧，爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；此脚本修改于智狐作者脚本。
 // @require      https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
