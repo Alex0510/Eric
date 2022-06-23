@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         翻译机
 // @namespace    http://tampermonkey.net/
-// @version      0.45
+// @version      1.0.0
 // @description  该脚本用于翻译各类常用社交网站为中文，不会经过中间服务器。
-// @author       HolynnChen
+// @author       Eric
 // @match        *://*.twitter.com/*
 // @match        *://*.youtube.com/*
 // @match        *://*.facebook.com/*
