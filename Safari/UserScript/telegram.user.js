@@ -1,10 +1,9 @@
 // ==UserScript==
 // @name         Telegram视频下载
 // @version      1.0.0
-// @description  Used to download streaming videos on Telegram
+// @description  突破群组限制下载视频
 // @author       Eric
 // @license      GNU GPLv3
-// @website      https://github.com/Neet-Nestor/Telegram-Media-Downloader
 // @match        https://web.telegram.org/*
 // @icon         https://img.icons8.com/color/452/telegram-app--v5.png
 // @grant        none
