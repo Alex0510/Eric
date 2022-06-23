@@ -151,7 +151,7 @@ const rules={
      'instagram':[{
         name:'github',
         matcher:/https:\/\/www.instagram.com/,
-        selector:baseSelector('div[class="_aa-9 _aa-a"]'),
+        selector:baseSelector('div[class="_aa-9 _aa-a"],[class="_aa-9"],[class="_aaz3"]'),
         textGetter:baseTextGetter,
         textSetter:baseTextSetter
     }],
