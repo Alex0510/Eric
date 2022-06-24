@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Telegram视频下载
 // @version      1.0.0
-// @description  突破群组限制下载视频
+// @description  突破群组限制视频下载，下载方法：等待视频缓冲完毕点击下载按钮即可保存
 // @author       Eric
 // @license      GNU GPLv3
 // @match        https://web.telegram.org/*
