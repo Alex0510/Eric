@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Telegram视频下载
-// @version      1.0.0
-// @description  突破群组限制视频下载，下载方法：等待视频缓冲完毕点击下载按钮即可保存
+// @version      1.1.0
+// @description  TG突破群组限制视频下载，下载方法：等待视频缓冲完毕点击下载按钮即可保存，Google浏览器暂时不支持待修复，建议使用Firefox、Safari等
 // @author       Eric
 // @license      GNU GPLv3
 // @match        https://web.telegram.org/*
@@ -139,7 +139,7 @@
 
   logger.info("Initialized");
 
-  // Copied and modified from Heroicons (https://heroicons.com/)
+  
   const downloadIcon = `
   <svg xmlns="http://www.w3.org/2000/svg" style="height:24px;width:24px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
