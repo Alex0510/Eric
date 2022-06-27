@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name        Twitter视频下载
 // @description 一键保存视频/图片，解除敏感内容警告，强制切换高品质画面
-// @version     1.0.0
+// @version     1.2.0
 // @author      Eric
 // @namespace   none
 // @match       https://*.twitter.com/*
+// @match       https://twitter.com
 // @grant       GM_registerMenuCommand
 // @grant       GM_setValue
 // @grant       GM_getValue
