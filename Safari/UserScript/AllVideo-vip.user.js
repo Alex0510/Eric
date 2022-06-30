@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         全网VIP视频解析|抖音快手视频无水印下载
-// @version      1.2.5
+// @version      1.2.7
 // @author       Eric
-// @description  【视频自动解析，适配PC+移动 】功能有：1、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告；
+// @description  【视频自动解析，适配PC+移动 】功能有：1、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告；新增抖音支持分辨率下载视频
 // @match           *://laisoyiba.com/*
 // @match           *://laisoyiba.com/*
 // @match           *://*.youku.com/v_*
@@ -1586,7 +1586,61 @@ function geturlid(url) {
             break;
     }
 
-
+ var data = document.getElementById('RENDER_DATA');
+    if (data) {
+        setTimeout(function () {
+            var decodeData = decodeURIComponent(data.innerText);
+            var json = JSON.parse(decodeData);
+            for (var item in json) {
+                if (json[item]['aweme']) {
+                    var detail = json[item]['aweme']['detail'];
+                    var video = detail.video;
+                    var bitData = [];
+                    if (video.bitRateList) {
+                        var bitRateList = video.bitRateList;
+                        for (var i = 0; i < bitRateList.length; i++) {
+                            var text = bitRateList[i].width + 'x' + bitRateList[i].height + '_' + bitRateList[i].gearName;
+                            var url = bitRateList[i].playApi
+                            bitData.push({
+                                text: text,
+                                url: url
+                            });
+                        }
+                    }
+                    var defaultUrl = video.playApi;
+                    var defaultRatio = video.width + 'x' + video.height + '_' + video.ratio;
+                    console.log(defaultRatio)
+                    var buttons = document.getElementsByTagName('button')
+                    for (var i = 0; i < buttons.length; i++) {
+                        if (buttons[i].innerText == '关注') {
+                            var classNames = buttons[i].className;
+                            console.log(classNames)
+                            var btnGrand = buttons[i].parentNode.parentNode;
+                            const div = document.createElement('div');
+                            for (var j = 0; j < bitData.length; j++) {
+                                var downA = document.createElement('a');
+                                var bit = bitData[j];
+                                downA.href = bit.url;
+                                downA.target = '_blank';
+                                downA.innerHTML = bit.text.replace('_0', 'p') + '_下载';
+                                downA.className = classNames;
+                                div.appendChild(downA);
+                            }
+                            var downADefault = document.createElement('a');
+                            downADefault.href = defaultUrl;
+                            downADefault.target = '_blank';
+                            downADefault.innerHTML = defaultRatio + '_下载';
+                            downADefault.className = classNames;
+                            div.appendChild(downADefault);
+                            btnGrand.after(div);
+                            console.log(btnGrand)
+                            console.log('add btn');
+                        }
+                    }
+                }
+            }
+        }, 1500)
+    }
 
 
 })();
