@@ -4,7 +4,7 @@
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
 
 // @author      Eric
-// @version     2.0.7
+// @version     3.0.0
 // @include     *
 // @license     MIT License
 
