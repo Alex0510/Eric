@@ -2,10 +2,8 @@
 // ==UserScript==
 // @name       网页工具箱
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
-// @namespace   http://payback.bwaq.cn
-// @icon        http://payback.bwaq.cn/logo.png
 // @author      Eric
-// @version     2.0.7
+// @version     3.0.0
 // @include     *
 // @license     MIT License
 // @require     https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js
@@ -44,44 +42,14 @@
 // ==/UserScript==
 (function () {
     'use strict';
- var Utils$2 = {
-        removePath: function (path) {
-            if (document.querySelector(path) == null) {
-                return;
-            }
-            document.querySelector(path).remove();
-            // GM_log('removing...');
-        },
-        performClick: function (item) {
-            let elements = document.getElementsByClassName(item[0]);
-            if (elements.length > item[1]) {
-                elements[item[1]].click();
-            }
-        },
-        invokeMethod: function (methodName) {
-            eval(methodName);
-        }
-    };
+
 
     var GUtils = {
         inIframe: function () {
             return self.frameElement && 'IFRAME' == self.frameElement.tagName
                 || !(window.frames.length == parent.frames.length && self == top)
         },
-        getUrlParam: function (name) {
-            let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-            let regRewrite = new RegExp('(^|/)' + name + '/([^/]*)(/|$)', 'i');
-            let r = window.location.search.substr(1).match(reg);
-            let q = window.location.pathname.substr(1).match(regRewrite);
-
-            if (r && r.length > 0) {
-                return unescape(r[2])
-            } else if (q && q.length > 0) {
-                return unescape(q[2])
-            } else {
-                return ''
-            }
-        },
+        
         intercepter: function (regexStr) {
             if (regexStr && regexStr.length !== 0) {
                 for (let i = 0; i < regexStr.length; i++) {
@@ -90,21 +58,13 @@
                         return false;
                     }
                 }
-                return true
+      
             }
-            return false
+         
         },
     };
 
-    const prepare$7 = {};
-
-    const prepare$6 = {};
-
-    const prepare$5 = {};
-
-    const prepare$4 = {};
-
-    const prepare$3 = {};
+    
 
     var Constant = {
         getLinkStr: function () {
@@ -236,8 +196,7 @@
 `;
 
     let linkList = '';
-    let currQueryPramVal = '';
-    let currSelector = '';
+   
 
     var Utils = {
         get: function () {
@@ -438,7 +397,7 @@
             if (e.key === 'Escape') {
                 // ESC关闭页面
                 $j('#maga-better-list-search').fadeOut();
-                $j('#maga-better-list-book-mark').fadeOut();
+                
                 $j('#maga-better-list-more').fadeOut();
                 $j('#maga-better-list-setting').fadeOut();
             } else if (e.altKey && e.key === 'z') {
@@ -446,7 +405,7 @@
             } else if (e.altKey && e.key === 'x') {
                 $j('#maga-better-icon-search').click();
             } else if (e.altKey && e.key === 'c') {
-                $j('#maga-better-icon-book-mark').click();
+               
             } else if (e.altKey && e.key === 'v') {
                 $j('#maga-better-icon-more').click();
             } else if (e.altKey && e.key === 'b') {
@@ -464,19 +423,19 @@
                 GM_setValue(Constant.getKeySearch(), false);
                 GM_setValue(Constant.getKeyBookMark(), false);
                 $j('#maga-better-list-search').fadeOut();
-                $j('#maga-better-list-book-mark').fadeOut();
+               
                 $j('#maga-better-list-more').fadeOut();
                 $j('#maga-better-list-setting').fadeOut();
             }
         });
         if (GM_getValue(Constant.getKeySwitch(), true)) {
             $j('#maga-better-icon-search').show();
-            $j('#maga-better-icon-book-mark').show();
+           
             $j('#maga-better-icon-more').show();
             $j('#maga-better-icon-setting').show();
         } else {
             $j('#maga-better-icon-search').hide();
-            $j('#maga-better-icon-book-mark').hide();
+           
             $j('#maga-better-icon-more').hide();
             $j('#maga-better-icon-setting').hide();
         }
@@ -492,9 +451,9 @@
             }
         } else if (selectMode == Constant.StrBookMark()) {
             if (GM_getValue(Constant.getKeyBookMark(), true)) {
-                $j('#maga-better-list-book-mark').show();
+                
             } else {
-                $j('#maga-better-list-book-mark').hide();
+                
             }
         }
     }
@@ -508,7 +467,7 @@
                 GM_setValue(Constant.getKeySearch(), false);
             }
 
-            $j('#maga-better-list-book-mark').fadeOut();
+          
             $j('#maga-better-list-setting').fadeOut();
             $j('#maga-better-list-more').fadeOut();
 
@@ -535,13 +494,7 @@
             $j('#maga-better-list-setting').fadeOut();
             $j('#maga-better-list-more').fadeOut();
 
-            setTimeout(function () {
-                if (GM_getValue(Constant.getKeyBookMark(), true)) {
-                    $j('#maga-better-list-book-mark').fadeIn();
-                } else {
-                    $j('#maga-better-list-book-mark').fadeOut();
-                }
-            }, 300);
+          
         });
     }
 
@@ -549,7 +502,7 @@
         $j('#maga-better-icon-more').click(function () {
             $j('#maga-better-list-search').hide();
             $j('#maga-better-list-setting').hide();
-            $j('#maga-better-list-book-mark').hide();
+          
 
             setTimeout(function () {
                 if ($j('#maga-better-list-more').css('display') === 'none') {
@@ -566,7 +519,7 @@
         $j('#maga-better-icon-setting').click(function () {
             $j('#maga-better-list-search').hide();
             $j('#maga-better-list-more').hide();
-            $j('#maga-better-list-book-mark').hide();
+           
 
             setTimeout(function () {
                 if ($j('#maga-better-list-setting').css('display') === 'none') {
@@ -683,12 +636,12 @@
     function addattribute($j) {
         $j('#maga-better-icon-switch').attr('class', 'maga-better-icon');
         $j('#maga-better-icon-search').attr('class', 'maga-better-icon');
-        $j('#maga-better-icon-book-mark').attr('class', 'maga-better-icon');
+       
         $j('#maga-better-icon-setting').attr('class', 'maga-better-icon');
         $j('#maga-better-icon-more').attr('class', 'maga-better-icon');
 
-        $j('#maga-better-list-setting').css('min-height', '176px');
-        $j('#maga-better-list-more').css('min-height', '176px');
+        $j('#maga-better-list-setting').css('min-height', '136px');
+        $j('#maga-better-list-more').css('min-height', '136px');
 
     }
 
@@ -713,8 +666,7 @@
                         <img id="maga-better-icon-switch"/>
                         <!--搜索优化-->
                         <img id="maga-better-icon-search"/>
-                        <!--书签模块-->
-                        <img id="maga-better-icon-book-mark"/>
+                       
                         <!--更多功能-->
                         <img id="maga-better-icon-more"/>
                         <!--设置功能-->
@@ -723,8 +675,7 @@
                     <div id="maga-better-content-wrapper">
                         <!--搜索优化列表-->
                         <div id="maga-better-list-search"></div>
-                        <!--书签模块列表-->
-                        <div id="maga-better-list-book-mark"></div>
+                        
                         <!--更多模块列表-->
                         <div id="maga-better-list-more"></div>
                         <!--设置模块列表-->
@@ -824,83 +775,31 @@
                                     idListStr.unshift(ids[i].id);
                                 }
                             }
-                            let bookMarkUrl = 'https://server.bwaq.cn/tbk/api/bookMark/getListBySort?typeIds=' + idListStr.join(',');
-                            // GM_log('idListStr===' + idListStr)
-                            // GM_log('bookMarkUrl===' + bookMarkUrl)
-                            GM.xmlHttpRequest({
-                                method: 'GET',
-                                url: bookMarkUrl,
-                                onload: function onload(response) {
-                                    let bookMark = response.response;
-                                    if (typeof bookMark === 'string') {
-                                        bookMark = JSON.parse(bookMark);
+                           
+                                  
                                     }
-                                    //GM_log('==============>' + JSON.stringify(bookMark))
-                                    GM_setValue(Constant.getListBookMark(), bookMark);
-
-                                    if (bookMark.code == 10) {
-                                        //GM_log('================获取成功================')
-                                        resolve(bookMark);
-                                    } else {
-                                        reject('get book mark error!');
-                                    }
-                                },
-                            });
+                                
+                           
                         }
-                    }
+                    
 
                     // 书签
                     function getBookType(resolve, reject) {
-                        let bookTypeUrl = 'https://server.bwaq.cn/tbk/api/bookType/getListBySort?category=1';
-                        GM.xmlHttpRequest({
-                            method: 'GET',
-                            url: bookTypeUrl,
-                            onload: function onload(response) {
-                                let data = response.response;
-                                if (typeof data === 'string') {
-                                    data = JSON.parse(data);
-                                }
-                                //GM_log('==============>' + JSON.stringify(data))
-
-                                if (data.code == 10) {
-                                    //GM_log('================获取成功================')
-                                    let ids = GM_getValue(Constant.getBookMarkIds(), []);
-                                    for (let i = 0; i < data.data.length; i++) {
-                                        let id = data.data[i].id;
-                                        let newElement = true;
-                                        for (let j = 0; j < ids.length; j++) {
-                                            if (ids[j].id == id) {
-                                                newElement = false;
-                                                break
-                                            }
-                                        }
-                                        if (newElement) {
-                                            let typeName = data.data[i].typeName;
-                                            ids.unshift({ id: id, enable: true, typeName: typeName });
-                                        }
-                                    }
-                                    GM_setValue(Constant.getBookMarkIds(), ids);
-                                    getBookmark(resolve, reject);
-                                } else {
-                                    reject('get book type id error!');
-                                }
-                            },
-                        });
+                       
+                        
                     }
 
-                    let bookMark = GM_getValue(Constant.getListBookMark(), null);
+                   
 
-                    if (bookMark) {
-                        renderHtml(bookMark, $j);
-                    }
+                   
                     if (GM_getValue(Constant.getBookMarkIds(), []).length == 0) {
                         getBookType(resolve, reject);
                     } else {
-                        getBookmark(resolve, reject);
+                       
                     }
 
                 }).then((bookMark) => {
-                    renderHtml(bookMark, $j);
+                   
                 })
             }
 
@@ -922,59 +821,10 @@
                     linkHtmlStr += `<a id="maga-better-setting-reset-button-tool">复位工具按钮</a>`;
                 }
                 linkHtmlStr += `<a id="maga-better-setting-reset">清理缓存</a>`;
-                linkHtmlStr += `<div>
-                                <div style="display: flex;align-items: center;flex-direction: row">
-                                    <a id="maga-better-setting-book-type">书签分类设置</a>
-                                    <span id="maga-better-setting-book-type-refresh">刷新书签</span>
-                                </div>
-                                <div id="maga-better-setting-book-type-list"></div>
-                            </div>`;
+                
                 $j('#maga-better-list-setting').append(linkHtmlStr);
-                let ids = GM_getValue(Constant.getBookMarkIds(), []);
-                if (ids.length == 0) {
-                    return new Promise((resolve, reject) => {
-                        let bookTypeUrl = 'https://server.bwaq.cn/tbk/api/bookType/getListBySort?category=1';
-                        GM.xmlHttpRequest({
-                            method: 'GET',
-                            url: bookTypeUrl,
-                            onload: function onload(response) {
-                                let data = response.response;
-                                if (typeof data === 'string') {
-                                    data = JSON.parse(data);
-                                }
-                                //GM_log('==============>' + JSON.stringify(data))
-
-                                if (data.code == 10) {
-                                    //GM_log('================获取成功================')
-                                    let ids = GM_getValue(Constant.getBookMarkIds(), []);
-                                    for (let i = 0; i < data.data.length; i++) {
-                                        let id = data.data[i].id;
-                                        let newElement = true;
-                                        for (let j = 0; j < ids.length; j++) {
-                                            if (ids[j].id == id) {
-                                                newElement = false;
-                                                break
-                                            }
-                                        }
-                                        if (newElement) {
-                                            let typeName = data.data[i].typeName;
-                                            ids.unshift({ id: id, enable: true, typeName: typeName });
-                                        }
-                                    }
-
-                                    GM_setValue(Constant.getBookMarkIds(), ids);
-                                    resolve(ids);
-                                } else {
-                                    reject('get book type id error!');
-                                }
-                            },
-                        });
-                    }).then((ids) => {
-                        renderHtml($j, ids);
-                    })
-                } else {
-                    renderHtml($j, ids);
-                }
+                
+                  
 
                 function renderHtml($j, ids) {
                     let templateIdOpen = `
@@ -1109,40 +959,11 @@
     border: 1px solid #EFEFEF;
 }
 
-/*书签模块-列表的标题：书签分类名称*/
-.book-mark-title {
-    font-weight: 600;
-    color: #EFEFEF;
-    border-radius: 2px;
-    border: 1px solid #EFEFEF;
-    display: block !important;
-}
 
-/*书签模块-列表的条目：书签*/
-.book-mark-item {
-    font-weight: 400;
-    display: inline-block;
-}
 
-/*设置模块-书签分类*/
-.book-type-item {
-    font-weight: 400;
-    cursor: pointer;
-    padding: 4px 6px;
-    display: inline-block;
-    border-radius: 2px;
-    border: 1px solid #EFEFEF;
-}
 
-/*设置模块-书签分类-选中状态*/
-.book-type-item-select {
-    color: #FFFFFF;
-}
 
-/*设置模块-书签分类-非选中状态*/
-.book-type-item-unselect {
-    color: #999999;
-}
+
 
 #maga-better-list-more {
     padding: 8px 4px;
@@ -1160,7 +981,7 @@
 #maga-better-setting-book-type-refresh {
     cursor: pointer;
     display: inline-block;
-    font-weight: 400;
+    font-weight: 100;
     color: #3186fd;
 }
 
@@ -1218,8 +1039,7 @@
 
 `;
 
-    let KEY_QRCODE_URL = 'https://qun.qq.com/qrcode/index?data=';
-    /*这里的ID若改变记得同步到optimize-search中，否则会导致设置模块失效*/
+   
     let KEY_QRCODE_SWITCH = 'maga-qrcode-url-key-switch';
     let runType = 'alone';
 
@@ -1459,11 +1279,7 @@
 
         prepare$2,
         prepare$1,
-        prepare$7,
-        prepare$6,
-        prepare$5,
-        prepare$3,
-        prepare$4,
+      
     ];
 
     (function () {
