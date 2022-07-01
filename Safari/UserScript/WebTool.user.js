@@ -1,18 +1,19 @@
 
 // ==UserScript==
-// @name       网页工具箱
+// @name       网页工具箱(待更新)
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
+
 // @author      Eric
-// @version     3.0.0
+// @version     2.0.7
 // @include     *
 // @license     MIT License
-// @require     https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js
+
 // @require     https://cdn.staticfile.org/mustache.js/3.1.0/mustache.min.js
 // @require     https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js
 // @require     https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.min.js
 // @require     https://cdn.bootcdn.net/ajax/libs/jszip/3.1.5/jszip.min.js
 // @resource    toastr_css https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.min.css
-// @resource    iconInfo http://payback.bwaq.cn/logo.png
+
 // @connect     *
 // @grant       GM_log
 // @grant       GM.info
