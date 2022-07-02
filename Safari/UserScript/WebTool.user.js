@@ -7,10 +7,10 @@
 // @include     *
 // @license     MIT License
 // @require     https://cdn.staticfile.org/mustache.js/3.1.0/mustache.min.js
-// @require     https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js
-// @require     https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.min.js
+// @require     https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js
+// @require     https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.js
 // @require     https://cdn.bootcdn.net/ajax/libs/jszip/3.1.5/jszip.min.js
-// @resource    toastr_css https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.min.css
+// @resource    toastr_css https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.css
 // @connect     *
 // @grant       GM_log
 // @grant       GM.info
