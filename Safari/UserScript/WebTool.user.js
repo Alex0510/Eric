@@ -1,19 +1,16 @@
 
 // ==UserScript==
-// @name       网页工具箱(待更新)
+// @name       网页工具箱（待更新）
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
-
 // @author      Eric
-// @version     3.0.1
+// @version     3.1.0
 // @include     *
 // @license     MIT License
-
 // @require     https://cdn.staticfile.org/mustache.js/3.1.0/mustache.min.js
 // @require     https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js
 // @require     https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.min.js
 // @require     https://cdn.bootcdn.net/ajax/libs/jszip/3.1.5/jszip.min.js
 // @resource    toastr_css https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.min.css
-
 // @connect     *
 // @grant       GM_log
 // @grant       GM.info
@@ -58,14 +55,10 @@
                     if (location.href.indexOf(item) !== -1) {
                         return false;
                     }
-                }
-      
-            }
-         
+                }      
+            }        
         },
     };
-
-    
 
     var Constant = {
         getLinkStr: function () {
@@ -115,16 +108,12 @@
     let keyButtonTop = 'maga-tag-navigator-button-top';
     let keyButtonLeft = 'maga-tag-navigator-button-left';
     let keyQrcodeSwitch = 'maga-qrcode-url-key-switch';
-
-
     let keySelectMode = 'maga-key-optimize-select-mode';
     let modeSearch = 'maga-optimize-select-mode-search';
     let modeBookMark = 'maga-optimize-select-mode-book-mark';
-
     let keySwitch = 'maga-key-optimize-search-switch';
     let keySearch = 'maga-key-optimize-search-search';
     let keyBookMark = 'maga-key-optimize-search-book-mark';
-
     let bookMarkIds = 'maga-optimize-select-book-mark-id-1001';
     let bookMarkList = 'maga-optimize-select-book-mark-list';
 
@@ -197,8 +186,6 @@
 `;
 
     let linkList = '';
-   
-
     var Utils = {
         get: function () {
             if (linkList == '' || linkList.length === 0) {
@@ -380,15 +367,13 @@
 
     function setOnClickListenerSwitch($j) {
         function fadeOutViews($j) {
-            $j('#maga-better-icon-search').fadeOut();
-         
+            $j('#maga-better-icon-search').fadeOut();        
             $j('#maga-better-icon-more').fadeOut();
             $j('#maga-better-icon-setting').fadeOut();
         }
 
         function fadeInViews($j) {
-            $j('#maga-better-icon-search').fadeIn();
-          
+            $j('#maga-better-icon-search').fadeIn();          
             $j('#maga-better-icon-more').fadeIn();
             $j('#maga-better-icon-setting').fadeIn();
         }
@@ -397,16 +382,14 @@
             // GM_log('e.key================' + e.key)
             if (e.key === 'Escape') {
                 // ESC关闭页面
-                $j('#maga-better-list-search').fadeOut();
-                
+                $j('#maga-better-list-search').fadeOut();                
                 $j('#maga-better-list-more').fadeOut();
                 $j('#maga-better-list-setting').fadeOut();
             } else if (e.altKey && e.key === 'z') {
                 $j('#maga-better-icon-switch').click();
             } else if (e.altKey && e.key === 'x') {
                 $j('#maga-better-icon-search').click();
-            } else if (e.altKey && e.key === 'c') {
-               
+            } else if (e.altKey && e.key === 'c') {              
             } else if (e.altKey && e.key === 'v') {
                 $j('#maga-better-icon-more').click();
             } else if (e.altKey && e.key === 'b') {
@@ -423,20 +406,17 @@
                 /*总开关关闭 ==> 关闭所有展示的模块*/
                 GM_setValue(Constant.getKeySearch(), false);
                 GM_setValue(Constant.getKeyBookMark(), false);
-                $j('#maga-better-list-search').fadeOut();
-               
+                $j('#maga-better-list-search').fadeOut();               
                 $j('#maga-better-list-more').fadeOut();
                 $j('#maga-better-list-setting').fadeOut();
             }
         });
         if (GM_getValue(Constant.getKeySwitch(), true)) {
-            $j('#maga-better-icon-search').show();
-           
+            $j('#maga-better-icon-search').show();           
             $j('#maga-better-icon-more').show();
             $j('#maga-better-icon-setting').show();
         } else {
-            $j('#maga-better-icon-search').hide();
-           
+            $j('#maga-better-icon-search').hide();           
             $j('#maga-better-icon-more').hide();
             $j('#maga-better-icon-setting').hide();
         }
@@ -451,10 +431,8 @@
                 $j('#maga-better-list-search').hide();
             }
         } else if (selectMode == Constant.StrBookMark()) {
-            if (GM_getValue(Constant.getKeyBookMark(), true)) {
-                
-            } else {
-                
+            if (GM_getValue(Constant.getKeyBookMark(), true)) {                
+            } else {                
             }
         }
     }
@@ -466,9 +444,7 @@
                 GM_setValue(Constant.getKeySearch(), true);
             } else {
                 GM_setValue(Constant.getKeySearch(), false);
-            }
-
-          
+            }         
             $j('#maga-better-list-setting').fadeOut();
             $j('#maga-better-list-more').fadeOut();
 
@@ -485,21 +461,16 @@
     function setOnClickListenerBookMark($j) {
         $j('#maga-better-icon-book-mark').click(function () {
             GM_setValue(Constant.getSelectMode(), Constant.StrBookMark());
-           
-
             $j('#maga-better-list-search').fadeOut();
             $j('#maga-better-list-setting').fadeOut();
-            $j('#maga-better-list-more').fadeOut();
-
-          
+            $j('#maga-better-list-more').fadeOut();         
         });
     }
 
     function setOnClickListenerMore($j) {
         $j('#maga-better-icon-more').click(function () {
             $j('#maga-better-list-search').hide();
-            $j('#maga-better-list-setting').hide();
-          
+            $j('#maga-better-list-setting').hide();          
 
             setTimeout(function () {
                 if ($j('#maga-better-list-more').css('display') === 'none') {
@@ -515,8 +486,7 @@
         // 设置页面点击事件
         $j('#maga-better-icon-setting').click(function () {
             $j('#maga-better-list-search').hide();
-            $j('#maga-better-list-more').hide();
-           
+            $j('#maga-better-list-more').hide();          
 
             setTimeout(function () {
                 if ($j('#maga-better-list-setting').css('display') === 'none') {
@@ -627,16 +597,92 @@
             // savieo视频
             GM_openInTab('https://savieo.com/');
         });
-
+       $j('#maga-better-setting-qqemail-group').click(function () {
+            // QQ邮箱
+            GM_openInTab('https://mail.qq.com/');
+        });
+         $j('#maga-better-setting-sina-group').click(function () {
+            // 新浪邮箱
+            GM_openInTab('https://mail.sina.com.cn//');
+        });
+         $j('#maga-better-setting-aliyun-group').click(function () {
+            // 阿里邮箱
+            GM_openInTab('https://qiye.aliyun.com/');
+        });
+         $j('#maga-better-setting-163-group').click(function () {
+            // 网易邮箱
+            GM_openInTab('https://mail.163.com/');
+        });
+         $j('#maga-better-setting-Hotmail-group').click(function () {
+            // Hotmail
+            GM_openInTab('https://outlook.live.com/mail/');
+        });
+         $j('#maga-better-setting-Gmail-group').click(function () {
+            // Gmail邮箱
+            GM_openInTab('https://mail.google.com/mail/u/0/#inbox');
+        });
+       $j('#maga-better-setting-vqq-group').click(function () {
+            // 腾讯视频
+            GM_openInTab('https://v.qq.com/');
+        });
+         $j('#maga-better-setting-iqiyi-group').click(function () {
+            // 爱奇艺
+            GM_openInTab('https://www.iqiyi.com/');
+        });
+         $j('#maga-better-setting-youku-group').click(function () {
+            // 优酷
+            GM_openInTab('https://youku.com/');
+        });
+         $j('#maga-better-setting-bilibili-group').click(function () {
+            // 哔哩哔哩
+            GM_openInTab('https://bilibili.com/');
+        });
+         $j('#maga-better-setting-mgtv-group').click(function () {
+            // 芒果TV
+            GM_openInTab('https://www.mgtv.com/');
+        });
+         $j('#maga-better-setting-le-group').click(function () {
+            // 乐视TV
+            GM_openInTab('http://www.le.com/');
+        });
+         $j('#maga-better-setting-Youtube-group').click(function () {
+            // Youtube
+            GM_openInTab('https://www.youtube.com//');
+        });
+         $j('#maga-better-setting-qqmusic-group').click(function () {
+            // QQ音乐
+            GM_openInTab('http://y.qq.com/');
+        });
+         $j('#maga-better-setting-163music-group').click(function () {
+            // 网易云音乐
+            GM_openInTab('http://music.163.com/?from=itab');
+        });
+         $j('#maga-better-setting-kuwo-group').click(function () {
+            // 酷我音乐
+            GM_openInTab('http://www.kuwo.cn/');
+        });
+         $j('#maga-better-setting-kugou-group').click(function () {
+            // 酷狗音乐
+            GM_openInTab('https://www.kugou.com/');
+        });
+         $j('#maga-better-setting-91q-group').click(function () {
+            // 千千音乐
+            GM_openInTab('https://music.91q.com/');
+        });
+        $j('#maga-better-setting-douyin-group').click(function () {
+            // 抖音
+            GM_openInTab('https://www.douyin.com/?enter=guide');
+        });$j('#maga-better-setting-kuaishou-group').click(function () {
+            // 快手
+            GM_openInTab('https://kuaishou.com/');
+        });
     }
 
     function addattribute($j) {
         $j('#maga-better-icon-switch').attr('class', 'maga-better-icon');
-        $j('#maga-better-icon-search').attr('class', 'maga-better-icon');
-       
+        $j('#maga-better-icon-search').attr('class', 'maga-better-icon');       
         $j('#maga-better-icon-setting').attr('class', 'maga-better-icon');
         $j('#maga-better-icon-more').attr('class', 'maga-better-icon');
-
         $j('#maga-better-list-setting').css('min-height', '136px');
         $j('#maga-better-list-more').css('min-height', '136px');
 
@@ -662,8 +708,7 @@
                         <!--关闭插件-->
                         <img id="maga-better-icon-switch"/>
                         <!--搜索优化-->
-                        <img id="maga-better-icon-search"/>
-                       
+                        <img id="maga-better-icon-search"/>                      
                         <!--更多功能-->
                         <img id="maga-better-icon-more"/>
                         <!--设置功能-->
@@ -671,8 +716,7 @@
                     </div>
                     <div id="maga-better-content-wrapper">
                         <!--搜索优化列表-->
-                        <div id="maga-better-list-search"></div>
-                        
+                        <div id="maga-better-list-search"></div>                        
                         <!--更多模块列表-->
                         <div id="maga-better-list-more"></div>
                         <!--设置模块列表-->
@@ -683,14 +727,10 @@
 
             setTimeout(function () {
                 if ($j('#maga-better-wrapper').length !== 0) return
-
                 $j('body').append(html);
-
-                parseConfigSearch($j);
-               
+                parseConfigSearch($j);              
                 parseConfigMore($j);
                 parseConfigSetting($j, runType$1);
-
                 Event.initEvent($j, runType$1);
             }, 200);
 
@@ -771,32 +811,19 @@
                                 if (ids[i].enable) {
                                     idListStr.unshift(ids[i].id);
                                 }
-                            }
-                           
-                                  
-                                    }
-                                
-                           
-                        }
-                    
+                            }                                  
+                                    }                               
+                        }                    
 
                     // 书签
                     function getBookType(resolve, reject) {
-                       
-                        
                     }
 
-                   
-
-                   
                     if (GM_getValue(Constant.getBookMarkIds(), []).length == 0) {
                         getBookType(resolve, reject);
-                    } else {
-                       
+                    } else {                       
                     }
-
-                }).then((bookMark) => {
-                   
+                }).then((bookMark) => {                   
                 })
             }
 
@@ -807,6 +834,26 @@
                 linkHtmlStr += `<a id="maga-better-setting-greasyfork-group">油猴脚本</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-tool-group">Tool在线工具</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-savieo-group">savieo视频</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-qqemail-group">QQ邮箱</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-sina-group">新浪邮箱</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-aliyun-group">阿里邮箱</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-163-group">网易邮箱</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-Hotmail-group">Hotmail</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-Gmail-group">Gmail邮箱</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-vqq-group">腾讯视频</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-iqiyi-group">爱奇艺</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-youku-group">优酷</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-bilibili-group">哔哩哔哩</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-mgtv-group">芒果TV</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-le-group">乐视TV</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-Youtube-group">Youtube</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-qqmusic-group">QQ音乐</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-163music-group">网易云音乐</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-kuwo-group">酷我音乐</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-kugou-group">酷狗音乐</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-91q-group">千千音乐</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-douyin-group">抖音</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-kuaishou-group">快手</a>`;
                 $j('#maga-better-list-more').append(linkHtmlStr);
             }
 
@@ -817,11 +864,8 @@
                     linkHtmlStr = `<a id="maga-better-setting-qrcode">二维码开关</a>`;
                     linkHtmlStr += `<a id="maga-better-setting-reset-button-tool">复位工具按钮</a>`;
                 }
-                linkHtmlStr += `<a id="maga-better-setting-reset">清理缓存</a>`;
-                
+                linkHtmlStr += `<a id="maga-better-setting-reset">清理缓存</a>`;                
                 $j('#maga-better-list-setting').append(linkHtmlStr);
-                
-                  
 
                 function renderHtml($j, ids) {
                     let templateIdOpen = `
@@ -955,12 +999,6 @@
     border-radius: 2px;
     border: 1px solid #EFEFEF;
 }
-
-
-
-
-
-
 
 #maga-better-list-more {
     padding: 8px 4px;
@@ -1270,10 +1308,8 @@
 
 
     const prepares = [
-
         prepare$2,
-        prepare$1,
-      
+        prepare$1,     
     ];
 
     (function () {
