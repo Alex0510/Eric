@@ -3,7 +3,7 @@
 // @name       网页工具箱（待更新）
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
 // @author      Eric
-// @version     3.1.0
+// @version     3.1.1
 // @include     *
 // @license     MIT License
 // @require     https://cdn.staticfile.org/mustache.js/3.1.0/mustache.min.js
