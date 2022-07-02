@@ -3,13 +3,12 @@
 // @name       网页工具箱（待更新）
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
 // @author      Eric
-// @version     3.1.1
+// @version     3.1.2
 // @include     *
 // @license     MIT License
-// @require     https://cdn.staticfile.org/mustache.js/3.1.0/mustache.min.js
+
 // @require     https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js
 // @require     https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.js
-// @require     https://cdn.bootcdn.net/ajax/libs/jszip/3.1.5/jszip.min.js
 // @resource    toastr_css https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.css
 // @connect     *
 // @grant       GM_log
@@ -683,7 +682,7 @@
         $j('#maga-better-icon-search').attr('class', 'maga-better-icon');       
         $j('#maga-better-icon-setting').attr('class', 'maga-better-icon');
         $j('#maga-better-icon-more').attr('class', 'maga-better-icon');
-        $j('#maga-better-list-setting').css('min-height', '136px');
+        $j('#maga-better-list-setting').css('min-height', '20px');
         $j('#maga-better-list-more').css('min-height', '136px');
 
     }
@@ -955,15 +954,7 @@
     flex: 1;
 }
 
-#maga-better-list-book-mark {
-    padding: 8px 4px;
-    border-radius: 6px;
-    background: rgba(28, 35, 35, 0.9);
-    display: none;
-    max-height: 500px;
-    min-height: 176px;
-    overflow-y: scroll;
-}
+
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 #maga-better-list-book-mark::-webkit-scrollbar {
@@ -988,8 +979,8 @@
 }
 
 #maga-better-list-setting {
-    padding: 8px 4px;
-    border-radius: 6px;
+    padding: 2px 4px;
+    border-radius: 2px;
     background: rgba(28, 35, 35, 0.9);
     display: none;
 }
@@ -1312,13 +1303,12 @@
         prepare$1,     
     ];
 
-    (function () {
-        var jq = jQuery.noConflict();
+        var jj = jQuery.noConflict();
         for (let i = 0; i < prepares.length; i++) {
             let prepare = prepares[i];
-            prepare.init(jq, 'complex');
+            prepare.init(jj, 'complex');
         }
     })();
 
-})();
+
 
