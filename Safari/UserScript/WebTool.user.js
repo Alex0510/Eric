@@ -3,13 +3,12 @@
 // @name       网页工具箱（待更新）
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
 // @author      Eric
-// @version     3.1.2
+// @version     3.1.3
 // @include     *
 // @license     MIT License
-
 // @require     https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js
 // @require     https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.js
-// @resource    toastr_css https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.css
+// @resource    toastr_css https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.cs
 // @connect     *
 // @grant       GM_log
 // @grant       GM.info
@@ -508,27 +507,18 @@
                     location.reload();
                 }, 200);
             });
-            $j('#maga-better-setting-reset-button-tool').click(function () {
-                // 导航按钮复位
-                GM_deleteValue(Constant.getKeyButtonTop());
-                GM_deleteValue(Constant.getKeyButtonLeft());
-                toastr.success('设置成功，网页刷新！');
-                setTimeout(() => {
-                    location.reload();
-                }, 200);
-            });
+           
         }
         $j('#maga-better-setting-reset').click(function () {
             // 清理缓存
             GM_deleteValue(Constant.getSelectMode());
-            GM_deleteValue(Constant.getBookMarkIds());
-            GM_deleteValue(Constant.getListBookMark());
+
             GM_deleteValue(Constant.getKeyButtonTop());
             GM_deleteValue(Constant.getKeyButtonLeft());
             GM_deleteValue(Constant.getKeyQrcodeSwitch());
             GM_deleteValue(Constant.getKeySwitch());
             GM_deleteValue(Constant.getKeySearch());
-            GM_deleteValue(Constant.getKeyBookMark());
+           
             toastr.success('清理成功，网页刷新！');
             setTimeout(() => {
                 location.reload();
@@ -542,12 +532,8 @@
             }
         });
 
-        $j('#maga-better-setting-book-type-refresh').click(function () {
-            toastr.success('网页刷新！');
-            setTimeout(() => {
-                location.reload();
-            }, 200);
-        });
+      
+      
 
         // 链接跳转
         $j('.book-type-item').click(function () {
@@ -588,6 +574,14 @@
             // 油猴脚本
             GM_openInTab('https://greasyfork.org/');
         });
+        $j('#maga-better-setting-github-group').click(function () {
+            // GitHub
+            GM_openInTab('https://github.com/');
+        });
+        $j('#maga-better-setting-runoob-group').click(function () {
+            // 菜鸟教程
+            GM_openInTab('https://www.runoob.com/');
+        });
         $j('#maga-better-setting-tool-group').click(function () {
             // Tools在线工具
             GM_openInTab('https://tool.lu/');
@@ -602,7 +596,7 @@
         });
          $j('#maga-better-setting-sina-group').click(function () {
             // 新浪邮箱
-            GM_openInTab('https://mail.sina.com.cn//');
+            GM_openInTab('https://mail.sina.com.cn/');
         });
          $j('#maga-better-setting-aliyun-group').click(function () {
             // 阿里邮箱
@@ -644,6 +638,10 @@
             // 乐视TV
             GM_openInTab('http://www.le.com/');
         });
+        $j('#maga-better-setting-acfun-group').click(function () {
+            // AcFun
+            GM_openInTab('https://www.acfun.cn/');
+        });
          $j('#maga-better-setting-Youtube-group').click(function () {
             // Youtube
             GM_openInTab('https://www.youtube.com//');
@@ -671,9 +669,18 @@
         $j('#maga-better-setting-douyin-group').click(function () {
             // 抖音
             GM_openInTab('https://www.douyin.com/?enter=guide');
-        });$j('#maga-better-setting-kuaishou-group').click(function () {
+        });
+        $j('#maga-better-setting-kuaishou-group').click(function () {
             // 快手
             GM_openInTab('https://kuaishou.com/');
+        });
+         $j('#maga-better-setting-twitter-group').click(function () {
+            // Twitter
+            GM_openInTab('https://twitter.com/');
+        });
+        $j('#maga-better-setting-facebook-group').click(function () {
+            // FaceBook
+            GM_openInTab('https://facebook.com/');
         });
     }
 
@@ -683,7 +690,7 @@
         $j('#maga-better-icon-setting').attr('class', 'maga-better-icon');
         $j('#maga-better-icon-more').attr('class', 'maga-better-icon');
         $j('#maga-better-list-setting').css('min-height', '20px');
-        $j('#maga-better-list-more').css('min-height', '136px');
+        $j('#maga-better-list-more').css('min-height', '20px');
 
     }
 
@@ -827,15 +834,16 @@
             }
 
             function parseConfigMore($j) {
-                let linkHtmlStr = `<a id="maga-better-setting-coupon">百度大全</a>`;
-                linkHtmlStr += `<a id="maga-better-setting-video">VIP影视解析</a>`;
-                linkHtmlStr += `<a id="maga-better-setting-zhenbuka-group">真不卡影视</a>`;
-                linkHtmlStr += `<a id="maga-better-setting-greasyfork-group">油猴脚本</a>`;
+                let linkHtmlStr = `<a id="maga-better-setting-coupon">百度大全 </a>`;
+                linkHtmlStr += `<a id="maga-better-setting-video">VIP影视解析 </a>`;
+                linkHtmlStr += `<a id="maga-better-setting-github-group">  GitHub  </a>`;
+                linkHtmlStr += `<a id="maga-better-setting-greasyfork-group">油猴脚本 </a>`;
                 linkHtmlStr += `<a id="maga-better-setting-tool-group">Tool在线工具</a>`;
-                linkHtmlStr += `<a id="maga-better-setting-savieo-group">savieo视频</a>`;
-                linkHtmlStr += `<a id="maga-better-setting-qqemail-group">QQ邮箱</a>`;
-                linkHtmlStr += `<a id="maga-better-setting-sina-group">新浪邮箱</a>`;
-                linkHtmlStr += `<a id="maga-better-setting-aliyun-group">阿里邮箱</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-runoob-group">菜鸟教程</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-savieo-group">savieo视频 </a>`;
+                linkHtmlStr += `<a id="maga-better-setting-qqemail-group">QQ邮箱 </a>`;
+                linkHtmlStr += `<a id="maga-better-setting-sina-group">新浪邮箱 </a>`;
+                linkHtmlStr += `<a id="maga-better-setting-aliyun-group">阿里邮箱 </a>`;
                 linkHtmlStr += `<a id="maga-better-setting-163-group">网易邮箱</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-Hotmail-group">Hotmail</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-Gmail-group">Gmail邮箱</a>`;
@@ -845,7 +853,11 @@
                 linkHtmlStr += `<a id="maga-better-setting-bilibili-group">哔哩哔哩</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-mgtv-group">芒果TV</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-le-group">乐视TV</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-acfun-group">AcFun</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-zhenbuka-group">真不卡影视</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-Youtube-group">Youtube</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-twitter-group">Twitter</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-facebook-group">FaceBook</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-qqmusic-group">QQ音乐</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-163music-group">网易云音乐</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-kuwo-group">酷我音乐</a>`;
@@ -861,7 +873,7 @@
                 let linkHtmlStr = '';
                 if (runType == 'complex') {
                     linkHtmlStr = `<a id="maga-better-setting-qrcode">二维码开关</a>`;
-                    linkHtmlStr += `<a id="maga-better-setting-reset-button-tool">复位工具按钮</a>`;
+                   
                 }
                 linkHtmlStr += `<a id="maga-better-setting-reset">清理缓存</a>`;                
                 $j('#maga-better-list-setting').append(linkHtmlStr);
