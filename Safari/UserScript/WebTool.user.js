@@ -3,7 +3,7 @@
 // @name       网页工具箱（待更新）
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
 // @author      Eric
-// @version     3.1.3
+// @version     3.1.4
 // @include     *
 // @license     MIT License
 // @require     https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js
@@ -682,6 +682,10 @@
             // FaceBook
             GM_openInTab('https://facebook.com/');
         });
+        $j('#maga-better-setting-telegram-group').click(function () {
+            // Telegram
+            GM_openInTab('https://web.telegram.org/');
+        });
     }
 
     function addattribute($j) {
@@ -858,6 +862,7 @@
                 linkHtmlStr += `<a id="maga-better-setting-Youtube-group">Youtube</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-twitter-group">Twitter</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-facebook-group">FaceBook</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-telegram-group">Telegram</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-qqmusic-group">QQ音乐</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-163music-group">网易云音乐</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-kuwo-group">酷我音乐</a>`;
