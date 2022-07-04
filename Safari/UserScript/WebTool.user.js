@@ -3,7 +3,7 @@
 // @name       网页工具箱（待更新）
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
 // @author      Eric
-// @version     3.1.4
+// @version     3.2.0
 // @include     *
 // @license     MIT License
 // @require     https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js
@@ -570,6 +570,10 @@
             // 真不卡影视
             GM_openInTab('http://www.zhenbuka5.com');
         });
+        $j('#maga-better-setting-bukaivip-group').click(function () {
+            // 不开VIP影视
+            GM_openInTab('http://bukaivip2.com/');
+        });
          $j('#maga-better-setting-greasyfork-group').click(function () {
             // 油猴脚本
             GM_openInTab('https://greasyfork.org/');
@@ -859,6 +863,7 @@
                 linkHtmlStr += `<a id="maga-better-setting-le-group">乐视TV</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-acfun-group">AcFun</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-zhenbuka-group">真不卡影视</a>`;
+                linkHtmlStr += `<a id="maga-better-setting-bukaivip-group">不开VIP影视</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-Youtube-group">Youtube</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-twitter-group">Twitter</a>`;
                 linkHtmlStr += `<a id="maga-better-setting-facebook-group">FaceBook</a>`;
