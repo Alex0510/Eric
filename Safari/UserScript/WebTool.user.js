@@ -3,7 +3,7 @@
 // @name       网页工具箱（待更新）
 // @description 常用网址书签栏、搜索引擎优化、网站二维码生成、链接跳转直达。本脚本基于星星龙作者精简修改
 // @author      Eric
-// @version     3.2.0
+// @version     3.2.1
 // @include     *
 // @license     MIT License
 // @require     https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js
@@ -38,7 +38,16 @@
 // ==/UserScript==
 (function () {
     'use strict';
-
+     //console.log('123')
+        //console.log('js')
+    if(navigator.userAgent.includes('Windows')) {
+      const customUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36';
+      Object.defineProperty(navigator, 'userAgent', {
+        value: customUserAgent,
+        writable: false
+      });
+      // history.go()
+    }
 
     var GUtils = {
         inIframe: function () {
