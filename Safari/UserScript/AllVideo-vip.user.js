@@ -57,6 +57,16 @@
 
 (function() {
     'use strict';
+	 //console.log('123')
+        //console.log('js')
+    if(navigator.userAgent.includes('Windows')) {
+      const customUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36';
+      Object.defineProperty(navigator, 'userAgent', {
+        value: customUserAgent,
+        writable: false
+      });
+      // history.go()
+    }
    var Insidehtml = "";
 var Outsidehtml = "";
 var selecthtml = "";
