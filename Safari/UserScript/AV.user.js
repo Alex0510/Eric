@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         优质资源和麻豆视频
-// @version      1.6.1
+// @version      1.6.2
 // @description  优质资源和麻豆解锁VIP直接免费看
 // @author       Eric
 // @match        http://www.nnu77.com/*
