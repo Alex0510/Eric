@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         优质资源和麻豆视频
-// @version      1.6.3
+// @version      1.6.5
 // @description  优质资源和麻豆解锁VIP直接免费看
 // @author       Eric
 // @match        http://www.nnu77.com/*
@@ -9,6 +9,8 @@
 // @match        https://kd773sg3.com/*
 // @match        https://n4iu0n36.com/*
 // @match        https://v0k83j2i.com/*
+// @match        https://madougrh.com/*
+// @match        https://madou.tv
 // @grant        GM_xmlhttpRequest
 // @grant        GM_log
 // @run-at document-end
