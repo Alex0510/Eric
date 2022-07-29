@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         全网VIP视频自动解析无广告播放精简版
-// @version      1.0.1
+// @name         全网VIP视频解析无广告播放，抖音快手无水印下载
+// @version      1.5.3
 // @author       Eric
-// @description  【❤️ 视频自动解析，体会拥有VIP的感觉❤️，适配PC+移动 】功能有：1、支持B站大会员番剧，爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；此脚本修改于智狐作者脚本。
+// @description  全网独创自由选择自动解析接口；抖音、快手无水印下载
 // @require      https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @require      https://lib.baomitu.com/echarts/4.6.0/echarts.min.js
 // @match          *://laisoyiba.com/*
@@ -40,6 +40,11 @@
 // @match           *://m.tv.sohu.com/v.*
 // @match           *://m.pptv.com/show/*
 
+// @match        *://*.douyin.com/video/*
+// @match        *.kuaishou.com/short-video/*
+// @match        *.kuaishou.com/video/*
+// @connect      api.bilibili.com
+// @connect      www.iesdouyin.com
 // @grant        GM_openInTab
 // @grant        GM.openInTab
 // @grant        GM_getValue
@@ -58,11 +63,11 @@
 // @grant        unsafeWindow
 // @run-at       document-body
 // @license             End-User License Agreement
-
 // ==/UserScript==
 
 (function() {
     'use strict';
+   
 
     const config ={
         "playhref":window.location.href,
@@ -71,62 +76,78 @@
         "scriptInfo":GM_info.script,
         "hdapikey":"FF9529914C44",
     }
-    const playList=[
-        {"id":"9","name":"M3U8.TV","category":1,"url":"https://jx.m3u8.tv/jiexi/?url=", "showType":3},
-        {"id":"55","name":"纯净/B站","category":1,"url":"https://z1.m1907.cn/?jx=", "showType":3},
-        {"id":"2","name":"高速接口","category":1,"url":"https://jsap.attakids.com/?url=", "showType":3},
-        {"id":"3","name":"综合/B站","category":1,"url":"https://vip.parwix.com:4433/player/?url=", "showType":3},
+    const playList=[{"id":"71","name":"M3U8.TV","category":1,"url":"https://jx.m3u8.tv/jiexi/?url=", "showType":3},
+        {"id":"70","name":"纯净/B站","category":1,"url":"https://z1.m1907.cn/?jx=", "showType":3},
+        {"id":"2","name":"思古高速","category":1,"url":"https://jsap.attakids.com/?url=", "showType":3},
+        {"id":"3","name":"综合/B站","category":1,"url":"https://jx.bozrc.com:4433/player/?url=", "showType":3},
         {"id":"4","name":"OK解析","category":1,"url":"https://okjx.cc/?url=", "showType":3},
         {"id":"1","name":"618g","category":1,"url":"https://jx.618g.com/?url=", "showType":3},
-        {"id":"5","name":"夜幕","category":1,"url":"https://www.yemu.xyz/?url=", "showType":3},
-        {"id":"6","name":"乐多资源","category":1,"url":"https://api.leduotv.com/wp-api/ifr.php?isDp=1&vid=", "showType":3},
-        {"id":"7","name":"爱豆","category":1,"url":"https://jx.aidouer.net/?url=", "showType":3},
-        {"id":"8","name":"虾米","category":1,"url":"https://jx.xmflv.com/?url=", "showType":3},
-        {"id":"10","name":"人人迷","category":1,"url":"https://jx.blbo.cc:4433/?url=", "showType":3},
-        {"id":"11","name":"全民","category":1,"url":"https://jx.blbo.cc:4433/?url=", "showType":3},
-        {"id":"12","name":"七哥","category":1,"url":"https://jx.mmkv.cn/tv.php?url=", "showType":3},
-        {"id":"13","name":"冰豆","category":1,"url":"https://api.qianqi.net/vip/?url=", "showType":3},
-        {"id":"14","name":"迪奥","category":1,"url":"https://123.1dior.cn/?url=", "showType":3},
-        {"id":"15","name":"CK","category":1,"url":"https://www.ckplayer.vip/jiexi/?url=", "showType":3},
-        {"id":"16","name":"游艺","category":1,"url":"https://api.u1o.net/?url=", "showType":3},
-        {"id":"17","name":"LE","category":1,"url":"https://lecurl.cn/?url=", "showType":3},
-        {"id":"18","name":"ckmov","category":1,"url":"https://www.ckmov.vip/api.php?url=", "showType":3},
-        {"id":"19","name":"playerjy/B站","category":1,"url":"https://jx.playerjy.com/?url=", "showType":3},
-        {"id":"20","name":"ccyjjd","category":1,"url":"https://ckmov.ccyjjd.com/ckmov/?url=", "showType":3},
-        {"id":"21","name":"爱豆","category":1,"url":"https://jx.aidouer.net/?url=", "showType":3},
-        {"id":"22","name":"诺诺","category":1,"url":"https://www.ckmov.com/?url=", "showType":3},
-        {"id":"23","name":"H8","category":1,"url":"https://www.h8jx.com/jiexi.php?url=", "showType":3},
-        {"id":"24","name":"BL","category":1,"url":"https://vip.bljiex.com/?v=", "showType":3},
-        {"id":"25","name":"解析la","category":1,"url":"https://api.jiexi.la/?url=", "showType":3},
-        {"id":"26","name":"MUTV","category":1,"url":"https://jiexi.janan.net/jiexi/?url=", "showType":3},
-        {"id":"27","name":"MAO","category":1,"url":"https://www.mtosz.com/m3u8.php?url=", "showType":3},
+        {"id":"5","name":"夜幕1","category":1,"url":"https://www.yemu.xyz/?url=", "showType":3},
+	    {"id":"6","name":"夜幕2","category":1,"url":"https://www.yemu.xyz/v/c.php?url=", "showType":3},
+	    {"id":"7","name":"夜幕3","category":1,"url":"https://www.yemu.xyz/v/d.php?url=", "showType":3},
+        {"id":"8","name":"夜幕4","category":1,"url":"https://www.yemu.xyz/v/e.php?url=", "showType":3},
+        {"id":"9","name":"乐多资源","category":1,"url":"https://api.leduotv.com/wp-api/ifr.php?isDp=1&vid=", "showType":3},
+        {"id":"10","name":"爱豆","category":1,"url":"https://jx.aidouer.net/?url=", "showType":3},
+        {"id":"11","name":"虾米","category":1,"url":"https://jx.xmflv.com/?url=", "showType":3},
+        {"id":"12","name":"人人迷","category":1,"url":"https://jx.blbo.cc:4433/?url=", "showType":3},
+        {"id":"13","name":"全民","category":1,"url":"https://660e.com/?url=", "showType":3},
+        {"id":"14","name":"七哥","category":1,"url":"https://jx.mmkv.cn/tv.php?url=", "showType":3},
+        {"id":"15","name":"BL解析","category":1,"url":"https://svip.bljiex.cc/?v=", "showType":3},
+        {"id":"16","name":"8090","category":1,"url":"https://www.8090g.cn/jiexi/?url=", "showType":3},
+        {"id":"17","name":"CK","category":1,"url":"https://www.ckplayer.vip/jiexi/?url=", "showType":3},
+        {"id":"18","name":"小七","category":1,"url":"https://2.08bk.com/?url=", "showType":3},
+        {"id":"19","name":"LE","category":1,"url":"https://lecurl.cn/?url=", "showType":3},
+        {"id":"20","name":"ckmov","category":1,"url":"https://www.ckmov.vip/api.php?url=", "showType":3},
+        {"id":"21","name":"playerjy/B站","category":1,"url":"https://jx.playerjy.com/?url=", "showType":3},
+        {"id":"22","name":"1717云","category":1,"url":"https://ckmov.ccyjjd.com/ckmov/?url=", "showType":3},
+        {"id":"23","name":"爱豆","category":1,"url":"https://jx.aidouer.net/?url=", "showType":3},
+        {"id":"24","name":"5gseo","category":1,"url":"https://sb.5gseo.net/?url=", "showType":3},
+        {"id":"25","name":"H8","category":1,"url":"https://www.h8jx.com/jiexi.php?url=", "showType":3},
+        {"id":"26","name":"解析la","category":1,"url":"https://api.jiexi.la/?url=", "showType":3},
+        {"id":"27","name":"云解析jj","category":1,"url":"https://lngyjj.cn/4/?url=", "showType":3},
         {"id":"28","name":"老板","category":1,"url":"https://vip.laobandq.com/jiexi.php?url=", "showType":3},
         {"id":"29","name":"盘古","category":1,"url":"https://www.pangujiexi.cc/jiexi.php?url=", "showType":3},
         {"id":"30","name":"盖世","category":1,"url":"https://www.gai4.com/?url=", "showType":3},
-        {"id":"31","name":"小蒋","category":1,"url":"https://www.kpezp.cn/jlexi.php?url=", "showType":3},
-        {"id":"32","name":"YiTV","category":1,"url":"https://jiexi.us/?url=", "showType":3},
-        {"id":"33","name":"星空","category":1,"url":"http://60jx.com/?url=", "showType":3},
-        {"id":"34","name":"0523","category":1,"url":"https://go.yh0523.cn/y.cy?url=", "showType":3},
-        {"id":"35","name":"17云","category":1,"url":"https://www.1717yun.com/jx/ty.php?url=", "showType":3},
-        {"id":"36","name":"4K","category":1,"url":"https://jx.4kdv.com/?url=", "showType":3},
-        {"id":"37","name":"云析","category":1,"url":"https://jx.yparse.com/index.php?url=", "showType":3},
-        {"id":"38","name":"8090","category":1,"url":"https://www.8090g.cn/?url=", "showType":3},
-        {"id":"39","name":"江湖","category":1,"url":"https://api.jhdyw.vip/?url=", "showType":3},
-        {"id":"40","name":"诺讯","category":1,"url":"https://www.nxflv.com/?url=", "showType":3},
-        {"id":"41","name":"PM","category":1,"url":"https://www.playm3u8.cn/jiexi.php?url=", "showType":3},
-        {"id":"42","name":"奇米","category":1,"url":"https://qimihe.com/?url=", "showType":3},
-        {"id":"43","name":"思云","category":1,"url":"https://jx.ap2p.cn/?url=", "showType":3},
-        {"id":"44","name":"听乐","category":1,"url":"https://jx.dj6u.com/?url=", "showType":3},
-        {"id":"45","name":"aijx","category":1,"url":"https://jiexi.t7g.cn/?url=", "showType":3},
-        {"id":"46","name":"52","category":1,"url":"https://vip.52jiexi.top/?url=", "showType":3},
-        {"id":"47","name":"黑米","category":1,"url":"https://www.myxin.top/jx/api/?url=", "showType":3},
-        {"id":"48","name":"豪华啦","category":1,"url":"https://api.lhh.la/vip/?url=", "showType":3},
-        {"id":"49","name":"凉城","category":1,"url":"https://jx.mw0.cc/?url=", "showType":3},
-        {"id":"50","name":"33t","category":1,"url":"https://www.33tn.cn/?url=", "showType":3},
-        {"id":"51","name":"180","category":1,"url":"https://jx.000180.top/jx/?url=", "showType":3},
-        {"id":"52","name":"无名","category":1,"url":"https://www.administratorw.com/video.php?url=", "showType":3},
-        {"id":"53","name":"黑云","category":1,"url":"https://jiexi.380k.com/?url=", "showType":3},
-        {"id":"54","name":"九八","category":1,"url":"https://jx.youyitv.com/?url=", "showType":3},
+        {"id":"31","name":"YiTV","category":1,"url":"https://jiexi.us/?url=", "showType":3},
+        {"id":"32","name":"0523","category":1,"url":"https://go.yh0523.cn/y.cy?url=", "showType":3},
+        {"id":"33","name":"17云","category":1,"url":"https://www.1717yun.com/jx/ty.php?url=", "showType":3},
+        {"id":"34","name":"4K","category":1,"url":"https://jx.4kdv.com/?url=", "showType":3},
+        {"id":"35","name":"云析","category":1,"url":"https://jx.yparse.com/index.php?url=", "showType":3},
+        {"id":"36","name":"8090","category":1,"url":"https://www.8090g.cn/?url=", "showType":3},
+        {"id":"37","name":"江湖","category":1,"url":"https://api.jhdyw.vip/?url=", "showType":3},
+        {"id":"38","name":"诺讯","category":1,"url":"https://www.nxflv.com/?url=", "showType":3},
+        {"id":"39","name":"PM","category":1,"url":"https://www.playm3u8.cn/jiexi.php?url=", "showType":3},
+        {"id":"40","name":"MaoPlayer","category":1,"url":"https://jx.dj6u.com/?url=", "showType":3},
+        {"id":"41","name":"180","category":1,"url":"https://jx.000180.top/jx/?url=", "showType":3},
+        {"id":"42","name":"无名","category":1,"url":"https://www.administratorw.com/video.php?url=", "showType":3},
+        {"id":"43","name":"cd①号vip","category":1,"url":"https://vip.26db.cn/play/?v=", "showType":3},
+        {"id":"44","name":"cd②号vip","category":1,"url":"https://vip.26db.cn/b/?url=", "showType":3},
+        {"id":"45","name":"cd③号vip","category":1,"url":"https://vip.26db.cn/a/?url=", "showType":3},
+        {"id":"46","name":"cd④号vip","category":1,"url":"https://vip.26db.cn/c/?url=", "showType":3},
+        {"id":"47","name":"cd⑤号vip","category":1,"url":"https://vip.26db.cn/d/?url=", "showType":3},
+        {"id":"48","name":"cd⑥号vip","category":1,"url":"https://vip.26db.cn/f/?url=", "showType":3},
+        {"id":"49","name":"cd⑧号通用","category":1,"url":"https://vip.26db.cn/g/?url=", "showType":3},
+        {"id":"50","name":"CC解析","category":1,"url":"https://thinkibm.now.sh/?url=", "showType":3},
+        {"id":"51","name":"truechat365","category":1,"url":"https://chaxun.truechat365.com/?url=", "showType":3},
+        {"id":"52","name":"lngyjj","category":1,"url":"http://lngyjj.cn/4/?url=", "showType":3},
+	    {"id":"53","name":"铭人云解析","category":1,"url":"https://parse.123mingren.com/?url=", "showType":3},
+	    {"id":"54","name":"铭人备用","category":1,"url":"https://parse.123mingren.com/Bei/?url=", "showType":3},
+	    {"id":"55","name":"七彩","category":1,"url":"https://jx.xymav.com/?url=", "showType":3},
+	    {"id":"56","name":"吾爱解析","category":1,"url":"https://jx.xymav.com/?url=", "showType":3},
+	    {"id":"57","name":"freeget","category":1,"url":"http://www.freeget.org/jx.php?url=", "showType":3},
+	    {"id":"58","name":"奥特曼解析","category":1,"url":"https://api.aoteman.tv/?url=", "showType":3},
+	    {"id":"59","name":"ivito","category":1,"url":"https://jx.ivito.cn/?url=", "showType":3},
+        {"id":"60","name":"vipjx","category":1,"url":"https://vipjx.cc/?url=", "showType":3},
+	    {"id":"61","name":"k8aa","category":1,"url":"https://k8aa.com/jx/index.php?url=", "showType":3},
+
+        {"name":"综合线路","category":2,"url":"https://laisoyiba.com/mov/s/?sv=3&url=", "showType":1},
+        {"name":"纯净/B站","category":2,"url":"https://z1.m1907.cn/?jx=", "showType":1},
+        {"name":"高速接口","category":2,"url":"https://jsap.attakids.com/?url=", "showType":1},
+        {"name":"综合/B站1","category":2,"url":"https://vip.parwix.com:4433/player/?url=", "showType":1},
+        {"name":"OK解析","category":2,"url":"https://okjx.cc/?url=", "showType":1},
+        {"name":"夜幕","category":2,"url":"https://www.yemu.xyz/?url=", "showType":1},
+        {"name":"虾米","category":2,"url":"https://jx.xmflv.com/?url=", "showType":1},
+        {"name":"全民","category":2,"url":"https://jx.quanmingjiexi.com/?url=", "showType":1},
     ];
     var author = config.scriptInfo.author;
 
@@ -135,7 +156,7 @@
             var m = document.createElement('div');
             m.innerHTML = msg;
             m.setAttribute('id','msg');
-            m.style.cssText = "max-width:60%;min-width: 150px;padding:0 14px;min-height: 40px;color: rgb(255, 255, 255);line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);z-index: 99999999;background: rgba(0, 0, 0,.7);font-size: 16px;";
+            m.style.cssText = "max-width:60%;min-width: 150px;padding:0 14px;min-height: 40px;color: rgb(255, 255, 255);line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);z-index: 9999999999;background: rgba(0, 0, 0,.7);font-size: 16px;";
             document.body.appendChild(m);
             setTimeout(() => {
                 var d = 0.5;
@@ -177,21 +198,6 @@
                 GM_xmlhttpRequest(obj);
             } else {
                 GM.xmlhttpRequest(obj);
-            }
-        },
-        GMiosgetValue:function(name){
-            if(config.UA.indexOf('iPhone') > -1||config.host.indexOf('m.iqiyi.com') > -1){
-                var StorageValue = localStorage.getItem(name);
-            }else{
-                StorageValue = commonFunction.GMgetValue(name);
-            }
-            return StorageValue;
-        },
-        GMiossetValue:function(name, Value) {
-            if(config.UA.indexOf('iPhone') > -1||config.host.indexOf('m.iqiyi.com') > -1){
-                localStorage.setItem(name, Value);
-            }else{
-                commonFunction.GMsetValue(name, Value);
             }
         },
         setItem:function(name, Value) {
@@ -266,12 +272,7 @@
                 },200);
             });
         },
-        menusetting:function(){
-            //初始化脚本设置
-            if(commonFunction.GMgetValue("videosetting")==null){
-                commonFunction.GMsetValue("videosetting",1);
-            }           
-        },
+        
         IsPC:function() {
             var userAgentInfo = config.UA;
             var Agents = ["Android", "iPhone","SymbianOS", "Windows Phone", "iPad", "iPod"];
@@ -341,7 +342,7 @@
             var height = data.area[1];
             var margintop = height/2;
             var marginleft = width/2;
-            var style = "z-index: 19891015;width: "+width+"px;height:"+height+"px;position: fixed;top: 50%;left: 50%;margin-left:-"+marginleft+"px;margin-top:-"+margintop+"px;"
+            var style = "z-index: 999999998;width: "+width+"px;height:"+height+"px;position: fixed;top: 50%;left: 50%;margin-left:-"+marginleft+"px;margin-top:-"+margintop+"px;"
             var btnHTML = '<a class="zhihu-layer-btn0">'+data.btn[0]+'</a><a class="zhihu-layer-btn1">'+data.btn[1]+'</a>';
             main.innerHTML = '<div class="zhihu-layer-title" style="cursor: move;">'+data.title+'</div><div class="zhihu-layer-content" >'+data.content+'</div><span class="zhihu-layer-setwin"><a class="zhihu-layer-ico zhihu-layer-close1" href="javascript:;"></a></span><div class="zhihu-layer-btn zhihu-layer-btn-c">'+btnHTML+'</div>';
             main.setAttribute('id',data.id);
@@ -349,7 +350,7 @@
             main.setAttribute('class',"zhihu-layer-page");
             document.body.appendChild(main);
             var shade = document.createElement('div');
-            shade.setAttribute('style',"z-index: 19891014;background-color: rgb(0, 0, 0);opacity: 0.3;");
+            shade.setAttribute('style',"z-index: 999999997;background-color: rgb(0, 0, 0);opacity: 0.3;");
             shade.setAttribute('class',"zhihu-layer-shade");
             shade.setAttribute('id',"zhihu-layer-shade");
             shade.innerHTML =''
@@ -506,6 +507,7 @@
                 }
                 .zhihu-input-block p {
                    font-size: 12px;
+                   line-height: 22px;
                 }
                 .zhihu-form {
                    display: flex;
@@ -520,19 +522,19 @@
             //保存按钮点击事件
             document.querySelector('.zhihu-layer-btn1').addEventListener('click',function() {
                 data.btn1(zhihuform);
-                document.body.removeChild(document.querySelector("#"+data.id));
+                document.body.removeChild(document.querySelector(".zhihu-layer-page"));
                 document.body.removeChild(document.querySelector("#zhihu-layer-shade"));
                 document.getElementsByTagName("head").item(0).removeChild(document.getElementById("open"));
             })
             //取消钮点击事件
             document.querySelector(".zhihu-layer-btn0").addEventListener('click',function() {
-                document.body.removeChild(document.querySelector("#"+data.id));
+                document.body.removeChild(document.querySelector(".zhihu-layer-page"));
                 document.body.removeChild(document.querySelector("#zhihu-layer-shade"));
                 document.getElementsByTagName("head").item(0).removeChild(document.getElementById("open"));
             })
             //关闭钮点击事件
             document.querySelector(".zhihu-layer-close1").addEventListener('click',function() {
-                document.body.removeChild(document.querySelector("#"+data.id));
+                document.body.removeChild(document.querySelector(".zhihu-layer-page"));
                 document.body.removeChild(document.querySelector("#zhihu-layer-shade"));
                 document.getElementsByTagName("head").item(0).removeChild(document.getElementById("open"));
             })
@@ -543,7 +545,7 @@
             var height = data.area[1];
             var margintop = height/2;
             var marginleft = width/2;
-            var style = "z-index: 19891015;width: "+width+"px;height:"+height+"px;position: fixed;top: 50%;left: 50%;margin-left:-"+marginleft+"px;margin-top:-"+margintop+"px;"
+            var style = "z-index: 999999998;width: "+width+"px;height:"+height+"px;position: fixed;top: 50%;left: 50%;margin-left:-"+marginleft+"px;margin-top:-"+margintop+"px;"
             var titleHTML ="";
             var contentHTML = "";
             var btnHTML = '<a class="zhihu-layer-btn0">'+data.btn[0]+'</a><a class="zhihu-layer-btn1">'+data.btn[1]+'</a>'
@@ -573,7 +575,7 @@
 
             }
             var shade = document.createElement('div');
-            shade.setAttribute('style',"z-index: 19891014;background-color: rgb(0, 0, 0);opacity: 0.3;");
+            shade.setAttribute('style',"z-index: 999999997;background-color: rgb(0, 0, 0);opacity: 0.3;");
             shade.setAttribute('class',"zhihu-layer-shade");
             shade.setAttribute('id',"");
             shade.innerHTML =''
@@ -665,9 +667,12 @@
               .zhihu-layer-tabmain {
                    line-height: 24px;
                    clear: both;
+                   padding: 0;
+                   margin: 0;
               }
               .zhihu-layer-tabli{
                    display:none;
+                   height: 100%;
               }
               .zhihu-layer-tabmain .zhihu-this{
                    display:block;
@@ -882,6 +887,7 @@
                    background-color: #fff;
                    border-radius: 2px;
                    box-sizing: border-box;
+                   margin: 0;
                }
                .zhihu-form-selected dl {
                    display: block;
@@ -892,6 +898,7 @@
                    white-space: nowrap;
                    overflow: hidden;
                    text-overflow: ellipsis;
+                   margin: 0;
                }
                .zhihu-form-select dl dd {
                    cursor: pointer;
@@ -965,10 +972,10 @@
                 let optionHtml ='';
                 let zhihuoption = zhihuselect[i].getElementsByTagName('option');
                 if(zhihuselect[i].selectedIndex < 0){
-                 var Index = 0
-                }else{
-                 Index = zhihuselect[i].selectedIndex;
-                }
+                    var Index = 0
+                    }else{
+                        Index = zhihuselect[i].selectedIndex;
+                    }
                 let selecttext = zhihuselect[i].options[Index].text;
                 var selectvalue = zhihuselect[i].options[Index].value;
                 for (let l = 0; l < zhihuoption.length; l++) {
@@ -1049,8 +1056,16 @@
                 if (PlayidList[i].url == config.host) {
                     if(config.playhref.indexOf("www.wasu.cn/wap/Play")!=-1){
                         Playid ="#pop"
+                    }else if(PlayidList[i].url == "v.qq.com"){
+                        var player = document.querySelector(".player_side_bd");
+                        console.log(player)
+                        if(player!=null){
+                            Playid = "#mod_player";
+                        }else{
+                            Playid = "#player-container"
+                        }
                     }else{
-                    Playid = PlayidList[i].node;
+                        Playid = PlayidList[i].node;
                     }
                     return Playid
                     break;
@@ -1063,14 +1078,24 @@
         },
         //----------------------------------------------------------------------
         //接口列表
-        Videolist:function(e){
+        Videolist:function(f){
             var ListHtml={
                 "Insidehtml":"",
                 "selecthtml":"",
                 "mobhtml":"",
-                
+                "Outsidehtml":"",
             };
             //-----------------------------
+            let v = commonFunction.GMgetValue("userplayurl");
+            //  GM_deleteValue("userplayurl");
+            if(v){
+                var e = v.concat(f);
+            }else{
+                e = f;
+            }
+
+            console.log(f)
+            console.log(e)
             for (let i = 0; i < e.length; i++) {
                 if (e[i].category == 1) {
                     ListHtml.Insidehtml += "<span  class='jiexi inside' id='Inside_" + i + "'  title='" + e[i].name + "' data-index='" + i + "' data-url='" + e[i].url + "'>" + e[i].name + "</span>";
@@ -1079,12 +1104,34 @@
                         ListHtml.mobhtml += "<span  class='mob-jiexi' id='mob_" + i + "'  title='" + e[i].name + "' data-index='" + i + "' data-url='" + e[i].url + "'>" + e[i].name + "</span>";
                     }
                 } else {
-                    
+                    ListHtml.Outsidehtml += "<span  class='jiexi outside 'title='" + e[i].name + "' data-index='" + i + "' data-url='" + e[i].url + "'>" + e[i].name + "</span>";
                 }
 
             }
             //-----------------------------
             return ListHtml
+        },
+        //增加接口列表
+        Videoaddlist:function(){
+            var addListHtml="";
+            //-----------------------------
+            let e = commonFunction.GMgetValue("userplayurl");
+            console.log(e);
+            if(e != null&&e != ""&&e != undefined){
+                for (let i = 0; i < e.length; i++) {
+                    if(e[i].category == 1){
+                        addListHtml += '<li><span>'+e[i].name+'</span><span>内部播放</span><span class="urllist">'+e[i].url+'</span><span class="delurl" data-id='+i+'>删除</span></li>';
+                    }else if(e[i].category == 2){
+                        addListHtml += '<li><span>'+e[i].name+'</span><span>跳转播放</span><span class="urllist">'+e[i].url+'</span><span class="delurl" data-id='+i+'>删除</span></li>';
+                    }else{
+                        continue;
+                    }
+                }
+            }else{
+                addListHtml = '<p style="text-align: center;margin: 20px 0;">暂无数据</p>'
+            }
+            //-----------------------------
+            return addListHtml
         },
         //----------------------------------------------------------------------
         //电脑端
@@ -1101,7 +1148,7 @@
 				    top: 55%;
 				    margin-top: -140px;
 				    left: 0;
-				    z-index: 9999;
+				    z-index: 999999996;
 				    background: rgb(134 134 134 / 40%);
                     box-shadow: 1px 1px 8px 1px rgb(98 99 99 / 34%);
 				    border-radius: 0 8px 8px 0;
@@ -1133,7 +1180,7 @@
 				color: #14191e;
 			}
 
-			.elevator .icon {
+			.elevator svg {
 				font-size: 24px;
 				line-height: 56px;
 				color: #199b6d;
@@ -1142,7 +1189,7 @@
 				margin: 14px 0;
 			}
 
-			.elevator .icon:hover {
+			.elevator svg:hover {
 				color: #14191e;
 			}
 
@@ -1154,13 +1201,13 @@
 				line-height: 14px;
 			}
 
-			.elevator .elevator-msg:hover .icon,
-			.elevator .elevator-faq:hover .icon, {
+			.elevator a:hover svg
+			{
 				display: none;
 			}
 
-			.elevator .elevator-msg:hover span,
-			.elevator .elevator-faq:hover span, {
+			.elevator a:hover span
+            {
 				display: inline-block;
 			}
 			.jiexi{
@@ -1199,15 +1246,38 @@
 			  font-size: 12px;
               line-height: 26px;
 			}
+            .addlist{
+              margin: 15px 0 0 0;
+              padding: 0;
+            }
+            .addlist li{
+              font-size: 14px;
+              color: #333;
+              line-height:36px;
+              height: 36px;
+            }
+            .addlist li span{
+              width: 100px;
+              display: inline-block;
+              text-align: center;
+              overflow: hidden;
+              font-size: 14px;
+              color: #333;
+              white-space:nowrap;
+              text-overflow:ellipsis;
+            }
+            .addlist li .urllist{
+              width: 214px;
+            }
+			::-webkit-input-placeholder{color:#999;font-size:12px;line-height:16px}
+			:-moz-placeholder{color:#999;font-size:12px;line-height:16px}
+			::-moz-placeholder{color:#999;font-size:12px;line-height:16px}
+			:-ms-input-placeholder{color:#999;font-size:12px;line-height:16px}
             `;
             commonFunction.GMaddStyle(css);
             ControllerVideo.CheckAutoplay();
-            var ListHtml = ControllerVideo.Videolist(playList);
-            console.log(ListHtml);
-            var btnhtml = '<div class="elevator" id=""><a class="elevator-msg" id="PlayMain"><svg t="1651763850342" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2320" width="200" height="200"><path d="M661.333333 665.6l51.2 12.8 42.666667-72.533333-34.133333-38.4c4.266667-21.333333 4.266667-38.4 4.266666-55.466667s0-34.133333-4.266666-51.2l34.133333-38.4-42.666667-72.533333-51.2 12.8c-25.6-21.333333-55.466667-42.666667-89.6-51.2L554.666667 256h-85.333334l-17.066666 51.2c-34.133333 8.533333-64 25.6-89.6 51.2l-51.2-12.8-42.666667 72.533333 34.133333 38.4c-4.266667 21.333333-4.266667 38.4-4.266666 55.466667s0 34.133333 4.266666 51.2l-34.133333 38.4 42.666667 72.533333 51.2-12.8c25.6 21.333333 55.466667 42.666667 89.6 51.2L469.333333 768h85.333334l17.066666-51.2c34.133333-8.533333 64-25.6 89.6-51.2z m38.4 81.066667c-21.333333 17.066667-51.2 34.133333-76.8 42.666666L597.333333 853.333333h-170.666666l-25.6-64c-29.866667-12.8-55.466667-25.6-76.8-42.666666l-68.266667 12.8-85.333333-149.333334 42.666666-51.2V512c0-17.066667 0-29.866667 4.266667-42.666667l-42.666667-51.2 85.333334-149.333333 68.266666 12.8c21.333333-17.066667 51.2-34.133333 76.8-42.666667L426.666667 170.666667h170.666666l25.6 64c29.866667 12.8 55.466667 25.6 76.8 42.666666l68.266667-12.8 85.333333 149.333334-42.666666 51.2c4.266667 12.8 4.266667 29.866667 4.266666 42.666666s0 29.866667-4.266666 42.666667l42.666666 51.2-85.333333 149.333333-68.266667-4.266666zM512 554.666667c25.6 0 42.666667-17.066667 42.666667-42.666667s-17.066667-42.666667-42.666667-42.666667-42.666667 17.066667-42.666667 42.666667 17.066667 42.666667 42.666667 42.666667z m0 85.333333c-72.533333 0-128-55.466667-128-128s55.466667-128 128-128 128 55.466667 128 128-55.466667 128-128 128z" fill="#ffffff" p-id="2321"></path></svg><span class="">解析设置</span></a><a  id="playing" class="elevator-faq" target="_blank"><svg t="1651762741797" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1235" width="200" height="200"><path d="M512 853.333333c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z m128-256l-213.333333 128V384l213.333333 128z" fill="#ffffff" p-id="1236"></path></svg><span class="">解析播放</span></a></div>';
-            var b = document.createElement('div');
-            b.innerHTML = btnhtml;
-            document.body.appendChild(b);
+            var btnhtml = '<div class="elevator" id=""><a href="javascript:;" class="elevator-msg" id="PlayMain"><svg t="1651763850342" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2320" width="200" height="200"><path d="M661.333333 665.6l51.2 12.8 42.666667-72.533333-34.133333-38.4c4.266667-21.333333 4.266667-38.4 4.266666-55.466667s0-34.133333-4.266666-51.2l34.133333-38.4-42.666667-72.533333-51.2 12.8c-25.6-21.333333-55.466667-42.666667-89.6-51.2L554.666667 256h-85.333334l-17.066666 51.2c-34.133333 8.533333-64 25.6-89.6 51.2l-51.2-12.8-42.666667 72.533333 34.133333 38.4c-4.266667 21.333333-4.266667 38.4-4.266666 55.466667s0 34.133333 4.266666 51.2l-34.133333 38.4 42.666667 72.533333 51.2-12.8c25.6 21.333333 55.466667 42.666667 89.6 51.2L469.333333 768h85.333334l17.066666-51.2c34.133333-8.533333 64-25.6 89.6-51.2z m38.4 81.066667c-21.333333 17.066667-51.2 34.133333-76.8 42.666666L597.333333 853.333333h-170.666666l-25.6-64c-29.866667-12.8-55.466667-25.6-76.8-42.666666l-68.266667 12.8-85.333333-149.333334 42.666666-51.2V512c0-17.066667 0-29.866667 4.266667-42.666667l-42.666667-51.2 85.333334-149.333333 68.266666 12.8c21.333333-17.066667 51.2-34.133333 76.8-42.666667L426.666667 170.666667h170.666666l25.6 64c29.866667 12.8 55.466667 25.6 76.8 42.666666l68.266667-12.8 85.333333 149.333334-42.666666 51.2c4.266667 12.8 4.266667 29.866667 4.266666 42.666666s0 29.866667-4.266666 42.666667l42.666666 51.2-85.333333 149.333333-68.266667-4.266666zM512 554.666667c25.6 0 42.666667-17.066667 42.666667-42.666667s-17.066667-42.666667-42.666667-42.666667-42.666667 17.066667-42.666667 42.666667 17.066667 42.666667 42.666667 42.666667z m0 85.333333c-72.533333 0-128-55.466667-128-128s55.466667-128 128-128 128 55.466667 128 128-55.466667 128-128 128z" fill="#ffffff" p-id="2321"></path></svg><span class="">解析设置</span></a><a href="javascript:;" id="addjiexi" class="elevator-faq" ><svg t="1656638904518" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7918" width="200" height="200"><path d="M469.333333 469.333333V341.333333h85.333334v128h128v85.333334h-128v128h-85.333334v-128H341.333333v-85.333334h128z m42.666667 384c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z" fill="#ffffff" p-id="7919"></path></svg><span class="">添加接口</span></a><a href="javascript:;" id="playing" class="elevator-faq" ><svg t="1651762741797" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1235" width="200" height="200"><path d="M512 853.333333c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z m128-256l-213.333333 128V384l213.333333 128z" fill="#ffffff" p-id="1236"></path></svg><span class="">解析播放</span></a></div>';
+            document.body.insertAdjacentHTML('afterbegin', btnhtml);
             commonFunction.removeItem('selectid');
             document.querySelector('#playing').onclick = function() {
                 ControllerVideo.autoplay();
@@ -1216,20 +1286,25 @@
             //弹窗开始-------------------------------------------------
             document.querySelector('#PlayMain').addEventListener('click',function() {
                 console.log("点击成功");
+                var ListHtml = ControllerVideo.Videolist(playList);
+                //   console.log(ListHtml);
                 var jiexi = commonFunction.getItem('AutoPlay') == 1 ? "checked": "";
                 commonFunction.tab({
-                    area: ['380', '400'],
+                    area: ['445', '400'],
                     id: "",
                     btn: ['取消', '保存设置'],
                     btnAlign: 'c',
                     tab: [{
                         title: '内嵌播放',
-                        content: '<div style="margin:10px 15px 0 10px;display:flex"><div style="width:356px;margin-left: 0px;height: 270px;overflow-y: scroll;" id="jiexilist">' +ListHtml.Insidehtml + '</div>'
+                        content: '<div style="margin:20px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' +ListHtml.Insidehtml + '</div>'
                     },
-                          
+                          {
+                              title: '跳转播放',
+                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' + ListHtml.Outsidehtml + '</div>'
+                          },
                           {
                               title: '解析设置',
-                              content: '<div style="margin:20px 30px 0 30px;display:flex"><div style="width:306px;display:inline-block;padding-right: 15px;height: 270px;overflow-y: scroll;" id="jiexilist"><form class="zhihu-form" ><div class="zhihu-form-item"><label class="zhihu-form-label">自动解析</label><div class="zhihu-input-block"><input type="checkbox" ' + jiexi + ' name="switch"  id="autoplay" ></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">解析接口</label><div class="zhihu-input-block"><select name="selectjiexi" lay-verify="required"  id ="selectjiexi"><option value="">直接选择或搜索选择</option>' + ListHtml.selecthtml + '</select></div></div></form></div>'
+                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;padding-right: 15px;height: 280px;overflow-y: scroll;" id="jiexilist"><form class="zhihu-form" ><div class="zhihu-form-item"><label class="zhihu-form-label">自动解析</label><div class="zhihu-input-block"><input type="checkbox" ' + jiexi + ' name="switch"  id="autoplay" ></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">解析接口</label><div class="zhihu-input-block"><select name="selectjiexi" lay-verify="required"  id ="selectjiexi"><option value="">直接选择或搜索选择</option>' + ListHtml.selecthtml + '</select></div></div></form></div>'
                           }],
                     btn1: function(data) {
                         var s = data.getElementsByTagName('select');
@@ -1300,6 +1375,87 @@
                 }
             });
             //弹窗结束-----------------------------------------
+            document.querySelector('#addjiexi').addEventListener('click',function() {
+                let e = commonFunction.GMgetValue("userplayurl");
+                console.log(e);
+                if(e == null||e == ""||e == undefined){
+                    let arr =[];
+                    commonFunction.GMsetValue("userplayurl",arr);
+                }
+                let addListHtml = ControllerVideo.Videoaddlist();
+                let addjiexihtml ="";
+                addjiexihtml +='<form class="zhihu-form" style="height: 325px;margin: 10px 30px 0 30px;"><div style="width:520px;display:inline-block;height:280px;overflow-y: scroll;">'
+                addjiexihtml +='<div class="zhihu-form-item"><textarea placeholder="B站,1,https://jx.m3u8.tv/jiexi/?url=&#10;B站,2,https://jx.m3u8.tv/jiexi/?url=&#10;分隔符使用英文逗号,解析名字：B站;1为内部播放,2为跳转播放,解析接口：https://jx.m3u8.tv/jiexi/?url=&#10;如需添加多个解析接口，每行设置一个" class="zhihu-input zhihu-unselect" style="min-height:100px;max-height:160px;max-width:512px;min-width:512px;padding: 10px;"></textarea>'
+                addjiexihtml +='<ul class="addlist"><li><span>解析名称</span><span>播放类型</span><span class="urllist">接口地址</span><span>操作</span></li>'+addListHtml+'</ul></div></div>'
+                addjiexihtml +='</form>'
+                commonFunction.open({
+                    area: ['580', '450'],
+                    title: "添加解析接口",
+                    shade: 0,
+                    id:"",
+                    btn: ['取消', '添加接口'],
+                    content:addjiexihtml,
+                    btn1: function(data) {
+                        var s= data.getElementsByTagName('textarea');
+                        for (var i = 0; i < s.length; i++) {
+                            let jiexitext = s[i].value;
+                            if(jiexitext){
+                                let Alljiexitext = jiexitext.split(/[(\r\n)\r\n]+/); // 根据换行或者回车进行识别
+                                Alljiexitext.forEach((item, index) => { // 删除空项
+                                    if (!item) {
+                                        Alljiexitext.splice(index, 1);
+                                    }
+                                })
+                                Alljiexitext = Array.from(new Set(Alljiexitext)); // 去重
+                                if(Alljiexitext){
+                                    Alljiexitext.forEach((item, index) => {
+                                        if (item) {
+                                            let jiexiitem = item.split(/,/);
+                                            let num = index+1
+                                            if(jiexiitem.length == 3){
+                                                if(jiexiitem[1]==1||jiexiitem[1]==2){
+                                                    let j = {name:jiexiitem[0],category:jiexiitem[1],url:jiexiitem[2],showType:"1"};
+                                                    let v= commonFunction.GMgetValue("userplayurl");
+                                                    let l = v.push(j);
+                                                    commonFunction.GMsetValue("userplayurl",v);
+                                                    commonFunction.Toast("添加成功，请重新设置自动解析接口",1500)
+
+                                                    console.log(v)
+                                                }else{
+                                                    commonFunction.Toast("第"+num+"行格式错误，请按照示例格式重新添加")
+                                                }
+                                            }else{
+                                                commonFunction.Toast("第"+num+"行格式错误，请按照示例格式重新添加")
+                                            }
+
+                                        }
+                                    })
+                                }
+                            }
+                        }
+
+                    }
+                });
+                var addurlList = document.getElementsByClassName('delurl');
+                for (var u = 0; u < addurlList.length; u++) {
+                    addurlList[u].addEventListener('click', function() {
+                        let urlid = this.getAttribute("data-id");
+                        let v= commonFunction.GMgetValue("userplayurl");
+                        v.forEach((item, index) => {
+                            if (index == urlid) {
+                                v.splice(index, 1);
+                            }
+                        });
+                        commonFunction.GMsetValue("userplayurl",v);
+                        console.log(commonFunction.GMgetValue("userplayurl"));
+                        commonFunction.Toast("删除成功，请重新设置自动解析接口",1500)
+                        document.body.removeChild(document.querySelector(".zhihu-layer-page"));
+                        document.body.removeChild(document.querySelector(".zhihu-layer-shade"));
+                        document.getElementsByTagName("head").item(0).removeChild(document.getElementById("open"));
+                        document.querySelector('#addjiexi').click();
+                    });
+                }
+            });
         },
         //---------------------------------------------------------------------
         //手机端
@@ -1329,10 +1485,8 @@
                 autohtml = onautohtml
             }
             var mainhtml = '<div class="mob-main"><div class="shaw"></div><div class="listmian"><div class="listmian-tit"><p>解析接口列表</p><div class="title_right" id="autobtn">' + autohtml + '</div></div><div class="list">' + ListHtml.mobhtml + '</div><p class="tips"><span class="ico">*</span><span>开启自动解析后，最后一次选择的接口即自动解析默认接口</span></p><p class="tips"><span class="ico">*</span><span>本脚本仅学习使用，解析接口收集于网络，版权问题联系接口制作者，请勿相信解析接口显示的任何广告</span></p></div></div>'
-            var btnhtml = '<div class="elevator"><a class="elevator-msg" id="Showmain"><svg t="1651763850342" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2320" width="200" height="200"><path d="M661.333333 665.6l51.2 12.8 42.666667-72.533333-34.133333-38.4c4.266667-21.333333 4.266667-38.4 4.266666-55.466667s0-34.133333-4.266666-51.2l34.133333-38.4-42.666667-72.533333-51.2 12.8c-25.6-21.333333-55.466667-42.666667-89.6-51.2L554.666667 256h-85.333334l-17.066666 51.2c-34.133333 8.533333-64 25.6-89.6 51.2l-51.2-12.8-42.666667 72.533333 34.133333 38.4c-4.266667 21.333333-4.266667 38.4-4.266666 55.466667s0 34.133333 4.266666 51.2l-34.133333 38.4 42.666667 72.533333 51.2-12.8c25.6 21.333333 55.466667 42.666667 89.6 51.2L469.333333 768h85.333334l17.066666-51.2c34.133333-8.533333 64-25.6 89.6-51.2z m38.4 81.066667c-21.333333 17.066667-51.2 34.133333-76.8 42.666666L597.333333 853.333333h-170.666666l-25.6-64c-29.866667-12.8-55.466667-25.6-76.8-42.666666l-68.266667 12.8-85.333333-149.333334 42.666666-51.2V512c0-17.066667 0-29.866667 4.266667-42.666667l-42.666667-51.2 85.333334-149.333333 68.266666 12.8c21.333333-17.066667 51.2-34.133333 76.8-42.666667L426.666667 170.666667h170.666666l25.6 64c29.866667 12.8 55.466667 25.6 76.8 42.666666l68.266667-12.8 85.333333 149.333334-42.666666 51.2c4.266667 12.8 4.266667 29.866667 4.266666 42.666666s0 29.866667-4.266666 42.666667l42.666666 51.2-85.333333 149.333333-68.266667-4.266666zM512 554.666667c25.6 0 42.666667-17.066667 42.666667-42.666667s-17.066667-42.666667-42.666667-42.666667-42.666667 17.066667-42.666667 42.666667 17.066667 42.666667 42.666667 42.666667z m0 85.333333c-72.533333 0-128-55.466667-128-128s55.466667-128 128-128 128 55.466667 128 128-55.466667 128-128 128z" fill="#ffffff" p-id="2321"></path></svg><span class="">解析设置</span></a><a  id="playing" class="elevator-faq" target="_blank"><svg t="1651762741797" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1235" width="200" height="200"><path d="M512 853.333333c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z m128-256l-213.333333 128V384l213.333333 128z" fill="#ffffff" p-id="1236"></path></svg><span class="">解析播放</span></a></div>' + mainhtml;
-            var mb = document.createElement('div');
-            mb.innerHTML = btnhtml;
-            document.body.appendChild(mb);
+            var btnhtml = '<div><div class="elevator"><a class="elevator-msg" id="Showmain"><svg t="1651763850342" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2320" width="200" height="200"><path d="M661.333333 665.6l51.2 12.8 42.666667-72.533333-34.133333-38.4c4.266667-21.333333 4.266667-38.4 4.266666-55.466667s0-34.133333-4.266666-51.2l34.133333-38.4-42.666667-72.533333-51.2 12.8c-25.6-21.333333-55.466667-42.666667-89.6-51.2L554.666667 256h-85.333334l-17.066666 51.2c-34.133333 8.533333-64 25.6-89.6 51.2l-51.2-12.8-42.666667 72.533333 34.133333 38.4c-4.266667 21.333333-4.266667 38.4-4.266666 55.466667s0 34.133333 4.266666 51.2l-34.133333 38.4 42.666667 72.533333 51.2-12.8c25.6 21.333333 55.466667 42.666667 89.6 51.2L469.333333 768h85.333334l17.066666-51.2c34.133333-8.533333 64-25.6 89.6-51.2z m38.4 81.066667c-21.333333 17.066667-51.2 34.133333-76.8 42.666666L597.333333 853.333333h-170.666666l-25.6-64c-29.866667-12.8-55.466667-25.6-76.8-42.666666l-68.266667 12.8-85.333333-149.333334 42.666666-51.2V512c0-17.066667 0-29.866667 4.266667-42.666667l-42.666667-51.2 85.333334-149.333333 68.266666 12.8c21.333333-17.066667 51.2-34.133333 76.8-42.666667L426.666667 170.666667h170.666666l25.6 64c29.866667 12.8 55.466667 25.6 76.8 42.666666l68.266667-12.8 85.333333 149.333334-42.666666 51.2c4.266667 12.8 4.266667 29.866667 4.266666 42.666666s0 29.866667-4.266666 42.666667l42.666666 51.2-85.333333 149.333333-68.266667-4.266666zM512 554.666667c25.6 0 42.666667-17.066667 42.666667-42.666667s-17.066667-42.666667-42.666667-42.666667-42.666667 17.066667-42.666667 42.666667 17.066667 42.666667 42.666667 42.666667z m0 85.333333c-72.533333 0-128-55.466667-128-128s55.466667-128 128-128 128 55.466667 128 128-55.466667 128-128 128z" fill="#ffffff" p-id="2321"></path></svg><span class="">解析设置</span></a><a  id="playing" class="elevator-faq" target="_blank"><svg t="1651762741797" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1235" width="200" height="200"><path d="M512 853.333333c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z m128-256l-213.333333 128V384l213.333333 128z" fill="#ffffff" p-id="1236"></path></svg><span class="">解析播放</span></a></div>' + mainhtml+'</div>';
+            document.body.insertAdjacentHTML('afterbegin', btnhtml);
             var css = `body, html {
 		         font-family: PingFang SC, HarmonyOS_Regular, Helvetica Neue, Microsoft YaHei, sans-serif;
 		    }
@@ -1593,9 +1747,11 @@
         }
     }
     //视频解析结束
+   
+   
     //-------------------------------------------------------------------------
     //统一判断运行
-    if(commonFunction.GMiosgetValue("isuser") == 1){
+    if(commonFunction.GMgetValue("isuser") == 1){
         switch (config.host) {
             case 'v.qq.com':
                 if(commonFunction.GMgetValue("videosetting")===1){
@@ -1609,6 +1765,10 @@
                     var mod = commonFunction.Commonsetinterval(".mod_vip_popup");
                     mod.then(function(modnode){
                         modnode.parentNode.removeChild(modnode);
+                    });
+                    var panel = commonFunction.Commonsetinterval(".panel-tip-pay");
+                    panel.then(function(panelnode){
+                        panelnode.parentNode.removeChild(panelnode);
                     });
                 }
                 break;
@@ -1715,7 +1875,7 @@
                 });
                 break;
             case 'm.v.qq.com':
-                if(config.playhref.indexOf('/play') > -1){
+                if(config.playhref.indexOf('/play') > -1||config.playhref.indexOf('/cover') > -1){
                     ControllerVideo.addmobbtn();
                     commonFunction.setItem("playwork","1");
                     var Poster = commonFunction.Commonsetinterval("#vipPosterContent");
@@ -1779,8 +1939,10 @@
             case 'm.pptv.com':
                 ControllerVideo.addmobbtn();
                 console.log('已进入手机PPTV');
-                break;           
-        }       
-    }   
-    // Your code here...
+                break;
+          
+
+        }
+
+    }
 })();
