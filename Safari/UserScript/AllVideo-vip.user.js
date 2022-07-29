@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         全网VIP视频解析|抖音快手视频无水印下载
-// @version      1.2.9
+// @version      1.3.0
 // @author       Eric
 // @description  【视频自动解析，适配PC+移动 】功能有：1、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告；新增抖音支持分辨率下载视频
 // @match           *://laisoyiba.com/*
@@ -81,7 +81,7 @@ const playList = [{"id":"9","name":"M3U8.TV","category":1,"url":"https://jx.m3u8
         {"id":"7","name":"爱豆","category":1,"url":"https://jx.aidouer.net/?url=", "showType":3},
         {"id":"8","name":"虾米","category":1,"url":"https://jx.xmflv.com/?url=", "showType":3},
         {"id":"10","name":"人人迷","category":1,"url":"https://jx.blbo.cc:4433/?url=", "showType":3},
-        {"id":"11","name":"全民","category":1,"url":"https://jx.blbo.cc:4433/?url=", "showType":3},
+        {"id":"11","name":"全民","category":1,"url":"https://660e.com/?url=", "showType":3},
         {"id":"12","name":"七哥","category":1,"url":"https://jx.mmkv.cn/tv.php?url=", "showType":3},
         {"id":"13","name":"冰豆","category":1,"url":"https://api.qianqi.net/vip/?url=", "showType":3},
         {"id":"14","name":"迪奥","category":1,"url":"https://123.1dior.cn/?url=", "showType":3},
@@ -125,6 +125,15 @@ const playList = [{"id":"9","name":"M3U8.TV","category":1,"url":"https://jx.m3u8
         {"id":"52","name":"无名","category":1,"url":"https://www.administratorw.com/video.php?url=", "showType":3},
         {"id":"53","name":"黑云","category":1,"url":"https://jiexi.380k.com/?url=", "showType":3},
         {"id":"54","name":"九八","category":1,"url":"https://jx.youyitv.com/?url=", "showType":3},
+        {"id":"64","name":"①号vip引擎系统【稳定通用】","category":1,"url":"http://vip.26db.cn/play/?v=", "showType":3},
+        {"id":"65","name":"①号vip引擎系统【稳定通用】","category":1,"url":"http://vip.26db.cn/b/?url=", "showType":3},
+        {"id":"66","name":"③号vip引擎系统【稳定通用】","category":1,"url":"http://vip.26db.cn/a/?url=", "showType":3},
+        {"id":"67","name":"④号vip引擎系统【稳定通用】","category":1,"url":"http://vip.26db.cn/c/?url=", "showType":3},
+        {"id":"68","name":"⑤号vip引擎系统【稳定通用】","category":1,"url":"http://vip.26db.cn/d/?url=", "showType":3},
+        {"id":"69","name":"⑥号vip引擎系统【稳定通用】,"category":1,"url":"http://vip.26db.cn/f/?url=", "showType":3},
+        {"id":"70","name":"⑦号通用vip引擎系统【稳定通用】","category":1,"url":"https://17kyun.com/jx.php?url=", "showType":3},
+        {"id":"71","name":"⑧号通用vip引擎系统【稳定通用】","category":1,"url":"http://vip.26db.cn/g/?url=", "showType":3},
+        {"id":"72","name":"CC解析","category":1,"url":"https://thinkibm.now.sh/?url=", "showType":3},
 
         {"id":"56","name":"综合线路","category":2,"url":"https://laisoyiba.com/mov/s/?sv=3&url=", "showType":1},
         {"id":"57","name":"纯净/B站","category":2,"url":"https://z1.m1907.cn/?jx=", "showType":1},
