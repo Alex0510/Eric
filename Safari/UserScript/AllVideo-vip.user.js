@@ -70,8 +70,8 @@ var goodid = "";
 var method, action, qrname, nodeid;
 const playList = [{"id":"9","name":"M3U8.TV","category":1,"url":"https://jx.m3u8.tv/jiexi/?url=", "showType":3},
         {"id":"55","name":"纯净/B站","category":1,"url":"https://z1.m1907.cn/?jx=", "showType":3},
-        {"id":"2","name":"高速接口","category":1,"url":"https://jsap.attakids.com/?url=", "showType":3},
-        {"id":"3","name":"综合/B站","category":1,"url":"https://vip.parwix.com:4433/player/?url=", "showType":3},
+        {"id":"2","name":"思古高速接口","category":1,"url":"https://jsap.attakids.com/?url=", "showType":3},
+        {"id":"3","name":"综合/B站","category":1,"url":"https://jx.bozrc.com:4433/player/?url=", "showType":3},
         {"id":"4","name":"OK解析","category":1,"url":"https://okjx.cc/?url=", "showType":3},
         {"id":"1","name":"618g","category":1,"url":"https://jx.618g.com/?url=", "showType":3},
         {"id":"5","name":"夜幕","category":1,"url":"https://www.yemu.xyz/?url=", "showType":3},
@@ -81,27 +81,27 @@ const playList = [{"id":"9","name":"M3U8.TV","category":1,"url":"https://jx.m3u8
         {"id":"10","name":"人人迷","category":1,"url":"https://jx.blbo.cc:4433/?url=", "showType":3},
         {"id":"11","name":"全民","category":1,"url":"https://660e.com/?url=", "showType":3},
         {"id":"12","name":"七哥","category":1,"url":"https://jx.mmkv.cn/tv.php?url=", "showType":3},
-        {"id":"13","name":"冰豆","category":1,"url":"https://api.qianqi.net/vip/?url=", "showType":3},
-        {"id":"14","name":"迪奥","category":1,"url":"https://123.1dior.cn/?url=", "showType":3},
+        {"id":"13","name":"BL解析","category":1,"url":" https://svip.bljiex.cc/?v=", "showType":3},
+        {"id":"14","name":"8090","category":1,"url":"https://www.8090g.cn/jiexi/?url=", "showType":3},
         {"id":"15","name":"CK","category":1,"url":"https://www.ckplayer.vip/jiexi/?url=", "showType":3},
-        {"id":"16","name":"游艺","category":1,"url":"https://api.u1o.net/?url=", "showType":3},
+        {"id":"16","name":"小七","category":1,"url":"https://2.08bk.com/?url=", "showType":3},
         {"id":"17","name":"LE","category":1,"url":"https://lecurl.cn/?url=", "showType":3},
         {"id":"18","name":"ckmov","category":1,"url":"https://www.ckmov.vip/api.php?url=", "showType":3},
         {"id":"19","name":"playerjy/B站","category":1,"url":"https://jx.playerjy.com/?url=", "showType":3},
-        {"id":"20","name":"ccyjjd","category":1,"url":"https://ckmov.ccyjjd.com/ckmov/?url=", "showType":3},
+        {"id":"20","name":"1717云","category":1,"url":"https://ckmov.ccyjjd.com/ckmov/?url=", "showType":3},
         {"id":"21","name":"爱豆","category":1,"url":"https://jx.aidouer.net/?url=", "showType":3},
-        {"id":"22","name":"诺诺","category":1,"url":"https://www.ckmov.com/?url=", "showType":3},
+        {"id":"22","name":"5gseo","category":1,"url":"https://sb.5gseo.net/?url=", "showType":3},
         {"id":"23","name":"H8","category":1,"url":"https://www.h8jx.com/jiexi.php?url=", "showType":3},
         {"id":"24","name":"BL","category":1,"url":"https://vip.bljiex.com/?v=", "showType":3},
         {"id":"25","name":"解析la","category":1,"url":"https://api.jiexi.la/?url=", "showType":3},
-        {"id":"26","name":"MUTV","category":1,"url":"https://jiexi.janan.net/jiexi/?url=", "showType":3},
-        {"id":"27","name":"MAO","category":1,"url":"https://www.mtosz.com/m3u8.php?url=", "showType":3},
+        
+        {"id":"27","name":"云解析jj","category":1,"url":"https://lngyjj.cn/4/?url=", "showType":3},
         {"id":"28","name":"老板","category":1,"url":"https://vip.laobandq.com/jiexi.php?url=", "showType":3},
         {"id":"29","name":"盘古","category":1,"url":"https://www.pangujiexi.cc/jiexi.php?url=", "showType":3},
         {"id":"30","name":"盖世","category":1,"url":"https://www.gai4.com/?url=", "showType":3},
-        {"id":"31","name":"小蒋","category":1,"url":"https://www.kpezp.cn/jlexi.php?url=", "showType":3},
+        
         {"id":"32","name":"YiTV","category":1,"url":"https://jiexi.us/?url=", "showType":3},
-        {"id":"33","name":"星空","category":1,"url":"http://60jx.com/?url=", "showType":3},
+        
         {"id":"34","name":"0523","category":1,"url":"https://go.yh0523.cn/y.cy?url=", "showType":3},
         {"id":"35","name":"17云","category":1,"url":"https://www.1717yun.com/jx/ty.php?url=", "showType":3},
         {"id":"36","name":"4K","category":1,"url":"https://jx.4kdv.com/?url=", "showType":3},
@@ -110,19 +110,19 @@ const playList = [{"id":"9","name":"M3U8.TV","category":1,"url":"https://jx.m3u8
         {"id":"39","name":"江湖","category":1,"url":"https://api.jhdyw.vip/?url=", "showType":3},
         {"id":"40","name":"诺讯","category":1,"url":"https://www.nxflv.com/?url=", "showType":3},
         {"id":"41","name":"PM","category":1,"url":"https://www.playm3u8.cn/jiexi.php?url=", "showType":3},
-        {"id":"42","name":"奇米","category":1,"url":"https://qimihe.com/?url=", "showType":3},
-        {"id":"43","name":"思云","category":1,"url":"https://jx.ap2p.cn/?url=", "showType":3},
-        {"id":"44","name":"听乐","category":1,"url":"https://jx.dj6u.com/?url=", "showType":3},
-        {"id":"45","name":"aijx","category":1,"url":"https://jiexi.t7g.cn/?url=", "showType":3},
-        {"id":"46","name":"52","category":1,"url":"https://vip.52jiexi.top/?url=", "showType":3},
-        {"id":"47","name":"黑米","category":1,"url":"https://www.myxin.top/jx/api/?url=", "showType":3},
-        {"id":"48","name":"豪华啦","category":1,"url":"https://api.lhh.la/vip/?url=", "showType":3},
-        {"id":"49","name":"凉城","category":1,"url":"https://jx.mw0.cc/?url=", "showType":3},
-        {"id":"50","name":"33t","category":1,"url":"https://www.33tn.cn/?url=", "showType":3},
+        
+      
+        {"id":"44","name":"MaoPlayer","category":1,"url":"https://jx.dj6u.com/?url=", "showType":3},
+        
+        
+        
+       
+       
+       
         {"id":"51","name":"180","category":1,"url":"https://jx.000180.top/jx/?url=", "showType":3},
         {"id":"52","name":"无名","category":1,"url":"https://www.administratorw.com/video.php?url=", "showType":3},
-        {"id":"53","name":"黑云","category":1,"url":"https://jiexi.380k.com/?url=", "showType":3},
-        {"id":"54","name":"九八","category":1,"url":"https://jx.youyitv.com/?url=", "showType":3},
+        
+       
         {"id":"64","name":"①号vip","category":1,"url":"https://vip.26db.cn/play/?v=", "showType":3},
         {"id":"65","name":"②号vip","category":1,"url":"https://vip.26db.cn/b/?url=", "showType":3},
         {"id":"66","name":"③号vip","category":1,"url":"https://vip.26db.cn/a/?url=", "showType":3},
