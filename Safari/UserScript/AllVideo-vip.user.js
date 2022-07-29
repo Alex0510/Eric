@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         全网VIP视频解析|抖音快手视频无水印下载
-// @version      1.3.2
+// @version      1.3.3
 // @author       Eric
 // @description  【视频自动解析，适配PC+移动 】功能有：1、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告；新增抖音支持分辨率下载视频
 // @match           *://laisoyiba.com/*
@@ -68,8 +68,8 @@ var playhref = window.location.href;
 var host = window.location.host;
 var goodid = "";
 var method, action, qrname, nodeid;
-const playList = [{"id":"9","name":"M3U8.TV","category":1,"url":"https://jx.m3u8.tv/jiexi/?url=", "showType":3},
-        {"id":"55","name":"纯净/B站","category":1,"url":"https://z1.m1907.cn/?jx=", "showType":3},
+const playList = [{"id":"71","name":"M3U8.TV","category":1,"url":"https://jx.m3u8.tv/jiexi/?url=", "showType":3},
+        {"id":"70","name":"纯净/B站","category":1,"url":"https://z1.m1907.cn/?jx=", "showType":3},
         {"id":"2","name":"思古高速接口","category":1,"url":"https://jsap.attakids.com/?url=", "showType":3},
         {"id":"3","name":"综合/B站","category":1,"url":"https://jx.bozrc.com:4433/player/?url=", "showType":3},
         {"id":"4","name":"OK解析","category":1,"url":"https://okjx.cc/?url=", "showType":3},
