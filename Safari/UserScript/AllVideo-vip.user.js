@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         全网VIP视频解析|抖音快手视频无水印下载
-// @version      1.3.7
+// @version      1.3.8
 // @author       Eric
 // @description  【视频自动解析，适配PC+移动 】功能有：1、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告；新增抖音支持分辨率下载视频
 // @match           *://laisoyiba.com/*
@@ -19,6 +19,7 @@
 // @match           *://m.v.qq.com/x/cover/*
 // @match           *://m.v.qq.com/x/page/*
 // @match           *://m.v.qq.com/x/m/play*
+// @match           *://m.v.qq.com/play*
 // @match           *://m.iqiyi.com/v_*
 // @match           *://m.iqiyi.com/w_*
 // @match           *://m.iqiyi.com/a_*
