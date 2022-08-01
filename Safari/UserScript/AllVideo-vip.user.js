@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         全网VIP视频全自动解析播放|抖音快手视频无水印下载
-// @version      1.3.9
+// @version      1.4.0
 // @author       Mr.Eric
 // @description  【视频自动解析，适配PC+移动 】功能有：1、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告；新增抖音支持分辨率下载视频
 // @match           *://laisoyiba.com/*
@@ -122,7 +122,7 @@ const playList = [{"id":"71","name":"M3U8.TV","category":1,"url":"https://jx.m3u
         {"id":"49","name":"cd⑧号通用","category":1,"url":"https://vip.26db.cn/g/?url=", "showType":3},
         {"id":"50","name":"CC解析","category":1,"url":"https://thinkibm.now.sh/?url=", "showType":3},
         {"id":"51","name":"truechat365","category":1,"url":"https://chaxun.truechat365.com/?url=", "showType":3},
-        {"id":"52","name":"lngyjj","category":1,"url":"http://lngyjj.cn/4/?url=", "showType":3},
+        {"id":"52","name":"lngyjj","category":1,"url":"https://jx.iztyy.com/svip/?url=", "showType":3},
 	{"id":"53","name":"铭人云解析","category":1,"url":"https://parse.123mingren.com/?url=", "showType":3},
 	{"id":"54","name":"铭人备用","category":1,"url":"https://parse.123mingren.com/Bei/?url=", "showType":3},
 	{"id":"55","name":"七彩","category":1,"url":"https://jx.xymav.com/?url=", "showType":3},
@@ -136,7 +136,8 @@ const playList = [{"id":"71","name":"M3U8.TV","category":1,"url":"https://jx.m3u
         {"id":"73","name":"全面解析","category":1,"url":"https://api.quanminjiexi.com/?v=", "showType":3},
         {"id":"74","name":"弹幕版VIP","category":1,"url":"https://vip.parwix.com:4433/player/?url=", "showType":3},
         {"id":"75","name":"二千线路","category":1,"url":"https://jx.ergan.top/?url=", "showType":3},
-
+        {"id":"76","name":"无广告解析","category":1,"url":"https://jx.iztyy.com/Bei/?url=", "showType":3},
+        
 
 
 
