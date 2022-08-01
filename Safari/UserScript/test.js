@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         全网VIP视频解析无广告播放
+// @name         【智狐】全网VIP视频解析无广告播放，文库下载器，支持B站大会员番剧、视频批量下载，全网独创自由选择自动解析接口|短视频无水印下载|淘宝、天猫、京东优惠券查询|更多功能持续更新中
 // @namespace    http://www.zhihupe.com/
-// @version      1.4.3
-// @author       Eric
-// @description  视频自动解析：1、支持B站大会员番剧，全网独创自由选择自动解析接口；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；
+// @version      1.36
+// @author       zhihu
+// @description  【❤️ 视频自动解析，体会拥有VIP的感觉❤️，适配PC+移动 】功能有：1、支持B站大会员番剧，全网独创自由选择自动解析接口；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；3.B站多P下载；抖音、西瓜视频、快手无水印下载；4.淘宝、天猫、京东优惠券查询5.新增喜马拉雅有声书批量下载,6.教育盘论坛免费下载,7.原创力文档、道客巴巴、智库文库免费下载
 // @icon         https://www.zhihupe.com/favicon.ico
 // @require      https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @require      https://lib.baomitu.com/echarts/4.6.0/echarts.min.js
@@ -319,24 +319,7 @@
             if(commonFunction.GMgetValue("videosetting")==null){
                 commonFunction.GMsetValue("videosetting",1);
             }
-            if(commonFunction.GMgetValue("couponsetting")==null){
-                commonFunction.GMsetValue("couponsetting",1);
-            }
-            if(commonFunction.GMgetValue("historysetting")==null){
-                commonFunction.GMsetValue("historysetting",1);
-            }
-            if(commonFunction.GMgetValue("Shortvideosetting")==null){
-                commonFunction.GMsetValue("Shortvideosetting",1);
-            }
-            if(commonFunction.GMgetValue("Bilibilisetting")==null){
-                commonFunction.GMsetValue("Bilibilisetting",1);
-            }
-            if(commonFunction.GMgetValue("Ximalayasetting")==null){
-                commonFunction.GMsetValue("Ximalayasetting",1);
-            }
-            if(commonFunction.GMgetValue("Jiaoyupansetting")==null){
-                commonFunction.GMsetValue("Jiaoyupansetting",1);
-            }
+            
         },
         IsPC:function() {
             var userAgentInfo = config.UA;
@@ -1356,21 +1339,21 @@
                 //   console.log(ListHtml);
                 var jiexi = commonFunction.getItem('AutoPlay') == 1 ? "checked": "";
                 commonFunction.tab({
-                    area: ['450', '400'],
+                    area: ['560', '400'],
                     id: "",
                     btn: ['取消', '保存设置'],
                     btnAlign: 'c',
                     tab: [{
                         title: '内嵌播放',
-                        content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' +ListHtml.Insidehtml + '</div></div>'
+                        content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' +ListHtml.Insidehtml + '</div><div class="zhihu-scan" ><img src="http://cdn.wezhicms.com/uploads/allimg/20211215/1-21121500044Q94.jpg"><h1>智狐百宝箱</h1><p>微信扫描上方二维码</p><p>关注我</p><p>从此不迷路</p></div></div>'
                     },
                           {
                               title: '跳转播放',
-                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' + ListHtml.Outsidehtml + '</div></div>'
+                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' + ListHtml.Outsidehtml + '</div><div class="zhihu-scan" ><img src="http://cdn.wezhicms.com/uploads/allimg/20211215/1-21121500044Q94.jpg"><h1>智狐百宝箱</h1><p>微信扫描上方二维码</p><p>关注我</p><p>从此不迷路</p></div></div>'
                           },
                           {
                               title: '解析设置',
-                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;padding-right: 15px;height: 280px;overflow-y: scroll;" id="jiexilist"><form class="zhihu-form" ><div class="zhihu-form-item"><label class="zhihu-form-label">解析接口</label><div class="zhihu-input-block"><select name="selectjiexi" lay-verify="required"  id ="selectjiexi"><option value="">直接选择或搜索选择</option>' + ListHtml.selecthtml + '</select></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">延迟时间</label><div class="zhihu-input-block"><input type="number" placeholder="'+jiexitime+'" name="jiexitime" class="zhihu-input" style="display: inline-block;width: 100px;padding: 2px;margin-right: 10px;text-align: center;"><span style="font-size: 14px;color: #333;">秒</span></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">自动解析</label><div class="zhihu-input-block"><input class="checkbox" type="checkbox" ' + jiexi + ' name="switch"  id="autoplay" ></div></div></form></div></div>'
+                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;padding-right: 15px;height: 280px;overflow-y: scroll;" id="jiexilist"><form class="zhihu-form" ><div class="zhihu-form-item"><label class="zhihu-form-label">解析接口</label><div class="zhihu-input-block"><select name="selectjiexi" lay-verify="required"  id ="selectjiexi"><option value="">直接选择或搜索选择</option>' + ListHtml.selecthtml + '</select></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">延迟时间</label><div class="zhihu-input-block"><input type="number" placeholder="'+jiexitime+'" name="jiexitime" class="zhihu-input" style="display: inline-block;width: 100px;padding: 2px;margin-right: 10px;text-align: center;"><span style="font-size: 14px;color: #333;">秒</span></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">自动解析</label><div class="zhihu-input-block"><input class="checkbox" type="checkbox" ' + jiexi + ' name="switch"  id="autoplay" ></div></div></form></div><div class="zhihu-scan" style="width:144px;"><img src="http://cdn.wezhicms.com/uploads/allimg/20211215/1-21121500044Q94.jpg"><h1>智狐百宝箱</h1><p>微信扫描上方二维码</p><p>关注我</p><p>从此不迷路</p></div></div>'
                           }],
                     btn1: function(data) {
                         var s = data.getElementsByTagName('select');
@@ -1817,8 +1800,53 @@
         }
     }
     //视频解析结束
-   
-   
+    
+    //-------------------------------------
+    //脚本设置开始   
+    if(commonFunction.IsPC()===true){
+        commonFunction.menusetting();
+        // GM_deleteValue("videosetting");
+        var Menu=GM_registerMenuCommand ("脚本设置", function(){
+            var menulist = [
+                {name:"VIP视频解析功能",value:"videosetting",set:commonFunction.GMgetValue("videosetting"),},
+                
+            ]
+            var mainHTML = ""
+            for(i in menulist){
+                let text = menulist[i].set===1?"关闭":"开启";
+                let style =menulist[i].set===1?"border: 1px solid #cacaca;":"border: 1px solid #54be99;color: #54be99;";
+                mainHTML += '<div style="display: flex;justify-content: space-between;font-size: 14px;height: 38px;line-height: 38px;"><div>'+menulist[i].name+'</div><button style="font-size: 14px;padding: 0px 10px;line-height: 18px;height: 28px;'+style+'border-radius: 5px;margin: 5px 0;background: #fff0;"  class="s" data-name="'+menulist[i].name+'" data-value="'+menulist[i].value+'">'+text+'</button></div>'
+            }
+
+            let m = document.createElement('div');
+            m.innerHTML = '<h2 style="font-size: 18px;font-weight: bold;margin: 0 0 10px 0;line-height: 40px;">脚本功能设置</h2>'+mainHTML+'<button style="font-size: 14px;padding: 0 10px;line-height: 28px;height: 38px;border: 0;border-radius: 5px;margin: 10px 0;background: #54be99;color: #fff;width: 80px;" id="CloseMenu">关闭</button>';
+            console.log(m)
+            m.setAttribute('id','Menu');
+            m.style.cssText = "box-shadow: 0px 0px 8px 1px rgb(98 99 99 / 34%);max-width:60%;width: 280px;padding:10px 20px;min-height: 40px;line-height: 40px;text-align: center;border-radius: 10px;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);z-index: 99999999;background: #fff;font-size: 16px;font-family: PingFang SC, HarmonyOS_Regular, Helvetica Neue, Microsoft YaHei, sans-serif;";
+            document.body.appendChild(m);
+            let s = document.getElementsByClassName("s");
+            for (var i = 0; i < s.length; i++) {
+                s[i].addEventListener('click',function() {
+                    var name = this.getAttribute("data-value");
+                    if(commonFunction.GMgetValue(name)=== 1){
+                        commonFunction.GMsetValue(name,0);
+                        this.innerText = "开启";
+                        commonFunction.Toast(this.getAttribute("data-name")+"已关闭",1500);
+                    }else{
+                        commonFunction.GMsetValue(name,1);
+                        this.innerText = "关闭";
+                        commonFunction.Toast(this.getAttribute("data-name")+"已开启",1500);
+                    }
+                });
+            }
+            document.querySelector("#CloseMenu").addEventListener('click',function() {
+                document.body.removeChild(document.querySelector("#Menu"));
+                window.location.reload();
+            })
+
+        }, "h");
+    }
+    //脚本设置结束
     //-------------------------------------------------------------------------
     //统一判断运行
     if(commonFunction.GMgetValue("isuser") == 1){
@@ -2014,7 +2042,38 @@
 
         }
 
-       
+        //网站判断执行结束
+    }else{
+        let userhtml = '<div id="user" style="position: fixed;top: 50%;left: 50%;width: 480px;max-width: 80%;height: 468px;border-radius: 10px;background-image: url(https://static.hitv.com/pc/img/601d3ee.png),url(https://static.hitv.com/pc/img/21b00eb.png);background-position: 0 0,100% 280px;background-repeat: no-repeat;background-color: #fff;-webkit-box-shadow: 0 0 80px rgba(0,0,0,.25);box-shadow: 0 0 80px rgba(0,0,0,.25);opacity: 1;-webkit-transform: translate(-50%,-50%);-ms-transform: translate(-50%,-50%);transform: translate(-50%,-50%);z-index: 99999;">';
+        if(commonFunction.IsWap() == "wap"){
+            var btncss="margin: 0 20px;";
+            var tybtncss="width: 130px;"
+            }else{
+                btncss="margin: 0 90px;";
+                tybtncss="width: 180px;"
+            }
+
+        userhtml += '<div style="margin-top: 45px;color: #222;font-weight: 700;font-size: 28px;text-align: center;">脚本使用协议</div>'
+        userhtml += '<div style="width: 100%;height: 220px;margin: 35px auto 40px;overflow-x: hidden;overflow-y: scroll;">'
+        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对本脚本的信任，为了更好的使用本脚本，在此，我们郑重提醒您：</p>'
+        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">1.有能力的情况，请大家支持正版</p>'
+        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">2.本脚本仅用学习交流，请勿用于非法、商业用途，使用本脚本下载的内容请勿进行复制、传播等侵权行为</p>'
+        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">3.VIP视频解析中所用到的解析接口全部收集自互联网（源码可见），版权问题请联系相关解析接口所有者，脚本不承担相关责任</p>'
+        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">4.视频下载内容均来自平台本身API接口，不存在破解情况，如果侵权请邮件（188872170@qq.com）联系删除。</p>'
+        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">5.点击我同意后，即已代表您已经充分了解相关问题，否则后果自负，特此声明！</p></div>'
+        userhtml +='<div style="display: flex;'+btncss+'justify-content: space-between;"><button style="width: 100px;height: 45px;border: none;border-radius: 25px;outline: none;color: #fff;background: #ddd;font-weight: 700;font-size: 15px;line-height: 45px;" id="bty">不同意</button> <button style="'+tybtncss+'height: 45px;border: none;border-radius: 25px;outline: none;color: #fff;background: #ffa000;background: -webkit-gradient(linear,left top,right top,from(#ff5f00),to(#ffa000));background: -webkit-linear-gradient(left,#ff5f00,#ffa000);background: -o-linear-gradient(left,#ff5f00 0,#ffa000 100%);background: linear-gradient(90deg,#ff5f00,#ffa000);font-weight: 700;font-size: 15px;line-height: 45px;" id="ty">我同意</button></div></div>'
+        console.log(userhtml)
+        document.body.insertAdjacentHTML('afterbegin', userhtml);
+
+
+        document.querySelector("#ty").addEventListener('click',function() {
+            commonFunction.GMsetValue("isuser","1");
+            window.location.reload();
+        })
+        document.querySelector("#bty").addEventListener('click',function() {
+            commonFunction.GMsetValue("isuser","0");
+            document.body.removeChild(document.querySelector("#user"));
+        });
     }
 
 
