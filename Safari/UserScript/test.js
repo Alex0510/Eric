@@ -2043,37 +2043,6 @@
         }
 
         //网站判断执行结束
-    }else{
-        let userhtml = '<div id="user" style="position: fixed;top: 50%;left: 50%;width: 480px;max-width: 80%;height: 468px;border-radius: 10px;background-image: url(https://static.hitv.com/pc/img/601d3ee.png),url(https://static.hitv.com/pc/img/21b00eb.png);background-position: 0 0,100% 280px;background-repeat: no-repeat;background-color: #fff;-webkit-box-shadow: 0 0 80px rgba(0,0,0,.25);box-shadow: 0 0 80px rgba(0,0,0,.25);opacity: 1;-webkit-transform: translate(-50%,-50%);-ms-transform: translate(-50%,-50%);transform: translate(-50%,-50%);z-index: 99999;">';
-        if(commonFunction.IsWap() == "wap"){
-            var btncss="margin: 0 20px;";
-            var tybtncss="width: 130px;"
-            }else{
-                btncss="margin: 0 90px;";
-                tybtncss="width: 180px;"
-            }
-
-        userhtml += '<div style="margin-top: 45px;color: #222;font-weight: 700;font-size: 28px;text-align: center;">脚本使用协议</div>'
-        userhtml += '<div style="width: 100%;height: 220px;margin: 35px auto 40px;overflow-x: hidden;overflow-y: scroll;">'
-        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对本脚本的信任，为了更好的使用本脚本，在此，我们郑重提醒您：</p>'
-        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">1.有能力的情况，请大家支持正版</p>'
-        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">2.本脚本仅用学习交流，请勿用于非法、商业用途，使用本脚本下载的内容请勿进行复制、传播等侵权行为</p>'
-        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">3.VIP视频解析中所用到的解析接口全部收集自互联网（源码可见），版权问题请联系相关解析接口所有者，脚本不承担相关责任</p>'
-        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">4.视频下载内容均来自平台本身API接口，不存在破解情况，如果侵权请邮件（188872170@qq.com）联系删除。</p>'
-        userhtml +='<p style="margin: 0 50px 5px;color: #777;font-weight: 400;font-size: 13px;line-height: 22px;word-break: break-all;text-align: justify;">5.点击我同意后，即已代表您已经充分了解相关问题，否则后果自负，特此声明！</p></div>'
-        userhtml +='<div style="display: flex;'+btncss+'justify-content: space-between;"><button style="width: 100px;height: 45px;border: none;border-radius: 25px;outline: none;color: #fff;background: #ddd;font-weight: 700;font-size: 15px;line-height: 45px;" id="bty">不同意</button> <button style="'+tybtncss+'height: 45px;border: none;border-radius: 25px;outline: none;color: #fff;background: #ffa000;background: -webkit-gradient(linear,left top,right top,from(#ff5f00),to(#ffa000));background: -webkit-linear-gradient(left,#ff5f00,#ffa000);background: -o-linear-gradient(left,#ff5f00 0,#ffa000 100%);background: linear-gradient(90deg,#ff5f00,#ffa000);font-weight: 700;font-size: 15px;line-height: 45px;" id="ty">我同意</button></div></div>'
-        console.log(userhtml)
-        document.body.insertAdjacentHTML('afterbegin', userhtml);
-
-
-        document.querySelector("#ty").addEventListener('click',function() {
-            commonFunction.GMsetValue("isuser","1");
-            window.location.reload();
-        })
-        document.querySelector("#bty").addEventListener('click',function() {
-            commonFunction.GMsetValue("isuser","0");
-            document.body.removeChild(document.querySelector("#user"));
-        });
     }
 
 
