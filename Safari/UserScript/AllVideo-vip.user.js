@@ -132,6 +132,11 @@ const playList = [{"id":"71","name":"M3U8.TV","category":1,"url":"https://jx.m3u
 	{"id":"59","name":"ivito","category":1,"url":"https://jx.ivito.cn/?url=", "showType":3},
         {"id":"60","name":"vipjx","category":1,"url":"https://vipjx.cc/?url=", "showType":3},
 	{"id":"61","name":"k8aa","category":1,"url":"https://k8aa.com/jx/index.php?url=", "showType":3},
+        {"id":"72","name":"70808","category":1,"url":"https://jx.70808.net/?url=", "showType":3},
+        {"id":"73","name":"全面解析","category":1,"url":"https://api.quanminjiexi.com/?v=", "showType":3},
+        {"id":"74","name":"弹幕版VIP","category":1,"url":"https://vip.parwix.com:4433/player/?url=", "showType":3},
+        {"id":"75","name":"二千线路","category":1,"url":"https://jx.ergan.top/?url=", "showType":3},
+
 
 
 
