@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         全网VIP视频全自动解析播放无广告
-// @version      1.4.5
+// @version      1.4.6
 // @author       Mr.Eric
-// @description  全网VIP视频自动解析播放(60+解析端口)：1、支持B站大会员番剧，全网独创自由选择自动解析接口；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；3、此脚本修改于智狐作者脚本
+// @description  视频自动解析：1、支持B站大会员番剧，全网独创自由选择自动解析接口；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；
+// @icon         https://www.zhihupe.com/favicon.ico
 // @require      https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @require      https://lib.baomitu.com/echarts/4.6.0/echarts.min.js
 // @match          *://laisoyiba.com/*
@@ -40,7 +41,8 @@
 // @match           *://m.tv.sohu.com/v.*
 // @match           *://m.pptv.com/show/*
 
-
+// @connect      tool.zhihupe.com
+// @connect      47.99.158.118
 // @connect      api.bilibili.com
 // @grant        GM_openInTab
 // @grant        GM.openInTab
