@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         全网VIP视频全自动解析播放无广告
-// @version      1.4.9
+// @version      1.5.0
 // @author       Mr.Eric
 // @description  视频自动解析：1、支持B站大会员番剧，全网独创自由选择自动解析接口；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；3、此脚本修改于智狐作者代码
-// @icon         https://www.zhihupe.com/favicon.ico
+// @icon         https://raw.githubusercontent.com/zc-nju-med/hellcell/master/QuantumultX/ICON/Panda.PNG
 // @require      https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @require      https://lib.baomitu.com/echarts/4.6.0/echarts.min.js
 // @match          *://laisoyiba.com/*
