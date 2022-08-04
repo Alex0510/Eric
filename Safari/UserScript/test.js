@@ -2,7 +2,8 @@
 // @name         全网VIP视频全自动解析播放无广告
 // @version      1.4.9
 // @author       Mr.Eric
-// @description  视频自动解析：1、支持B站大会员番剧，全网独创自由选择自动解析接口；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；3、此脚本修改于智狐作者源码
+// @description  视频自动解析：1、支持B站大会员番剧，全网独创自由选择自动解析接口；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；3、此脚本修改于智狐作者代码
+// @icon         https://www.zhihupe.com/favicon.ico
 // @require      https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @require      https://lib.baomitu.com/echarts/4.6.0/echarts.min.js
 // @match          *://laisoyiba.com/*
@@ -672,6 +673,7 @@
                    position: relative;
                    overflow: hidden;
                    height:290px;
+
               }
               .zhihu-layer-tabmain {
                    line-height: 24px;
@@ -1299,21 +1301,21 @@
                 //   console.log(ListHtml);
                 var jiexi = commonFunction.getItem('AutoPlay') == 1 ? "checked": "";
                 commonFunction.tab({
-                    area: ['450', '400'],
+                    area: ['442', '400'],
                     id: "",
                     btn: ['取消', '保存设置'],
                     btnAlign: 'c',
                     tab: [{
                         title: '内嵌播放',
-                        content: '<div style="margin:10px 10px 10px 30px;display:flex"><div style="width:356px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' +ListHtml.Insidehtml + '</div></div>'
+                        content: '<div style="margin:10px 10px 10px 40px;display:flex"><div style="width:400px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' +ListHtml.Insidehtml + '</div>'
                     },
                           {
                               title: '跳转播放',
-                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' + ListHtml.Outsidehtml + '</div></div>'
+                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:390px;display:inline-block;margin-left: -8px;height: 280px;overflow-y: scroll;" id="jiexilist">' + ListHtml.Outsidehtml + '</div>'
                           },
                           {
                               title: '解析设置',
-                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:356px;display:inline-block;padding-right: 15px;height: 280px;overflow-y: scroll;" id="jiexilist"><form class="zhihu-form" ><div class="zhihu-form-item"><label class="zhihu-form-label">解析接口</label><div class="zhihu-input-block"><select name="selectjiexi" lay-verify="required"  id ="selectjiexi"><option value="">直接选择或搜索选择</option>' + ListHtml.selecthtml + '</select></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">延迟时间</label><div class="zhihu-input-block"><input type="number" placeholder="'+jiexitime+'" name="jiexitime" class="zhihu-input" style="display: inline-block;width: 100px;padding: 2px;margin-right: 10px;text-align: center;"><span style="font-size: 14px;color: #333;">秒</span></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">自动解析</label><div class="zhihu-input-block"><input class="checkbox" type="checkbox" ' + jiexi + ' name="switch"  id="autoplay" ></div></div></form></div></div>'
+                              content: '<div style="margin:10px 30px 0 30px;display:flex"><div style="width:390px;display:inline-block;padding-right: 15px;height: 280px;overflow-y: scroll;" id="jiexilist"><form class="zhihu-form" ><div class="zhihu-form-item"><label class="zhihu-form-label">解析接口</label><div class="zhihu-input-block"><select name="selectjiexi" lay-verify="required"  id ="selectjiexi"><option value="">直接选择或搜索选择</option>' + ListHtml.selecthtml + '</select></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">延迟时间</label><div class="zhihu-input-block"><input type="number" placeholder="'+jiexitime+'" name="jiexitime" class="zhihu-input" style="display: inline-block;width: 100px;padding: 2px;margin-right: 10px;text-align: center;"><span style="font-size: 14px;color: #333;">秒</span></div></div><div class="zhihu-form-item"><label class="zhihu-form-label">自动解析</label><div class="zhihu-input-block"><input class="checkbox" type="checkbox" ' + jiexi + ' name="switch"  id="autoplay" ></div></div></form></div></div>'
                           }],
                     btn1: function(data) {
                         var s = data.getElementsByTagName('select');
@@ -1498,8 +1500,8 @@
                 autohtml = onautohtml
             }
             var mainhtml = '<div class="mob-main"><div class="shaw"></div><div class="listmian"><div class="listmian-tit"><p>解析接口列表</p><div class="title_right" id="autobtn">' + autohtml + '</div></div><div class="list">' + ListHtml.mobhtml + '</div><p class="tips"><span class="ico">*</span><span>开启自动解析后，最后一次选择的接口即自动解析默认接口</span></p><p class="tips"><span class="ico">*</span><span>本脚本仅学习使用，解析接口收集于网络，版权问题联系接口制作者，请勿相信解析接口显示的任何广告</span></p></div></div>'
-            var btnhtml = '<div><div class="elevator"><a class="elevator-msg" id="Showmain"><svg t="1651763850342" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2320" width="200" height="200"><path d="M661.333333 665.6l51.2 12.8 42.666667-72.533333-34.133333-38.4c4.266667-21.333333 4.266667-38.4 4.266666-55.466667s0-34.133333-4.266666-51.2l34.133333-38.4-42.666667-72.533333-51.2 12.8c-25.6-21.333333-55.466667-42.666667-89.6-51.2L554.666667 256h-85.333334l-17.066666 51.2c-34.133333 8.533333-64 25.6-89.6 51.2l-51.2-12.8-42.666667 72.533333 34.133333 38.4c-4.266667 21.333333-4.266667 38.4-4.266666 55.466667s0 34.133333 4.266666 51.2l-34.133333 38.4 42.666667 72.533333 51.2-12.8c25.6 21.333333 55.466667 42.666667 89.6 51.2L469.333333 768h85.333334l17.066666-51.2c34.133333-8.533333 64-25.6 89.6-51.2z m38.4 81.066667c-21.333333 17.066667-51.2 34.133333-76.8 42.666666L597.333333 853.333333h-170.666666l-25.6-64c-29.866667-12.8-55.466667-25.6-76.8-42.666666l-68.266667 12.8-85.333333-149.333334 42.666666-51.2V512c0-17.066667 0-29.866667 4.266667-42.666667l-42.666667-51.2 85.333334-149.333333 68.266666 12.8c21.333333-17.066667 51.2-34.133333 76.8-42.666667L426.666667 170.666667h170.666666l25.6 64c29.866667 12.8 55.466667 25.6 76.8 42.666666l68.266667-12.8 85.333333 149.333334-42.666666 51.2c4.266667 12.8 4.266667 29.866667 4.266666 42.666666s0 29.866667-4.266666 42.666667l42.666666 51.2-85.333333 149.333333-68.266667-4.266666zM512 554.666667c25.6 0 42.666667-17.066667 42.666667-42.666667s-17.066667-42.666667-42.666667-42.666667-42.666667 17.066667-42.666667 42.666667 17.066667 42.666667 42.666667 42.666667z m0 85.333333c-72.533333 0-128-55.466667-128-128s55.466667-128 128-128 128 55.466667 128 128-55.466667 128-128 128z" fill="#ffffff" p-id="2321"></path></svg><span class="">解析设置</span></a><a href="javascript:;" id="addjiexi" class="elevator-faq" ><svg t="1656638904518" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7918" width="200" height="200"><path d="M469.333333 469.333333V341.333333h85.333334v128h128v85.333334h-128v128h-85.333334v-128H341.333333v-85.333334h128z m42.666667 384c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z" fill="#ffffff" p-id="7919"></path></svg><span class="">添加接口</span></a><a  id="playing" class="elevator-faq" target="_blank"><svg t="1651762741797" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1235" width="200" height="200"><path d="M512 853.333333c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z m128-256l-213.333333 128V384l213.333333 128z" fill="#ffffff" p-id="1236"></path></svg><span class="">解析播放</span></a></div>' + mainhtml+'</div>';
-	    document.body.insertAdjacentHTML('afterbegin', btnhtml);
+           var btnhtml = '<div><div class="elevator"><a class="elevator-msg" id="Showmain"><svg t="1651763850342" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2320" width="200" height="200"><path d="M661.333333 665.6l51.2 12.8 42.666667-72.533333-34.133333-38.4c4.266667-21.333333 4.266667-38.4 4.266666-55.466667s0-34.133333-4.266666-51.2l34.133333-38.4-42.666667-72.533333-51.2 12.8c-25.6-21.333333-55.466667-42.666667-89.6-51.2L554.666667 256h-85.333334l-17.066666 51.2c-34.133333 8.533333-64 25.6-89.6 51.2l-51.2-12.8-42.666667 72.533333 34.133333 38.4c-4.266667 21.333333-4.266667 38.4-4.266666 55.466667s0 34.133333 4.266666 51.2l-34.133333 38.4 42.666667 72.533333 51.2-12.8c25.6 21.333333 55.466667 42.666667 89.6 51.2L469.333333 768h85.333334l17.066666-51.2c34.133333-8.533333 64-25.6 89.6-51.2z m38.4 81.066667c-21.333333 17.066667-51.2 34.133333-76.8 42.666666L597.333333 853.333333h-170.666666l-25.6-64c-29.866667-12.8-55.466667-25.6-76.8-42.666666l-68.266667 12.8-85.333333-149.333334 42.666666-51.2V512c0-17.066667 0-29.866667 4.266667-42.666667l-42.666667-51.2 85.333334-149.333333 68.266666 12.8c21.333333-17.066667 51.2-34.133333 76.8-42.666667L426.666667 170.666667h170.666666l25.6 64c29.866667 12.8 55.466667 25.6 76.8 42.666666l68.266667-12.8 85.333333 149.333334-42.666666 51.2c4.266667 12.8 4.266667 29.866667 4.266666 42.666666s0 29.866667-4.266666 42.666667l42.666666 51.2-85.333333 149.333333-68.266667-4.266666zM512 554.666667c25.6 0 42.666667-17.066667 42.666667-42.666667s-17.066667-42.666667-42.666667-42.666667-42.666667 17.066667-42.666667 42.666667 17.066667 42.666667 42.666667 42.666667z m0 85.333333c-72.533333 0-128-55.466667-128-128s55.466667-128 128-128 128 55.466667 128 128-55.466667 128-128 128z" fill="#ffffff" p-id="2321"></path></svg><span class="">解析设置</span></a><a href="javascript:;" id="addjiexi" class="elevator-faq" ><svg t="1656638904518" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7918" width="200" height="200"><path d="M469.333333 469.333333V341.333333h85.333334v128h128v85.333334h-128v128h-85.333334v-128H341.333333v-85.333334h128z m42.666667 384c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z" fill="#ffffff" p-id="7919"></path></svg><span class="">添加接口</span></a><a  id="playing" class="elevator-faq" target="_blank"><svg t="1651762741797" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1235" width="200" height="200"><path d="M512 853.333333c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z m128-256l-213.333333 128V384l213.333333 128z" fill="#ffffff" p-id="1236"></path></svg><span class="">解析播放</span></a></div>' + mainhtml+'</div>';
+            document.body.insertAdjacentHTML('afterbegin', btnhtml);
             var css = `body, html {
 		         font-family: PingFang SC, HarmonyOS_Regular, Helvetica Neue, Microsoft YaHei, sans-serif;
 		    }
@@ -1759,6 +1761,7 @@
         }
     }
     //视频解析结束
+
     //-------------------------------------------------------------------------
     //统一判断运行
     if(commonFunction.GMgetValue("isuser") == 1){
@@ -1944,4 +1947,6 @@
 
         //网站判断执行结束
     }
+
+    // Your code here...
 })();
