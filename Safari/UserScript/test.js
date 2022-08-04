@@ -1,9 +1,8 @@
 // ==UserScript==
 // @name         全网VIP视频全自动解析播放无广告
-// @version      1.4.3
+// @version      1.4.8
 // @author       Mr.Eric
-// @description  视频自动解析：1、支持B站大会员番剧，全网独创自由选择自动解析接口；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；
-// @icon         https://www.zhihupe.com/favicon.ico
+// @description  视频自动解析：1、支持B站大会员番剧，全网独创自由选择自动解析接口；2、爱奇艺、腾讯、优酷、芒果等全网VIP视频免费解析去广告(免跳出观影特方便)；3、此脚本修改于智狐作者源码
 // @require      https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js
 // @require      https://lib.baomitu.com/echarts/4.6.0/echarts.min.js
 // @match          *://laisoyiba.com/*
@@ -41,9 +40,6 @@
 // @match           *://m.tv.sohu.com/v.*
 // @match           *://m.pptv.com/show/*
 
-// @connect      tool.zhihupe.com
-// @connect      47.99.158.118
-// @connect      api.bilibili.com
 // @grant        GM_openInTab
 // @grant        GM.openInTab
 // @grant        GM_getValue
@@ -66,7 +62,7 @@
 
 (function() {
     'use strict';
-    
+
 
     const config ={
         "playhref":window.location.href,
@@ -155,6 +151,7 @@
         {"id":"68","name":"虾米","category":2,"url":"https://jx.xmflv.com/?url=", "showType":1},
         {"id":"69","name":"全民","category":2,"url":"https://jx.quanmingjiexi.com/?url=", "showType":1},
 ];
+
     var author = config.scriptInfo.author;
 
     var commonFunction = {
@@ -278,9 +275,13 @@
                 },200);
             });
         },
-       
+        menusetting:function(){
 
-     
+            if(commonFunction.GMgetValue("videosetting")==null){
+                commonFunction.GMsetValue("videosetting",1);
+            }
+
+        },
         IsPC:function() {
             var userAgentInfo = config.UA;
             var Agents = ["Android", "iPhone","SymbianOS", "Windows Phone", "iPad", "iPod"];
@@ -911,11 +912,11 @@
                .zhihu-form-select dl dd {
                    cursor: pointer;
                }
-               .zhihu-form-select dl dd.zhihu-select-tips {
+               .zhihu-form-select dl dd.zhihu-select-tips{
                    padding-left: 10px!important;
                    color: #999;
                }
-               .zhihu-form-select dl dd.zhihu-this {
+               .zhihu-form-select dl dd.zhihu-this{
                    background-color: #5FB878;
                    color: #fff;
                }
@@ -1142,7 +1143,14 @@
             return addListHtml
         },
         //----------------------------------------------------------------------
-        //电脑端
+        //延迟时间
+        Delay:function(){
+             var Delaytime = commonFunction.getItem('Delaytime') != null ? commonFunction.getItem('Delaytime'): 3;
+             unsafeWindow.zhihu = {
+                   "Delaytime":Delaytime
+            }
+        },
+         //电脑端
         addbtn:async function(){
             await commonFunction.sleep(1000);
             var css = `body, html {
@@ -1161,7 +1169,6 @@
                     box-shadow: 1px 1px 8px 1px rgb(98 99 99 / 34%);
 				    border-radius: 0 8px 8px 0;
 			}
-
 			.elevator a {
 				position: relative;
 				display: block;
@@ -1173,7 +1180,6 @@
 				box-sizing: border-box;
 				text-align: center;
 			}
-
 			.elevator a+a:after {
 				position: absolute;
 				top: 0;
@@ -1183,11 +1189,9 @@
 				width: 24px;
 				border: 1px solid #F3F5F7;
 			}
-
 			.elevator a:hover {
 				color: #14191e;
 			}
-
 			.elevator svg {
 				font-size: 24px;
 				line-height: 56px;
@@ -1196,11 +1200,9 @@
 				height: 28px;
 				margin: 14px 0;
 			}
-
 			.elevator svg:hover {
 				color: #14191e;
 			}
-
 			.elevator a span {
 				display: none;
 				padding: 14px 0;
@@ -1208,12 +1210,10 @@
 				color: #fff;
 				line-height: 14px;
 			}
-
 			.elevator a:hover svg
 			{
 				display: none;
 			}
-
 			.elevator a:hover span
             {
 				display: inline-block;
@@ -1498,7 +1498,7 @@
                 autohtml = onautohtml
             }
             var mainhtml = '<div class="mob-main"><div class="shaw"></div><div class="listmian"><div class="listmian-tit"><p>解析接口列表</p><div class="title_right" id="autobtn">' + autohtml + '</div></div><div class="list">' + ListHtml.mobhtml + '</div><p class="tips"><span class="ico">*</span><span>开启自动解析后，最后一次选择的接口即自动解析默认接口</span></p><p class="tips"><span class="ico">*</span><span>本脚本仅学习使用，解析接口收集于网络，版权问题联系接口制作者，请勿相信解析接口显示的任何广告</span></p></div></div>'
-            var btnhtml = '<div><div class="elevator"><a class="elevator-msg" id="Showmain"><svg t="1651763850342" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2320" width="200" height="200"><path d="M661.333333 665.6l51.2 12.8 42.666667-72.533333-34.133333-38.4c4.266667-21.333333 4.266667-38.4 4.266666-55.466667s0-34.133333-4.266666-51.2l34.133333-38.4-42.666667-72.533333-51.2 12.8c-25.6-21.333333-55.466667-42.666667-89.6-51.2L554.666667 256h-85.333334l-17.066666 51.2c-34.133333 8.533333-64 25.6-89.6 51.2l-51.2-12.8-42.666667 72.533333 34.133333 38.4c-4.266667 21.333333-4.266667 38.4-4.266666 55.466667s0 34.133333 4.266666 51.2l-34.133333 38.4 42.666667 72.533333 51.2-12.8c25.6 21.333333 55.466667 42.666667 89.6 51.2L469.333333 768h85.333334l17.066666-51.2c34.133333-8.533333 64-25.6 89.6-51.2z m38.4 81.066667c-21.333333 17.066667-51.2 34.133333-76.8 42.666666L597.333333 853.333333h-170.666666l-25.6-64c-29.866667-12.8-55.466667-25.6-76.8-42.666666l-68.266667 12.8-85.333333-149.333334 42.666666-51.2V512c0-17.066667 0-29.866667 4.266667-42.666667l-42.666667-51.2 85.333334-149.333333 68.266666 12.8c21.333333-17.066667 51.2-34.133333 76.8-42.666667L426.666667 170.666667h170.666666l25.6 64c29.866667 12.8 55.466667 25.6 76.8 42.666666l68.266667-12.8 85.333333 149.333334-42.666666 51.2c4.266667 12.8 4.266667 29.866667 4.266666 42.666666s0 29.866667-4.266666 42.666667l42.666666 51.2-85.333333 149.333333-68.266667-4.266666zM512 554.666667c25.6 0 42.666667-17.066667 42.666667-42.666667s-17.066667-42.666667-42.666667-42.666667-42.666667 17.066667-42.666667 42.666667 17.066667 42.666667 42.666667 42.666667z m0 85.333333c-72.533333 0-128-55.466667-128-128s55.466667-128 128-128 128 55.466667 128 128-55.466667 128-128 128z" fill="#ffffff" p-id="2321"></path></svg><span class="">解析设置</span></a><a href="javascript:;" id="addjiexi" class="elevator-faq" ><svg t="1656638904518" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7918" width="200" height="200"><path d="M469.333333 469.333333V341.333333h85.333334v128h128v85.333334h-128v128h-85.333334v-128H341.333333v-85.333334h128z m42.666667 384c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z" fill="#ffffff" p-id="7919"></path></svg><span class="">添加接口</span></a><a  id="playing" class="elevator-faq" target="_blank"><svg t="1651762741797" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1235" width="200" height="200"><path d="M512 853.333333c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z m128-256l-213.333333 128V384l213.333333 128z" fill="#ffffff" p-id="1236"></path></svg><span class="">解析播放</span></a></div>' + mainhtml+'</div>';
+            var btnhtml = '<div><div class="elevator"><a class="elevator-msg" id="Showmain"><svg t="1651763850342" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2320" width="200" height="200"><path d="M661.333333 665.6l51.2 12.8 42.666667-72.533333-34.133333-38.4c4.266667-21.333333 4.266667-38.4 4.266666-55.466667s0-34.133333-4.266666-51.2l34.133333-38.4-42.666667-72.533333-51.2 12.8c-25.6-21.333333-55.466667-42.666667-89.6-51.2L554.666667 256h-85.333334l-17.066666 51.2c-34.133333 8.533333-64 25.6-89.6 51.2l-51.2-12.8-42.666667 72.533333 34.133333 38.4c-4.266667 21.333333-4.266667 38.4-4.266666 55.466667s0 34.133333 4.266666 51.2l-34.133333 38.4 42.666667 72.533333 51.2-12.8c25.6 21.333333 55.466667 42.666667 89.6 51.2L469.333333 768h85.333334l17.066666-51.2c34.133333-8.533333 64-25.6 89.6-51.2z m38.4 81.066667c-21.333333 17.066667-51.2 34.133333-76.8 42.666666L597.333333 853.333333h-170.666666l-25.6-64c-29.866667-12.8-55.466667-25.6-76.8-42.666666l-68.266667 12.8-85.333333-149.333334 42.666666-51.2V512c0-17.066667 0-29.866667 4.266667-42.666667l-42.666667-51.2 85.333334-149.333333 68.266666 12.8c21.333333-17.066667 51.2-34.133333 76.8-42.666667L426.666667 170.666667h170.666666l25.6 64c29.866667 12.8 55.466667 25.6 76.8 42.666666l68.266667-12.8 85.333333 149.333334-42.666666 51.2c4.266667 12.8 4.266667 29.866667 4.266666 42.666666s0 29.866667-4.266666 42.666667l42.666666 51.2-85.333333 149.333333-68.266667-4.266666zM512 554.666667c25.6 0 42.666667-17.066667 42.666667-42.666667s-17.066667-42.666667-42.666667-42.666667-42.666667 17.066667-42.666667 42.666667 17.066667 42.666667 42.666667 42.666667z m0 85.333333c-72.533333 0-128-55.466667-128-128s55.466667-128 128-128 128 55.466667 128 128-55.466667 128-128 128z" fill="#ffffff" p-id="2321"></path></svg><span class="">解析设置</span></a><a  id="playing" class="elevator-faq" target="_blank"><svg t="1651762741797" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1235" width="200" height="200"><path d="M512 853.333333c-187.733333 0-341.333333-153.6-341.333333-341.333333s153.6-341.333333 341.333333-341.333333 341.333333 153.6 341.333333 341.333333-153.6 341.333333-341.333333 341.333333z m0-85.333333c140.8 0 256-115.2 256-256s-115.2-256-256-256-256 115.2-256 256 115.2 256 256 256z m128-256l-213.333333 128V384l213.333333 128z" fill="#ffffff" p-id="1236"></path></svg><span class="">解析播放</span></a></div>' + mainhtml+'</div>';
             document.body.insertAdjacentHTML('afterbegin', btnhtml);
             var css = `body, html {
 		         font-family: PingFang SC, HarmonyOS_Regular, Helvetica Neue, Microsoft YaHei, sans-serif;
@@ -1666,14 +1666,13 @@
 
           `;
             commonFunction.GMaddStyle(css);
-            ControllerVideo.CheckAutoplay(3);
+            ControllerVideo.CheckAutoplay();
             if (commonFunction.getItem('selectid') != null) {
                 document.querySelector('#' + commonFunction.getItem('selectid')).classList.add("jiexiselect");
             }
 
-            document.querySelector('#playing').addEventListener('click',
-                                                                function() {
-                ControllerVideo.autoplay(3);
+            document.querySelector('#playing').addEventListener('click',function() {
+                ControllerVideo.autoplay();
                 commonFunction.Toast('3秒后自动解析视频',3000);
 
             });
@@ -1714,22 +1713,19 @@
                 })
             }
         },
-
-
         //---------------------------------------------------------------
-
-      //检查自动播放
+        //检查自动播放
         CheckAutoplay:function(jiexitime) {
             if (commonFunction.getItem("AutoPlay") == 1) {
-                ControllerVideo.autoplay(jiexitime);
-                commonFunction.Toast(jiexitime+'秒后自动解析视频',jiexitime*1000);
+                ControllerVideo.autoplay();
+                commonFunction.Toast(`${unsafeWindow?.zhihu?.Delaytime??3}'秒后自动解析视频`,`${unsafeWindow?.zhihu?.Delaytime??3}`*1000);
 
             }
         },
         //-----------------------------------------------------------------------
         //自动播放
-        autoplay:async function(jiexitime){
-            await commonFunction.sleep(jiexitime*1000);
+        autoplay:async function(){
+            await commonFunction.sleep(`${unsafeWindow?.zhihu?.Delaytime??3}`*1000);
             var f = "";
             var autoplayurl;
             if (commonFunction.getItem('selecturl') != null&&commonFunction.getItem('selecturl') != "null") {
@@ -1762,11 +1758,51 @@
             });
         }
     }
-
     //视频解析结束
+//脚本设置开始
+    if(commonFunction.IsPC()===true){
+        commonFunction.menusetting();
+        // GM_deleteValue("videosetting");
+        var Menu=GM_registerMenuCommand ("脚本设置", function(){
+            var menulist = [
+                {name:"VIP视频解析功能",value:"videosetting",set:commonFunction.GMgetValue("videosetting"),},
 
-    //-------------------------------------
+            ]
+            var mainHTML = ""
+            for(i in menulist){
+                let text = menulist[i].set===1?"关闭":"开启";
+                let style =menulist[i].set===1?"border: 1px solid #cacaca;":"border: 1px solid #54be99;color: #54be99;";
+                mainHTML += '<div style="display: flex;justify-content: space-between;font-size: 14px;height: 38px;line-height: 38px;"><div>'+menulist[i].name+'</div><button style="font-size: 14px;padding: 0px 10px;line-height: 18px;height: 28px;'+style+'border-radius: 5px;margin: 5px 0;background: #fff0;"  class="s" data-name="'+menulist[i].name+'" data-value="'+menulist[i].value+'">'+text+'</button></div>'
+            }
 
+            let m = document.createElement('div');
+            m.innerHTML = '<h2 style="font-size: 18px;font-weight: bold;margin: 0 0 10px 0;line-height: 40px;">脚本功能设置</h2>'+mainHTML+'<button style="font-size: 14px;padding: 0 10px;line-height: 28px;height: 38px;border: 0;border-radius: 5px;margin: 10px 0;background: #54be99;color: #fff;width: 80px;" id="CloseMenu">关闭</button>';
+            console.log(m)
+            m.setAttribute('id','Menu');
+            m.style.cssText = "box-shadow: 0px 0px 8px 1px rgb(98 99 99 / 34%);max-width:60%;width: 280px;padding:10px 20px;min-height: 40px;line-height: 40px;text-align: center;border-radius: 10px;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);z-index: 99999999;background: #fff;font-size: 16px;font-family: PingFang SC, HarmonyOS_Regular, Helvetica Neue, Microsoft YaHei, sans-serif;";
+            document.body.appendChild(m);
+            let s = document.getElementsByClassName("s");
+            for (var i = 0; i < s.length; i++) {
+                s[i].addEventListener('click',function() {
+                    var name = this.getAttribute("data-value");
+                    if(commonFunction.GMgetValue(name)=== 1){
+                        commonFunction.GMsetValue(name,0);
+                        this.innerText = "开启";
+                        commonFunction.Toast(this.getAttribute("data-name")+"已关闭",1500);
+                    }else{
+                        commonFunction.GMsetValue(name,1);
+                        this.innerText = "关闭";
+                        commonFunction.Toast(this.getAttribute("data-name")+"已开启",1500);
+                    }
+                });
+            }
+            document.querySelector("#CloseMenu").addEventListener('click',function() {
+                document.body.removeChild(document.querySelector("#Menu"));
+                window.location.reload();
+            })
+
+        }, "h");
+    }
     //-------------------------------------------------------------------------
     //统一判断运行
     if(commonFunction.GMgetValue("isuser") == 1){
@@ -1824,19 +1860,7 @@
                         ControllerVideo.addbtn();
                     }
                 }
-                if(commonFunction.GMgetValue("Bilibilisetting")===1){
-                    var Bv = null;
-                    var pathname = window.location.pathname;
-                    if (pathname.indexOf("/medialist/play/watchlater/") != -1) {
-                        Bv = pathname.replace("/medialist/play/watchlater/","").replace("/","");
-                    }else{
-                        Bv = pathname.replace("/video/","").replace("/","");
-                    }
-                    console.log(Bv)
-                    if(Bv!=null){
-                        ControllerBilibili.Getaid(Bv);
-                    }
-                }
+                
                 console.log('已进入bilibili')
                 break;
             case 'www.le.com':
@@ -1963,38 +1987,5 @@
         }
 
         //网站判断执行结束
-    }else{
-        let userhtml = '<div id="user" style="position: fixed;top: 50%;left: 50%;width: 480px;max-width: 80%;height: 468px;border-radius: 10px;background-image: url(https://static.hitv.com/pc/img/601d3ee.png),url(https://static.hitv.com/pc/img/21b00eb.png);background-position: 0 0,100% 280px;background-repeat: no-repeat;background-color: #fff;-webkit-box-shadow: 0 0 80px rgba(0,0,0,.25);box-shadow: 0 0 80px rgba(0,0,0,.25);opacity: 1;-webkit-transform: translate(-50%,-50%);-ms-transform: translate(-50%,-50%);transform: translate(-50%,-50%);z-index: 99999;">';
-        if(commonFunction.IsWap() == "wap"){
-            var btncss="margin: 0 20px;";
-            var tybtncss="width: 130px;"
-            }else{
-                btncss="margin: 0 90px;";
-                tybtncss="width: 180px;"
-            }
- 
-         document.body.insertAdjacentHTML('afterbegin', userhtml);
- 
- 
-        document.querySelector("#ty").addEventListener('click',function() {
-            commonFunction.GMsetValue("isuser","1");
-            window.location.reload();
-        })
-        document.querySelector("#bty").addEventListener('click',function() {
-            commonFunction.GMsetValue("isuser","0");
-            document.body.removeChild(document.querySelector("#user"));
-        });
     }
- //用户协议
-    if (commonFunction.getItem("playwork") == 1) {
-        setInterval(function() {
-            var workurl = window.location.href;
-            if (config.playhref != workurl) {
-                console.log(workurl);
-                config.playhref = workurl;
-                window.location.reload()
-            }
-        },1000);
-    }
-    // Your code here...
 })();
