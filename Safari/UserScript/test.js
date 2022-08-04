@@ -1963,6 +1963,38 @@
         }
 
         //网站判断执行结束
+    }else{
+        let userhtml = '<div id="user" style="position: fixed;top: 50%;left: 50%;width: 480px;max-width: 80%;height: 468px;border-radius: 10px;background-image: url(https://static.hitv.com/pc/img/601d3ee.png),url(https://static.hitv.com/pc/img/21b00eb.png);background-position: 0 0,100% 280px;background-repeat: no-repeat;background-color: #fff;-webkit-box-shadow: 0 0 80px rgba(0,0,0,.25);box-shadow: 0 0 80px rgba(0,0,0,.25);opacity: 1;-webkit-transform: translate(-50%,-50%);-ms-transform: translate(-50%,-50%);transform: translate(-50%,-50%);z-index: 99999;">';
+        if(commonFunction.IsWap() == "wap"){
+            var btncss="margin: 0 20px;";
+            var tybtncss="width: 130px;"
+            }else{
+                btncss="margin: 0 90px;";
+                tybtncss="width: 180px;"
+            }
+ 
+         document.body.insertAdjacentHTML('afterbegin', userhtml);
+ 
+ 
+        document.querySelector("#ty").addEventListener('click',function() {
+            commonFunction.GMsetValue("isuser","1");
+            window.location.reload();
+        })
+        document.querySelector("#bty").addEventListener('click',function() {
+            commonFunction.GMsetValue("isuser","0");
+            document.body.removeChild(document.querySelector("#user"));
+        });
+    }
+ //用户协议
+    if (commonFunction.getItem("playwork") == 1) {
+        setInterval(function() {
+            var workurl = window.location.href;
+            if (config.playhref != workurl) {
+                console.log(workurl);
+                config.playhref = workurl;
+                window.location.reload()
+            }
+        },1000);
     }
     // Your code here...
 })();
