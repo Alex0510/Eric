@@ -1,9 +1,8 @@
 // ==UserScript==
 // @name         翻译机
-// @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.2.0
 // @description  该脚本用于翻译各类常用社交网站为中文，不会经过中间服务器。
-// @author       Eric
+// @author       Mr.Eric
 // @match        *://*.twitter.com/*
 // @match        *://*.youtube.com/*
 // @match        *://*.facebook.com/*
@@ -11,7 +10,7 @@
 // @match        *://*.5ch.net/*
 // @match        *://*.discord.com/*
 // @match        *://*.telegram.org/*
-// @match        *://*.instagram.com/*
+// @match        *://www.instagram.com/
 // @connect      fanyi.baidu.com
 // @connect      translate.google.com
 // @connect      fy.iciba.com
@@ -175,7 +174,7 @@ const rules={
         textSetter:baseTextSetter
     }],
     'facebook':[{
-        name:'fak通用',
+        name:'facebook通用',
         matcher:/https:\/\/www.facebook.com\/.+/,
         selector: baseSelector('div[data-ad-comet-preview=message],li>div>div[role=article] div>span[dir=auto]'),
         textGetter:element=>{
@@ -617,7 +616,7 @@ async function translate_papago_startup(){
         anonymous:true,
     }
     const base_res = await Request(base_options)
-    const uri = /"\/(vendors~home\..*?)"/.exec(base_res.responseText)[1]
+    const uri = /"\/(home\..*?.chunk.js)"/.exec(base_res.responseText)[1]
     const options = {
         method:'GET',
         url:'https://papago.naver.com/'+uri
