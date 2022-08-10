@@ -7,6 +7,11 @@ DOMAIN-SUFFIX,updates-http.cdn-apple.com
 DOMAIN-SUFFIX,ocsp.apple.com
 DOMAIN,gdmf.apple.com
 DOMAIN,mesu.apple.com
+DOMAIN,xp.apple.com
+
+#爱思助手
+
+DOMAIN-SUFFIX,d.image.i4.cn,REJECT
 
 # 证书
 DOMAIN-SUFFIX,crl.apple.com
