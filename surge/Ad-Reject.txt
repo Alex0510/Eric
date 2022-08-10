@@ -21,3 +21,8 @@ DOMAIN-SUFFIX,crl4.digicert.com
 DOMAIN-SUFFIX,ocsp.digicert.com
 DOMAIN-SUFFIX,ocsp.entrust.net
 DOMAIN-SUFFIX,ocsp.verisign.net
+#其他
+URL-REGEX,https://player.hdgay.net/ad/.*
+URL-REGEX,^https:\/\/h4ahsm\.cfeucdn\.com\/video_short\.mp4$
+URL-REGEX,https://argo.blued.cn/blued/splash\?conn_type=
+URL-REGEX,https://argo.blued.cn/blued/adms/.*
