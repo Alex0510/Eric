@@ -11,7 +11,7 @@ DOMAIN,xp.apple.com
 
 #爱思助手
 
-DOMAIN-SUFFIX,d.image.i4.cn,REJECT
+URL-REGEX,http://d.image.i4.cn/adInfo
 
 # 证书
 DOMAIN-SUFFIX,crl.apple.com
