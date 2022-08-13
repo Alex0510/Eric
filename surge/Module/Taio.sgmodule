@@ -1,0 +1,10 @@
+#!name=Taio解锁高级订阅
+#!desc=Mr.Eric转载注明出处
+#!system=ios
+
+
+[Script]
+Taio = type=http-response,pattern=https:\/\/api\.revenuecat\.com\/v1\/receipts,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/Taio.js,script-update-interval=0
+
+[MITM]
+hostname = %APPEND% api.revenuecat.com
