@@ -2,7 +2,7 @@
 熊掌记
 [rewrite_local]
 
-^https:\/\/buy\.itunes\.apple\.com\/verifyReceipt url script-response-body https://raw.githubusercontent.com/89996462/Quantumult-X/main/ycdz/xzj.js
+^https:\/\/buy\.itunes\.apple\.com\/verifyReceipt url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/xzj.js
 
 [mitm] 
 
