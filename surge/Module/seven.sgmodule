@@ -1,0 +1,10 @@
+
+#!name=seven解锁Pro-Eric首发
+#!desc=Mr.Eric转载注明出处
+
+[Rule]
+URL-REGEX,^https:\/\/api\.sevenworkouts\.com\/api\/v1\/buyers\/,Reject
+[MITM]
+hostname = %APPEND% api.sevenworkouts.com
+[Script]
+sevenPro = type=http-response,pattern= https://api.sevenworkouts.com/api/v2/verify-purchases,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/seven.js
