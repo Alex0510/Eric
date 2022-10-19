@@ -5,9 +5,6 @@
 [Rule]
 URL-REGEX,^https:\/\/api\.sevenworkouts\.com\/api\/v1\/buyers\/,Reject
 URL-REGEX,^https:\/\/api\.sevenworkouts\.com\/api\/v1\/account\/subscription-purchases,Reject
-[rewrite_local]
-https:\/\/api\.sevenworkouts\.com\/api\/v1\/buyers\/ url reject
-https:\/\/api\.sevenworkouts\.com\/api\/v1\/account\/subscription-purchases url reject
 [MITM]
 hostname = %APPEND% api.sevenworkouts.com
 [Script]
