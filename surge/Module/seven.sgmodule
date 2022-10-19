@@ -1,6 +1,6 @@
 
 #!name=seven解锁Pro-Eric首发
-#!desc=Mr.Eric转载注明出处
+#!desc=Mr.Eric转载注明出处，APP需要先试用会员，请删除APP重新安装恢复内购即可
 
 [Rule]
 URL-REGEX,^https:\/\/api\.sevenworkouts\.com\/api\/v1\/buyers\/,Reject
