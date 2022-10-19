@@ -4,7 +4,7 @@
 
 [Rule]
 URL-REGEX,^https:\/\/api\.sevenworkouts\.com\/api\/v1\/buyers\/,Reject
-URL-REGEX,^https:\/\/api\.sevenworkouts\.com\/api\/v1\/account\/subscription-purchases,REJECT
+URL-REGEX,^https:\/\/api\.sevenworkouts\.com\/api\/v1\/account\/subscription-purchases,Reject
 [MITM]
 hostname = %APPEND% api.sevenworkouts.com
 [Script]
