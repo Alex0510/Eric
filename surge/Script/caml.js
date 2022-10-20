@@ -123,7 +123,7 @@ obj = {
     "plan_duration": "year",
     "product_id": "com.calm.yearly.trial.one_week.usd_60",
     "free_trial_length_in_days": 7,
-    "free_trial_ended": "2020-03-20T03:20:31.000Z"
+    "free_trial_ended": "2099-03-20T03:20:31.000Z"
   },
   "subscription_plan": "com.calm.yearly.trial.one_week.usd_60",
   "has_ever_had_android_subscription": false,
