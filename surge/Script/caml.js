@@ -56,10 +56,10 @@ let key = {
 let obj = JSON.parse($response.body);
 
 if ($request.url.indexOf(path1) != -1){
-obj.subscription = key;
+obj["subscription"] = key;
 }
 if ($request.url.indexOf(path2) != -1){
-obj.user.subscription = key;
+obj["subscription"] = key;
 }
 if ($request.url.indexOf(path3) != -1){
 obj = {
