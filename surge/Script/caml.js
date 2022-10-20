@@ -51,7 +51,7 @@ let key = {
     "began": "2020-03-13T03:20:31.000Z",
     "in_free_trial_window": false,
     "is_renewable": true
-  }
+  };
 
 let obj = JSON.parse($response.body);
 
@@ -59,7 +59,7 @@ if ($request.url.indexOf(path1) != -1){
 obj["subscription"]= key;
 }
 if ($request.url.indexOf(path2) != -1){
-obj["subscription"]= key;
+obj.user.subscription = key;
 }
 if ($request.url.indexOf(path3) != -1){
 obj = {
