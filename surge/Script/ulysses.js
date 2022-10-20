@@ -5,7 +5,7 @@ ulysses解锁订阅--Eric
 ^https://sk.ulysses.app/api/v1/itunes_receipt_verify url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/ulysess.js
 
 [mitm] 
-hostname = sk.ulysses.app
+hostname = %APPEND% sk.ulysses.app
 ***/
 
 
