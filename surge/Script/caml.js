@@ -93,18 +93,18 @@ obj = {
   "has_ever_had_ios_subscription": true,
   "is_canceled": true,
   "will_renew": false,
-  "is_lifetime": false,
+  "is_lifetime": true,
   "type": "ios",
   "free_trial_length_in_days": 7,
-  "is_free": false,
+  "is_free": true,
   "id": "160000700663112",
   "expires": "2099-03-20T03:20:31.000Z",
   "valid": false,
   "payment_processor": "itunes",
   "began": "2020-03-13T03:20:31.000Z",
-  "in_free_trial_window": false,
+  "in_free_trial_window": true,
   "is_renewable": true,
   "conversion_value": 0
-};
+}
 }
 $done({body:JSON.stringify(obj)});
