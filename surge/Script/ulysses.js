@@ -2,7 +2,7 @@
 ulysses解锁订阅--Eric
 
 [rewrite_local]
-^ https://sk.ulysses.app/api/v1/itunes_receipt_verify url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/ulysess.js
+^https://sk.ulysses.app/api/v1/itunes_receipt_verify url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/ulysess.js
 
 [mitm] 
 hostname = sk.ulysses.app
