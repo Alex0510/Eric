@@ -61,6 +61,6 @@ if ($request.url.indexOf(path2) != -1){
 obj["subscription"] = key;
 }
 if ($request.url.indexOf(path3) != -1){
-obj["subscription"] = key;
+obj[""] = key;
 }
 $done({body:JSON.stringify(obj)});
