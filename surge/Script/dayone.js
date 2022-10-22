@@ -5,7 +5,7 @@ dayone日记高级版2022--Eric
 ^https:\/\/dayone\.app\/api\/v2\/users url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/dayone.js
 
 [mitm] 
-hostname：dayone.app
+hostname = %APPEND% dayone.app
 
 */
 
