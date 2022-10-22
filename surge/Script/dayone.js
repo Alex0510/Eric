@@ -1,11 +1,13 @@
-/***
-dayone日记高级版--Eric
-[MITM]
-hostname = %APPEND% dayone.app
-[Script]
-sevenPro = type=http-response,pattern= https://dayone.app/api/v2/users/(receipt|account-status),requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/dayone.js
-***/
+/*
+dayone日记高级版2022--Eric
 
+[rewrite_local]
+^https:\/\/dayone\.app\/api\/v2\/users url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/dayone.js
+
+[mitm] 
+hostname：dayone.app
+
+*/
 
 const path1 = "/account-status";
 const path2 = "/receipt";
@@ -27,39 +29,136 @@ if ($request.url.indexOf(path2) != -1){
 obj={
   "bundle": {
     "bundleName": "premium",
-    "features": [
-      {
-        "name": "imagesPerEntry",
-        "limit": 30,
-        "canUpgrade": false
-      },
-      {
-        "name": "journalLimit",
-        "limit": 100,
-        "canUpgrade": false
-      },
-      {
-        "name": "audioPerEntry",
-        "limit": 10,
-        "canUpgrade": false
-      },
-      {
-        "name": "sync",
-        "canUpgrade": false
-      },
-      {
-        "name": "syncMac",
-        "canUpgrade": false
-      },
-      {
-        "name": "printingDiscount",
-        "canUpgrade": false
-      },
-      {
-        "name": "prioritySupport",
-        "canUpgrade": false
-      }
-    ]
+    "features": [{
+      "name": "imagesPerEntry",
+      "limit": 30,
+      "canUpgrade": false
+    }, {
+      "name": "journalLimit",
+      "limit": 100,
+      "canUpgrade": false
+    }, {
+      "name": "audioPerEntry",
+      "limit": 10,
+      "canUpgrade": false
+    }, {
+      "name": "sync",
+      "limit": null,
+      "canUpgrade": false
+    }, {
+      "name": "backup",
+      "limit": null,
+      "canUpgrade": false
+    }, {
+      "name": "printingDiscount",
+      "limit": null,
+      "canUpgrade": false
+    }, {
+      "name": "prioritySupport",
+      "limit": null,
+      "canUpgrade": false
+    }, {
+      "name": "drawingsPerEntry",
+      "limit": 30,
+      "canUpgrade": false
+    }, {
+      "name": "scanToPDF",
+      "limit": 30,
+      "canUpgrade": false
+    }, {
+      "name": "videosPerEntry",
+      "limit": 30,
+      "canUpgrade": false
+    }, {
+      "name": "journalViaSMS",
+      "limit": null,
+      "canUpgrade": false
+    }],
+    "featuresFull": [{
+      "name": "journalLimit",
+      "limit": 100,
+      "canUpgrade": false
+    }, {
+      "name": "backup",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "sync",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "discountedSubscription",
+      "enabled": false,
+      "canUpgrade": false
+    }, {
+      "name": "printingDiscount",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "prioritySupport",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "scanToPDF",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "attachmentsPerEntry",
+      "limit": 30,
+      "canUpgrade": false
+    }, {
+      "name": "journalViaSMS",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "canAttachPhoto",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "canAttachVideo",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "canAttachAudio",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "canAttachDrawing",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "canAttachPDF",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "instagram",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "ifttt",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "colors",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "emailToJournal",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "appIcons",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "moonPhase",
+      "enabled": true,
+      "canUpgrade": false
+    }, {
+      "name": "foursquareNearbyVenues",
+      "enabled": true,
+      "canUpgrade": false
+    }]
   },
   "reason": "purchase"
 }
