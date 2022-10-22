@@ -1,4 +1,4 @@
-/*
+/***
 Agenda永久解锁--Eric
 
 [rewrite_local]
@@ -7,7 +7,7 @@ Agenda永久解锁--Eric
 [mitm] 
 hostname = %APPEND% accounts.agenda.com
 
-*/
+***/
 
 
 let obj = JSON.parse($response.body);
