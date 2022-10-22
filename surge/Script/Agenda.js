@@ -1,14 +1,3 @@
-/***
-Agenda永久解锁--Eric
-
-[rewrite_local]
-^https://accounts.agenda.com/users/.*/license url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/Agenda.js
-
-[mitm] 
-hostname = %APPEND% accounts.agenda.com
-
-***/
-
 
 let obj = JSON.parse($response.body);
 
