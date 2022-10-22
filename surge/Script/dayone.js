@@ -1,9 +1,12 @@
-/*
-dayone日记高级版
-https://dayone.me/api/v2/users/(receipt|account-status)
-hostname：dayone.me
+/***
+dayone日记高级版--Eric
+[MITM]
+hostname = %APPEND% dayone.app
+[Script]
+sevenPro = type=http-response,pattern= https://dayone.app/api/v2/users/(receipt|account-status),requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/dayone.js
+***/
 
-*/
+
 const path1 = "/account-status";
 const path2 = "/receipt";
 
