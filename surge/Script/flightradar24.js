@@ -4,7 +4,7 @@
 flightradar24高级解锁--Eric
 
 [rewrite_local]
-^ https://mobile.flightradar24.com/mobile/gettime url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/flightradar24.js
+^https://mobile.flightradar24.com/mobile/gettime url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/flightradar24.js
 
 [mitm] 
 hostname = %APPEND% mobile.flightradar24.com
