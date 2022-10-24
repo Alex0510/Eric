@@ -3,7 +3,7 @@
 支持最新版11.1.90
 
 [rewrite_local]
-^ https://.*.mei(yan|tu).com\/.* url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/myCamera.js
+^https://.*.mei(yan|tu).com\/.* url script-response-body https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/myCamera.js
 
 [mitm] 
 hostname = %APPEND% *.meiyan.com *.meitu.com
