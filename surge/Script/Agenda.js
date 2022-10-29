@@ -4,7 +4,7 @@ let obj = JSON.parse($response.body);
 obj = {
   "error": 0,
   "universalPurchaseAvailable": true,
-  "informUserOfPendingBonus": true,
+  "informUserOfPendingBonus": false,
   "licenseStatus": 1,
   "isSubscribed": true,
   "unlockExpiry": 63114076800,
