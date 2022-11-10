@@ -3,7 +3,7 @@
 
 
 [MITM]
-hostname = %APPEND% api.revenuecat.com,buy.itunes.apple.com,app.xunjiepdf.com,*.flownow.cn,api2.tophub.app,ch.sleepcycle.com,callrecorder.icamscanner.com,ssl-api.itranslateapp.com,mobile-api.adguard.com,*.googleapis.com,notability.com,mobile.flightradar24.com, *.meiyan.com,*.meitu.com,accounts.agenda.com,dayone.app,backend.getdrafts.com,api.effie.pro,api.effie.co,ssl-api.itranslateapp.com,pushserv.airapps.co,qianji.xxoojoke.com,restore-access.indream.app
+hostname = %APPEND% api.revenuecat.com,buy.itunes.apple.com,app.xunjiepdf.com,*.flownow.cn,api2.tophub.app,api.getmimo.com,ch.sleepcycle.com,callrecorder.icamscanner.com,ssl-api.itranslateapp.com,mobile-api.adguard.com,*.googleapis.com,notability.com,mobile.flightradar24.com, *.meiyan.com,*.meitu.com,accounts.agenda.com,dayone.app,backend.getdrafts.com,api.effie.pro,api.effie.co,ssl-api.itranslateapp.com,pushserv.airapps.co,qianji.xxoojoke.com,restore-access.indream.app
 [Script]
 Pro = type=http-response,pattern= ^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers\/(\$RCAnonymousID%)?([\u4E00-\u9FA5A-Za-z0-9-_]+))$,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/revenuecat.js
 RC = type=http-request,pattern= ^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers\/(\$RCAnonymousID%)?([\u4E00-\u9FA5A-Za-z0-9-_]+)),requires-body=0,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/bytq.js,script-update-interval=0
@@ -26,3 +26,4 @@ adguard = type=http-response,pattern=https://mobile-api.adguard.com/api/2.0/ios_
 今日热榜 = type=http-response,pattern=^https://api2.tophub.app/account/sync,requires-body=1,max-size=0,script-path= https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/jinrirebang.js,script-update-interval=0 
 flow = type=http-response,pattern=^https://.*.flownow.cn/v\d.\d.0/(.*|user.info),requires-body=1,max-size=0,script-path= https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/flow.js,script-update-interval=0 
 flomo = type=http-response,pattern=^https://flomoapp.com/api/v1/user/me,requires-body=1,max-size=0,script-path= https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/flomo.js,script-update-interval=0 
+mimo = type=http-response,pattern=^https://api.getmimo.com/v1/subscriptions,requires-body=1,max-size=0,script-path= https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/mimo.js,script-update-interval=0 
