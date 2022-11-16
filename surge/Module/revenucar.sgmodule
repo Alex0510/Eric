@@ -3,7 +3,7 @@
 #!说明=具体解锁APP请移步https://t.me/Mr_Eric_iOS
 
 [MITM]
-hostname = %APPEND% revenuecat.com,buy.itunes.apple.com,api.apphud.com,app.xunjiepdf.com,*.flownow.cn,api2.tophub.app,rdp.duetdisplay.com,ars.alar.my,api.getmimo.com,medi.dxzzy321.top,*.endel.io,ch.sleepcycle.com,callrecorder.icamscanner.com,ssl-api.itranslateapp.com,mobile-api.adguard.com,*.googleapis.com,notability.com,mobile.flightradar24.com, *.meiyan.com,*.meitu.com,accounts.agenda.com,dayone.app,backend.getdrafts.com,api.effie.pro,api.effie.co,ssl-api.itranslateapp.com,pushserv.airapps.co,qianji.xxoojoke.com,restore-access.indream.app
+hostname = %APPEND% revenuecat.com,buy.itunes.apple.com,api.apphud.com,api.faceapp.io,app.xunjiepdf.com,*.flownow.cn,api2.tophub.app,rdp.duetdisplay.com,ars.alar.my,api.getmimo.com,medi.dxzzy321.top,*.endel.io,ch.sleepcycle.com,callrecorder.icamscanner.com,ssl-api.itranslateapp.com,mobile-api.adguard.com,*.googleapis.com,notability.com,mobile.flightradar24.com, *.meiyan.com,*.meitu.com,accounts.agenda.com,dayone.app,backend.getdrafts.com,api.effie.pro,api.effie.co,ssl-api.itranslateapp.com,pushserv.airapps.co,qianji.xxoojoke.com,restore-access.indream.app
 [Script]
 Pro = type=http-response,pattern= ^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers\/(\$RCAnonymousID%)?([\u4E00-\u9FA5A-Za-z0-9-_]+))$,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/revenuecat.js
 RC = type=http-request,pattern= ^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers\/(\$RCAnonymousID%)?([\u4E00-\u9FA5A-Za-z0-9-_]+)),requires-body=0,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/bytq.js,script-update-interval=0
@@ -32,3 +32,4 @@ endel = type=http-response,pattern=^https://api-production.endel.io/v4/call,requ
 Alarmy = type=http-response,pattern=^https://ars.alar.my/api/v2/user/sync,requires-body=1,max-size=0,script-path= https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/alarmy.js,script-update-interval=0 
 duet = type=http-response,pattern=^https://rdp.duetdisplay.com/v1/users/validateReceipt,requires-body=1,max-size=0,script-path= https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/duet.js,script-update-interval=0 
 vivacut = type=http-response,pattern=^https://medi.dxzzy321.top/api/rest/commerce/integrate/vip/perform,requires-body=1,max-size=0,script-path= https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/vivacut.js,script-update-interval=0 
+faceapp = type=http-response,pattern=^https://api.faceapp.io/api/v3.3/auth/user/credentials,requires-body=1,max-size=0,script-path= https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/faceapp.js,script-update-interval=0 
