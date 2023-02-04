@@ -6,6 +6,7 @@
 DOMAIN-SUFFIX,updates-http.cdn-apple.com
 DOMAIN-SUFFIX,ocsp.apple.com
 DOMAIN,gdmf.apple.com
+DOMAIN-SUFFIX,ocsp2.apple.com
 DOMAIN,mesu.apple.com
 DOMAIN,xp.apple.com
 
