@@ -5,4 +5,4 @@ https://prod.api.lambus.io header-del If-None-Match
 [MITM]
 hostname = %APPEND% prod.api.lambus.io
 [Script]
-lambusPro = type=http-response,pattern=https://prod.api.lambus.io/v1.10/(subscriptions|trips|users/profile),requires-body=0,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/lambus.js,script-update-interval=0
+lambusPro = type=http-response,pattern=https://prod.api.lambus.io/v1.10/,requires-body=0,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/lambus.js,script-update-interval=0
