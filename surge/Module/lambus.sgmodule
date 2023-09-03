@@ -1,4 +1,4 @@
-#!name=谜底时钟解锁永久会员-Eric
+#!name=lambus解锁会员-Eric
 #!desc=Eric转载注明出处
 [Header Rewrite]
 https://prod.api.lambus.io header-del If-None-Match
