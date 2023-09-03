@@ -1,0 +1,8 @@
+#!name=谜底时钟解锁永久会员-Eric
+#!desc=Eric转载注明出处
+[Header Rewrite]
+https://prod.api.lambus.io header-del If-None-Match
+[MITM]
+hostname = %APPEND% prod.api.lambus.io
+[Script]
+lambusPro = type=http-request,pattern=https://prod.api.lambus.io/v1.10/,requires-body=0,max-size=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/lambus.js,script-update-interval=0
