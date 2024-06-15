@@ -6,5 +6,5 @@
 hostname = %APPEND% api.ideation.love,api.revenuecat.com
 
 [Script]
-stresswatch1 = type=http-request,pattern=://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/StressWatch.js
+stresswatch1 = type=http-request,pattern=https://api.ideation.love/api/v1/check,requires-body=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/StressWatch.js
 stresswatch = type=http-response,pattern=https://api.(ideation.love|revenuecat.com)\/(api/v1/subscription/confirm|api/v1/check|.+\/(receipts|subscribers\/(\$RCAnonymousID%)?([\u4E00-\u9FA5A-Za-z0-9-_=]+))$),requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/stresswatch.js
