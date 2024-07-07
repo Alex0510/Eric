@@ -1,12 +1,11 @@
 #!name=blued
 #!desc=聊天页面查看会员隐藏距离，地图显示头像和影子功能，修改定位(网上自行搜索位置经纬度填写到下方url重写修改经纬度)等功能
-[General]
-force-http-engine-hosts = *:0
-always-raw-tcp-hosts = 443, 80
+#https://jingweidu.bmcx.com可查看具体位置的经纬度网站默认已改为北京
+
 
 [URL Rewrite]
-(?<=(lot|longitude)=)\d+.\d+ 111.619512 header
-(?<=(lat|latitude)=)\d+.\d+ 40.815888 header
+(?<=(lot|longitude)=)\d+.\d+ 116.39305584377894 header
+(?<=(lat|latitude)=)\d+.\d+ 39.90394882291005 header
 
 [MITM]
 hostname =  %APPEND% *.blued.cn,*,<ip-address>
