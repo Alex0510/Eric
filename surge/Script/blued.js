@@ -1,7 +1,7 @@
 var anye = JSON.parse($response.body);
 const Eric = /users\/shadow/;
 const Eric1 = /users\/.*\/basi/;
-const Eric2 = /users\/.*is_living=false\&from=online/;
+const Eric2 = /users\/.*is_living=.*/;
 
 if (Eric.test($request.url) && anye.data && anye.data.length > 0) {
     // 地图显示头像和影子功能
