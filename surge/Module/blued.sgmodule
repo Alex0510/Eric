@@ -1,0 +1,14 @@
+#!name=blued
+#!desc=聊天页面查看会员隐藏距离，地图显示头像和影子功能，修改定位(网上自行搜索位置经纬度填写到下方url重写修改经纬度)等功能
+
+[URL Rewrite]
+(?<=(lot|longitude)=)\d+.\d+ 111.619512 header
+(?<=(lat|latitude)=)\d+.\d+ 40.815888 header
+
+[MITM]
+skip-server-cert-verify = true
+tcp-connection = true
+hostname = %APPEND% *
+
+[script]
+blued = type=http-response,pattern=https:\/\/.*\/users\/.*,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.js,script-update-interval=0
