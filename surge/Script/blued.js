@@ -1,6 +1,6 @@
 var anye = JSON.parse($response.body);
-const Eric = /^https:\/\/.*\/users\/shadow/;
-const Eric1 = /^https:\/\/.*\/users\/.*\/basi/;
+const Eric = /users\/shadow/;
+const Eric1 = /users\/.*\/basi/;
 
 if (Eric.test($request.url) && anye.data && anye.data.length > 0) {
     // 地图显示头像和影子功能
