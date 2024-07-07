@@ -1,5 +1,8 @@
 #!name=blued
 #!desc=聊天页面查看会员隐藏距离，地图显示头像和影子功能，修改定位(网上自行搜索位置经纬度填写到下方url重写修改经纬度)等功能
+[General]
+force-http-engine-hosts = *:0
+always-raw-tcp-hosts = 443, 80
 
 [URL Rewrite]
 (?<=(lot|longitude)=)\d+.\d+ 111.619512 header
