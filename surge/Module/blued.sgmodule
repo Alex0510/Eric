@@ -9,7 +9,7 @@ always-raw-tcp-hosts = 443, 80
 (?<=(lat|latitude)=)\d+.\d+ 40.815888 header
 
 [MITM]
-hostname =  * <ip-address>
+hostname =  *.blued.com * <ip-address>
 
 [Script]
 blued = type=http-response,pattern=https:\/\/.*\/users\/.*,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.js,script-update-interval=0
