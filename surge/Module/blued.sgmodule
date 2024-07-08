@@ -15,4 +15,4 @@ hostname =  %APPEND% *.blued.cn,<ip-address>,-blued.irisdt.cn,-120.53.131.149,-l
 
 [Script]
 Blued = type=http-request,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/users\?extra_info=.*,requires-body=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/Blued.js
-blued = type=http-response,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/users.*,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.js,script-update-interval=0
+blued = type=http-response,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/users/.*,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.js,script-update-interval=0
