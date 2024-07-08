@@ -2,11 +2,13 @@
 #!desc=聊天页面查看会员隐藏距离，显示会员保密的最后登录时间而不是最后在线时间，此功能仅供参考，地图找人次数到期，地图显示头像和影子功能，修改定位(网上自行搜索位置经纬度填写到下方url重写修改经纬度)等功能
 #https://jingweidu.bmcx.com可查看具体位置的经纬度网站默认已改为北京
 #说明：2024-07-08更新：因为blued的网址太多无法确认具体的，默认mitm全部网址，会导致聊天无无法发送信息等问题，及部分APP解析失败，不使用时请禁用此规则
+#避免影响其他APP解析问题，如匹配不到手动自行添加mitm：*默认全部解析，不使用时禁用即可
 
 [URL Rewrite]
 (?<=(lot|longitude)=)\d+.\d+ 116.39305584377894 header
 (?<=(lat|latitude)=)\d+.\d+ 39.90394882291005 header
 (?<=sort_by=)nearby online header
+
 [MITM]
 hostname =  %APPEND% *.blued.cn,<ip-address>,-blued.irisdt.cn,-120.53.131.149,-live-im.blued.cn,-h4.blued.cn,-95.161.76.101,-101.23.128.20,-129.226.78.144,-112.28.199.148
 
