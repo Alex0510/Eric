@@ -1,18 +1,40 @@
-const $ = new Env("ip替换");
-(async () => {
-    try {      
-        const customLatitude = $.getdata("customLatitude") || "31.220570627554054"; // 默认纬度值
-        const customLongitude = $.getdata("customLongitude") || "121.48001048292042"; // 默认经度值
 
-        // 替换URL中的经纬度参数
-				
+const $ = new Env("ip替换");
+
+(async () => {
+    try {
+        // 从 boxjs 中读取自定义城市
+        const customCity = $.getdata("customCity") || "恩施";
+
+        // 将城市名称进行URL编码
+        const encodedCity = encodeURIComponent(customCity);
+
+        // 准备请求选项
+        const options = {
+            url: `https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/map/sou_suo/?ajaxtimestamp=${Date.now()}`,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept": "*/*",
+                "Origin": "https://jingweidu.bmcx.com",
+                "Referer": "https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/jingweidu/api/?v=125b5a3c78f141a0_1754",
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1",
+                "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+                "Accept-Encoding": "gzip, deflate, br"
+            },
+            body: `keyword=${encodedCity}`,
+            method: 'POST'
+        };
+
+        // 发送请求获取经纬度
+        let response = await $.http.post(options).then(res => JSON.parse(res.body));
+        let customLatitude = response.lat;
+        let customLongitude = response.lng;
+
+        // 替换URL中的经纬度参数 
         const modifiedUrl = $request.url.replace(/(lot|longitude|lon)=\d+\.\d+|(lat|latitude)=\d+\.\d+/g, function(match, p1, p2) {
-					
             if (p1 === 'lot' || p1 === 'longitude' || p1 === 'lon') return p1 + '=' + customLongitude;
-						
             if (p2 === 'lat' || p2 === 'latitude') return p2 + '=' + customLatitude;
-            return match;
-						
+            return match; 
         });
 
         $done({ url: modifiedUrl });
@@ -21,6 +43,7 @@ const $ = new Env("ip替换");
         $done({});
     }
 })();
+
 
 
 //
