@@ -7,9 +7,6 @@
 #更新说明；2024-07-09可查看会员模糊真实头像功能;感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加https://gist.githubusercontent.com/Yu9191/8aff962e1d0d4c50fc97791bad14185f/raw/boxjs.json
 
 
-[URL Rewrite]
-# 重写 latitude 参数
-#(?<=(lat|latitude)=)[0-9.]+ $customLatitude header
 
 # 重写 longitude 参数
 #(?<=(lot|longitude)=)[0-9.]+ $customLongitude header
