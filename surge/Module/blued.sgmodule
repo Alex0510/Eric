@@ -5,10 +5,14 @@
 #避免影响其他APP解析问题，mitm已删除*,如匹配不到手动自行添加mitm：*默认全部解析，不使用时禁用即可
 #由于定位默认为北京，建议添加本地脚本，方便更改参数，使用链接无法更改参数
 #更新说明；2024-07-09可查看会员模糊真实头像功能
+#!arguments=定时签到:0 9 * * *,禁用MITM:hostname,longitude:116.40133452594137,latitude:39.89503534593025
+#!arguments-desc=定时签到：自定义Cron表达式，禁用输入 # 。\n\n禁用获取CK，禁用MITM输入 # 。\n\nlongitude：自定义经度值。\n\nlatitude：自定义纬度值。
 
 [URL Rewrite]
-(?<=(lot|longitude)=)\d+.\d+ 116.39305584377894 header
-(?<=(lat|latitude)=)\d+.\d+ 39.90394882291005 header
+
+(?<=(lot|longitude)=)\d+\.\d+ $longitude header
+(?<=(lat|latitude)=)\d+\.\d+ $latitude header
+
 
 
 [MITM]
