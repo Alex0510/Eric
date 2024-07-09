@@ -1,8 +1,8 @@
 
 
 // 获取传递的参数
-const customLongitude = $argument.Longitude || '116.40133452594137';
-const customLatitude = $argument.Latitude || '39.89503534593025';
+const customLongitude = $argument.Longitude || '';
+const customLatitude = $argument.Latitude || '';
 
 // 添加日志输出以调试
 console.log('Custom Longitude:', customLongitude);
