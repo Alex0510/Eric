@@ -13,7 +13,7 @@
         {
           "id": "customCity",
           "name": "自定义城市",
-          "val": "诸暨",
+          "val": "",
           "type": "text",
           "desc": "请输入要替换的城市"
         },
