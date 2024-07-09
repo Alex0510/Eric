@@ -1,8 +1,14 @@
-
-
 // 获取传递的参数
-const customLongitude = $argument.Longitude || '';
-const customLatitude = $argument.Latitude || '';
+const params = new URLSearchParams($argument);
+const customLongitude = params.get('Longitude');
+const customLatitude = params.get('Latitude');
+
+// 检查参数是否存在
+if (!customLongitude || !customLatitude) {
+    console.error('Missing required parameters: Longitude and Latitude');
+    $done({});
+    return;
+}
 
 // 添加日志输出以调试
 console.log('Custom Longitude:', customLongitude);
