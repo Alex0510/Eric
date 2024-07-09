@@ -4,7 +4,7 @@
 #说明：2024-07-08更新：因为blued的网址太多无法确认具体的，默认mitm全部网址，会导致聊天无无法发送信息等问题，及部分APP解析失败，不使用时请禁用此规则
 #避免影响其他APP解析问题，mitm已删除*,如匹配不到手动自行添加mitm：*默认全部解析，不使用时禁用即可
 #更新说明；2024-07-09可查看会员模糊真实头像功能;
-#更新定位功能，感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加修改经纬度坐标或城市：https://github.com/Alex0510/Eric/blob/master/surge/Script/boxjs.js
+#更新定位功能，感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加修改经纬度坐标或城市：https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/boxjs.json
 
 
 [MITM]
