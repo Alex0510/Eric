@@ -29,7 +29,7 @@
             }
          ],
          "author": "@baby",
-         "script": "https://raw.githubusercontent.com/Yu9191/Rewrite/main/buled_ip.js",
+         "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
          "repo": "https://Yu9191",
          "icons": [
             "https://github.com/wuhuhuuuu/study/raw/main/wuhuhuuuu.PNG"
