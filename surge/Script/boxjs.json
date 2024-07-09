@@ -6,17 +6,30 @@
   "repo": "https://github.com/Alex0510",
   "apps": [
     {
-      "id": "ipReplacement",
-      "name": "IP 替换",
-      "keys": ["customCity", "customLatitude", "customLongitude"],
+      "id": "ipReplacementCity",
+      "name": "IP 替换 - 城市",
+      "keys": ["customCity"],
       "settings": [
         {
           "id": "customCity",
           "name": "自定义城市",
-          "val": "",
+          "val": "诸暨",
           "type": "text",
           "desc": "请输入要替换的城市"
-        },
+        }
+      ],
+      "author": "@baby",
+      "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://github.com/wuhuhuuuu/study/raw/main/wuhuhuuuu.PNG"
+      ]
+    },
+    {
+      "id": "ipReplacementCoordinates",
+      "name": "IP 替换 - 经纬度",
+      "keys": ["customLatitude", "customLongitude"],
+      "settings": [
         {
           "id": "customLatitude",
           "name": "自定义纬度",
