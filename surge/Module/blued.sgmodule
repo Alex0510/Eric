@@ -1,6 +1,6 @@
 #!name=blued增强脚本--Eric，转载请注明出处
 #!desc=聊天页面查看会员隐藏距离，显示会员保密的最后登录时间而不是最后在线时间，此功能仅供参考，地图找人次数到期，地图显示头像和影子功能，修改定位(网上自行搜索位置经纬度填写到下方url重写修改经纬度)等功能
-#!arguments=禁用MITM:hostname,longitude:116.40133452594137,latitude:39.89503534593025
+#!arguments=禁用MITM:hostname,customLatitude:116.40133452594137,customLongitude:39.89503534593025
 #!arguments-desc=禁用输入 # 。\n\n禁用获取CK，禁用MITM输入 # 。\n\nlongitude：自定义经度值。\n\nlatitude：自定义纬度值。
 
 #https://jingweidu.bmcx.com可查看具体位置的经纬度网站默认已改为北京
