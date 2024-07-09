@@ -4,7 +4,7 @@ const $ = new Env("ip替换");
 (async () => {
     try {
         // 从 boxjs 中读取自定义城市
-        const customCity = $.getdata("customCity") || "恩施";
+        const customCity = $.getdata("customCity") || "";
 
         // 将城市名称进行URL编码
         const encodedCity = encodeURIComponent(customCity);
