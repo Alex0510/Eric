@@ -1,16 +1,18 @@
 #!name=blued增强脚本--Eric，转载请注明出处
 #!desc=聊天页面查看会员隐藏距离，显示会员保密的最后登录时间而不是最后在线时间，此功能仅供参考，地图找人次数到期，地图显示头像和影子功能，修改定位(网上自行搜索位置经纬度填写到下方url重写修改经纬度)等功能
+#!arguments=禁用MITM:hostname,禁用ip:blued_ip
+#!arguments-desc=禁用输入 # 。\n\n禁用MITM输入 # 使用这种方法自定义添加禁用blued_ip规则
 #https://jingweidu.bmcx.com可查看具体位置的经纬度网站默认已改为北京
 #说明：2024-07-08更新：因为blued的网址太多无法确认具体的，默认mitm全部网址，会导致聊天无无法发送信息等问题，及部分APP解析失败，不使用时请禁用此规则
 #避免影响其他APP解析问题，mitm已删除*,如匹配不到手动自行添加mitm：*默认全部解析，不使用时禁用即可
-#更新说明；2024-07-09可查看会员模糊真实头像功能;
-#更新定位功能，感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加修改经纬度坐标或城市：https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/boxjs.json
+#由于定位默认为北京，建议添加本地脚本，方便更改参数，使用链接无法更改参数
+#更新说明；2024-07-09可查看会员模糊真实头像功能;感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加修改经纬度坐标或直接修改城市；https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/boxjs.json
 
 
 [MITM]
-hostname =  %APPEND% argo.blued.cn,<ip-address>,-blued.irisdt.cn,-120.53.131.149,-live-im.blued.cn,-h*.blued.cn,-95.161.76.101,-101.23.128.20,-129.226.78.144,-112.28.199.148,-120.53.131.149
+{{{禁用MITM}}} =  %APPEND% argo.blued.cn,<ip-address>,-blued.irisdt.cn,-120.53.131.149,-live-im.blued.cn,-h*.blued.cn,-95.161.76.101,-101.23.128.20,-129.226.78.144,-112.28.199.148,-120.53.131.149
 
 [Script]
-Blued_ip = type=http-request,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/(blued|users|users\?extra_info=).*,requires-body=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js
+{{{禁用ip}}} = type=http-request,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/(blued|users|users\?extra_info=).*,requires-body=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js
 Blued = type=http-request,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/(blued|users|users\?extra_info=).*,requires-body=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/Blued.js
 blued = type=http-response,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/users/.*,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.js,script-update-interval=0
