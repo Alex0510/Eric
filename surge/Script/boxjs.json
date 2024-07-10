@@ -2,7 +2,7 @@
   "id": "Eric.app.sub",
   "name": "Eric",
   "author": "@Eric",
-  "icon": "https://github.com/Alex0510/Eric/blob/master/surge/eric.PNG",
+  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG",
   "repo": "https://github.com/Alex0510",
   "apps": [
     {
@@ -22,7 +22,7 @@
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
-        "https://github.com/Alex0510/Eric/blob/master/surge/eric.PNG"
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG"
       ]
     },
     {
@@ -49,7 +49,7 @@
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
-        "https://github.com/wuhuhuuuu/study/raw/main/wuhuhuuuu.PNG"
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG"
       ]
     }
   ]
