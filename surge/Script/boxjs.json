@@ -21,8 +21,8 @@
       "author": "@baby",
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
-      "icon": [
-        "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG"
       ]
     },
     {
@@ -48,8 +48,8 @@
       "author": "@baby",
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
-      "icon": [
-        "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG"
       ]
     }
   ]
