@@ -2,7 +2,7 @@
   "id": "Eric.app.sub",
   "name": "Eric",
   "author": "@Eric",
-  "icon": "https://github.com/wuhuhuuuu/study/raw/main/wuhuhuuuu.PNG",
+  "icon": "https://github.com/Alex0510/Eric/blob/master/surge/eric.PNG",
   "repo": "https://github.com/Alex0510",
   "apps": [
     {
@@ -19,10 +19,10 @@
         }
       ],
       "author": "@baby",
-      "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js?token=GHSAT0AAAAAACUOHXLV3S6TDZKCES52XBXGZUOTWCA",
+      "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
-        "https://github.com/wuhuhuuuu/study/raw/main/wuhuhuuuu.PNG"
+        "https://github.com/Alex0510/Eric/blob/master/surge/eric.PNG"
       ]
     },
     {
@@ -46,7 +46,7 @@
         }
       ],
       "author": "@baby",
-      "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js?token=GHSAT0AAAAAACUOHXLV3S6TDZKCES52XBXGZUOTWCA",
+      "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://github.com/wuhuhuuuu/study/raw/main/wuhuhuuuu.PNG"
