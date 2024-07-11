@@ -1,1 +1,69 @@
 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eric-替换 - 地图</title>
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Eric-替换 - 地图</h1>
+    <div>
+        <label for="city">城市:</label>
+        <input type="text" id="city" name="city">
+        <button onclick="updateCity()">更新城市</button>
+    </div>
+    <div>
+        <label for="latitude">纬度:</label>
+        <input type="text" id="latitude" name="latitude">
+        <label for="longitude">经度:</label>
+        <input type="text" id="longitude" name="longitude">
+        <button onclick="updateCoordinates()">更新经纬度</button>
+    </div>
+    <div id="map"></div>
+
+    <script>
+        let map;
+        let marker;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 8,
+            });
+            marker = new google.maps.Marker({
+                position: { lat: -34.397, lng: 150.644 },
+                map: map,
+            });
+        }
+
+        function updateCity() {
+            const city = document.getElementById("city").value;
+            fetch(`https://jingweidu.bmcx.com/?city=${city}`)
+                .then(response => response.json())
+                .then(data => {
+                    const { lat, lng } = data.result;
+                    const position = { lat: parseFloat(lat), lng: parseFloat(lng) };
+                    map.setCenter(position);
+                    marker.setPosition(position);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function updateCoordinates() {
+            const lat = parseFloat(document.getElementById("latitude").value);
+            const lng = parseFloat(document.getElementById("longitude").value);
+            const position = { lat, lng };
+            map.setCenter(position);
+            marker.setPosition(position);
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+</body>
+</html>
