@@ -7,7 +7,7 @@
   "apps": [
     {
       "id": "ipReplacementCity",
-      "name": "IP 替换 - 城市",
+      "name": "Eric-替换 - 城市",
       "keys": ["customCity"],
       "settings": [
         {
@@ -28,7 +28,7 @@
     },
     {
       "id": "ipReplacementCoordinates",
-      "name": "IP 替换 - 经纬度",
+      "name": "Eric-替换 - 经纬度",
       "keys": ["customLatitude", "customLongitude"],
       "settings": [
         {
