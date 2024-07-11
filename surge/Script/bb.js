@@ -3,7 +3,7 @@ const PASSWORD = "Eric1069";
 const userPassword = $persistentStore.read("userPassword");
 
 if (!userPassword) {
-  $notification.post("请输入密码", "点击此通知输入密码", "surge://run-js-input?title=输入密码&hint=请输入密码&key=userPassword");
+  $notification.post("请输入密码", "点击此通知输入密码", "surge://prompt?title=输入密码&hint=请输入密码&key=userPassword");
   $done({ response: { status: 403, body: "Forbidden: No Password Provided" } });
   return;
 }
