@@ -2,7 +2,7 @@
   "id": "Eric.app.sub",
   "name": "Eric",
   "author": "@Eric",
-  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG",
+  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
   "repo": "https://github.com/Alex0510",
   "apps": [
     {
@@ -21,7 +21,7 @@
       "author": "@baby",
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
-      "icons": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG",
+      "icons": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
     },
     {
       "id": "ipReplacementCoordinates",
@@ -46,7 +46,7 @@
       "author": "@baby",
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
-      "icons": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/eric.PNG",
+      "icons": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/blued.png",
     }
   ]
 }
