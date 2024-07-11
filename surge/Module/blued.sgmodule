@@ -1,5 +1,5 @@
 #!name=blued增强脚本--Eric，转载请注明出处
-#!desc=聊天页面查看会员隐藏距离，显示会员保密的最后登录时间而不是最后在线时间，此功能仅供参考，地图找人次数到期，地图显示头像和影子功能，修改定位(网上自行搜索位置经纬度填写到下方url重写修改经纬度)等功能
+#!desc=聊天页面查看会员隐藏距离，显示会员保密的最后登录时间而不是最后在线时间，此功能仅供参考，地图找人次数到期，地图显示头像和影子功能，捕获闪照视频,修改定位(需使用boxjs可自定义修改参数)等功能
 #!arguments=禁用MITM:hostname,Eric禁用定位:blued_ip,Eric禁用在线:Blued,Eric捕获密照:blued-pic
 #!arguments-desc=禁用输入 # 。\n\n禁用MITM输入 # ,\n\n禁用定位输入 #,\n\n禁用在线输入 #,\n\n禁用捕获输入 #。
 #更新说明；2024-07-09可查看会员模糊真实头像功能;https://jingweidu.bmcx.com可查看具体位置的经纬度；感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加修改经纬度坐标或直接修改城市：https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/boxjs.json
