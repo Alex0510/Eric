@@ -18,7 +18,7 @@
           "desc": "请输入要替换的城市"
         }
       ],
-      "author": "@baby",
+      "author": "@Eric",
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
       "icons": ["https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png"],
@@ -43,7 +43,7 @@
           "desc": "设置自定义经度值"
         }
       ],
-      "author": "@baby",
+      "author": "@Eric",
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
       "icons": ["https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png"],
