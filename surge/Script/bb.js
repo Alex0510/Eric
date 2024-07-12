@@ -1,4 +1,3 @@
-// verifyPassword.js
 const crypto = require('crypto');
 
 // 密码的SHA256哈希值
@@ -11,9 +10,11 @@ const inputPassword = $persistentStore.read("inputPassword");
 const inputPasswordHash = crypto.createHash('sha256').update(inputPassword).digest('hex');
 
 if (inputPasswordHash === storedPasswordHash) {
-    $notify("密码验证", "成功", "密码验证成功，可以继续添加链接。");
+    $persistentStore.write("verified", "true");
+    $notify("密码验证", "成功", "密码验证成功，可以继续操作。");
     $done({ pass: true });
 } else {
-    $notify("密码验证", "失败", "密码验证失败，无法添加链接。");
+    $persistentStore.write("verified", "false");
+    $notify("密码验证", "失败", "密码验证失败，无法继续操作。");
     $done({ pass: false });
 }
