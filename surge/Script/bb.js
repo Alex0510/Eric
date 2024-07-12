@@ -2,7 +2,7 @@
 const crypto = require('crypto');
 
 // 密码的SHA256哈希值
-const storedPasswordHash = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd8be41d1d4f1d6b224";
+const storedPasswordHash = "c98cd3b5b1e43c3c5ae06e82a5b7da3d4ec13adfb14e3ad9ae0c8dfbf63053aa";
 
 // 从持久化存储中读取用户输入的密码
 const inputPassword = $persistentStore.read("inputPassword");
