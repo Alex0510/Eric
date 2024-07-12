@@ -56,12 +56,12 @@
     },
     {
       "id": "sortByReplacement",
-      "name": "Eric-替换 - 排序方式",
+      "name": "Eric-替换 - Map",
       "keys": ["customSortBy"],
       "settings": [
         {
           "id": "customSortBy",
-          "name": "排序方式",
+          "name": "Map",
           "val": "nearby",
           "type": "text",
           "desc": "请输入排序方式 (nearby 或 online)"
