@@ -1,15 +1,15 @@
 const $ = new Env("Eric专属");
 
-// 使用crypto库进行哈希加密
-const crypto = require('crypto');
+// 使用 CryptoJS 进行哈希加密
+const CryptoJS = require('crypto-js');
 
 // 设置脚本密码
 const scriptPassword = 'Eric1069';
-const hashedPassword = crypto.createHash('sha256').update(scriptPassword).digest('hex');
+const hashedPassword = CryptoJS.SHA256(scriptPassword).toString();
 
 // 从请求头中读取用户输入的密码并进行哈希加密
 const userInputPassword = $request.headers["X-Script-Password"];
-const userInputHashedPassword = crypto.createHash('sha256').update(userInputPassword).digest('hex');
+const userInputHashedPassword = CryptoJS.SHA256(userInputPassword).toString();
 
 // 校验密码
 if (userInputHashedPassword !== hashedPassword) {
