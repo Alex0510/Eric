@@ -71,8 +71,8 @@
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
-        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
-        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png"
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
       ]
     }
   ]
