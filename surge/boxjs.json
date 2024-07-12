@@ -1,8 +1,30 @@
 {
-    "script": {
-        "name": "验证密码",
-        "url": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/bb.js",
-        "icon": "lock.circle",
-        "description": "输入密码验证"
+  "id": "Eric.app.sub",
+  "name": "Eric",
+  "author": "@Eric",
+  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
+  "repo": "https://github.com/Alex0510",
+  "apps": [
+    {
+      "id": "passwordValidation",
+      "name": "密码验证",
+      "keys": ["inputPassword"],
+      "settings": [
+        {
+          "id": "inputPassword",
+          "name": "输入密码",
+          "val": "",
+          "type": "password",
+          "desc": "请输入密码"
+        }
+      ],
+      "author": "@Eric",
+      "script": "https://path_to_your_script/verifyPassword.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png"
+      ]
     }
+  ]
 }
