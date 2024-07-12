@@ -21,7 +21,7 @@
           "id": "password",
           "name": "密码",
           "val": "",
-          "type": "text",
+          "type": "password",
           "desc": "请输入密码"
         }
       ],
@@ -56,7 +56,7 @@
           "id": "password",
           "name": "密码",
           "val": "",
-          "type": "text",
+          "type": "password",
           "desc": "请输入密码"
         }
       ],
