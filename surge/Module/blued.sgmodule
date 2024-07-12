@@ -1,6 +1,6 @@
 #!name=blued增强脚本--Eric，转载请注明出处
 #!desc=查看会员隐藏距离，查看会员保密的最后在线时间，地图找人次数到期，地图显示头像和影子功能，捕获闪照视频,修改定位(需使用boxjs可自定义修改参数)等功能
-#!arguments=禁用MITM:hostname,Eric禁用定位:blued_ip,Eric捕获密照:blued-pic
+#!arguments=禁用MITM:hostname,Eric定位:blued_ip,Eric捕获密照:blued-pic
 #!arguments-desc=禁用输入 # 。\n\n禁用MITM输入 # ,\n\n禁用定位输入 #,\n\n禁用捕获输入 #。
 #更新说明:2024-07-09可查看会员模糊真实头像功能;https://jingweidu.bmcx.com可查看具体位置的经纬度；感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加修改经纬度坐标或直接修改城市：https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/boxjs.json
 #更新说明:2024-07-10更新闪照、视频捕获功能防止销毁或撤回
@@ -12,5 +12,5 @@
 
 [Script]
 {{{Eric捕获密照}}} = type=http-request,pattern=^https:\/\/burn-chatfiles\.bldimg\.com\/burn_chatfiles\/(videos|users)\/.*(mp4|jpg).*,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued-pic.js,requires-body=0,max-size=0,debug=0
-{{{Eric禁用定位}}} = type=http-request,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/(blued|users|users\?extra_info=|ticktocks/users|groups/nearby).*,requires-body=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js
+{{{Eric定位}}} = type=http-request,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/(blued|users|users\?extra_info=|ticktocks/users|groups/nearby).*,requires-body=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued_ip.js
 Blued-Eric = type=http-response,pattern=https://(argo.blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/users/.*,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/Blued.js,script-update-interval=0
