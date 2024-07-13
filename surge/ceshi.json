@@ -8,13 +8,13 @@
     {
       "id": "ipReplacementCity",
       "name": "Eric-替换 - 密码",
-      "keys": ["customPassword"],
+      "keys": ["inputPassword"],
       "settings": [
         {
-          "id": "customPassword",
-          "name": "密码",
+          "id": "inputPassword",
+          "name": "Password",
           "val": "",
-          "type": "password",
+          "type": "Password",
           "desc": "请输入访问密码"
         }
       ],
@@ -29,7 +29,7 @@
     {
       "id": "ipReplacementCity",
       "name": "Eric-替换 - 城市",
-      "keys": ["customCity", "customPassword"],
+      "keys": ["customCity", "inputPassword"],
       "settings": [
         {
           "id": "customCity",
@@ -39,10 +39,10 @@
           "desc": "请输入要替换的城市"
         },
         {
-          "id": "customPassword",
-          "name": "密码",
+          "id": "inputPassword",
+          "name": "Password",
           "val": "",
-          "type": "password",
+          "type": "Password",
           "desc": "请输入访问密码"
         }
       ],
@@ -57,7 +57,7 @@
     {
       "id": "ipReplacementCoordinates",
       "name": "Eric-替换 - 经纬度",
-      "keys": ["customLatitude", "customLongitude", "customPassword"],
+      "keys": ["customLatitude", "customLongitude", "inputPassword"],
       "settings": [
         {
           "id": "customLatitude",
@@ -74,10 +74,10 @@
           "desc": "设置自定义经度值"
         },
         {
-          "id": "customPassword",
-          "name": "密码",
+          "id": "inputPassword",
+          "name": "Password",
           "val": "",
-          "type": "password",
+          "type": "Password",
           "desc": "请输入访问密码"
         }
       ],
@@ -92,7 +92,7 @@
     {
       "id": "sortByReplacement",
       "name": "Eric-替换 - Map",
-      "keys": ["customSortBy", "customPassword"],
+      "keys": ["customSortBy", "inputPassword"],
       "settings": [
         {
           "id": "customSortBy",
@@ -102,10 +102,10 @@
           "desc": "请输入排序方式 (nearby 或 online)"
         },
         {
-          "id": "customPassword",
-          "name": "密码",
+          "id": "inputPassword",
+          "name": "Password",
           "val": "",
-          "type": "password",
+          "type": "Password",
           "desc": "请输入访问密码"
         }
       ],
