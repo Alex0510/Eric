@@ -1,37 +1,30 @@
 const $ = new Env("Eric专属");
 
 // 简单的 SHA-256 实现，用于密码哈希
-function sha256(str) {
+async function sha256(str) {
     const utf8 = new TextEncoder().encode(str);
-    return crypto.subtle.digest('SHA-256', utf8).then(buf => {
-        return Array.prototype.map.call(new Uint8Array(buf), x => ('00' + x.toString(16)).slice(-2)).join('');
-    });
+    const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
 }
 
 // 设置脚本密码
 const scriptPassword = 'Eric1069';
+const hashedPassword = await sha256(scriptPassword);
 
 // 从请求头中读取用户输入的密码
 const userInputPassword = $request.headers["X-Script-Password"];
+const userInputHashedPassword = await sha256(userInputPassword);
 
 // 校验密码
-async function validatePassword() {
-    const userInputHashedPassword = await sha256(userInputPassword);
-    const hashedPassword = await sha256(scriptPassword);
-
-    if (userInputHashedPassword !== hashedPassword) {
-        console.error("密码错误");
-        $done({ response: { status: 403, body: "密码错误" } });
-        return false;
-    }
-    return true;
+if (userInputHashedPassword !== hashedPassword) {
+    console.error("密码错误");
+    $done({ response: { status: 403, body: "密码错误" } });
+    return;
 }
 
 (async () => {
-    if (!(await validatePassword())) {
-        return;
-    }
-
     try {
         // 从 BoxJs 中读取设置
         const customCity = $.getdata("customCity") || "";
