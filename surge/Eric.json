@@ -1,0 +1,23 @@
+{
+  "id": "Eric1069.app.sub",
+  "name": "Eric1069",
+  "author": "@Eric1069",
+  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
+  "repo": "https://github.com/Alex0510",
+  "apps": []
+    {
+      "id": "ericPassword",
+      "name": "Eric-密码验证",
+      "keys": ["EricPassword"],
+      "settings": [
+        {
+          "id": "EricPassword",
+          "name": "脚本密码",
+          "val": "Eric1069",
+          "type": "text",
+          "desc": "请输入脚本密码"
+        }
+      ]
+    }
+  ]
+}
