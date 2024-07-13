@@ -1,18 +1,21 @@
+// Predefined password
+const predefinedPassword = "Eric1069";
+
+// Get the user-provided password from BoxJS
+const inputPassword = $persistentStore.read("inputPassword");
+
+if (predefinedPassword !== inputPassword) {
+  // If passwords don't match, return an error message
+  $done({ body: JSON.stringify({ error: "Unauthorized" }) });
+  return;
+}
+
+// Proceed with the rest of your script
 // 获取当前响应的body
 let body = $response.body;
 let obj = JSON.parse(body);
 
 console.log('Original response body:', JSON.stringify(obj, null, 2));
-
-// 预定义密码
-const predefinedPassword = "Eric1069";
-const inputPassword = $request.headers['password'];
-
-if (inputPassword !== predefinedPassword) {
-  // 如果密码不匹配，返回错误信息
-  $done({ body: JSON.stringify({ error: "Unauthorized" }) });
-  return;
-}
 
 // 使用正则表达式提取当前请求URL中的用户ID
 const userIdRegex = /users\/(\d+)/;
