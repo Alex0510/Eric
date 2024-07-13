@@ -6,6 +6,27 @@
   "repo": "https://github.com/Alex0510",
   "apps": [
     {
+      "id": "ericPassword",
+      "name": "Eric-密码验证",
+      "keys": ["EricPassword"],
+      "settings": [
+        {
+          "id": "EricPassword",
+          "name": "脚本密码",
+          "val": "",
+          "type": "text",
+          "desc": "请输入脚本密码"
+        }
+      ],
+      "author": "@Eric",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/blued_vip.js,https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/Blued_pic.js,https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/Blued_location.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
+      ]
+    },
+    {
       "id": "ipReplacementCity",
       "name": "Eric-替换 - 城市",
       "keys": ["customCity"],
