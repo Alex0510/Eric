@@ -1,40 +1,39 @@
 const $ = new Env("Eric专属");
 
-// 简单的 SHA-256 实现，用于密码哈希
-async function sha256(str) {
-    const utf8 = new TextEncoder().encode(str);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    return hashHex;
-}
-
-// 设置脚本密码
-const scriptPassword = 'Eric1069';
-const hashedPassword = await sha256(scriptPassword);
-
-// 从URL参数中读取用户输入的密码
-const url = $request.url;
-const urlParams = new URLSearchParams(url.split('?')[1]);
-const userInputPassword = urlParams.get("X-Script-Password");
-
-if (!userInputPassword) {
-    console.error("缺少密码");
-    $done({ response: { status: 403, body: "缺少密码" } });
-    return;
-}
-const userInputHashedPassword = await sha256(userInputPassword);
-
-// 校验密码
-if (userInputHashedPassword !== hashedPassword) {
-    console.error("密码错误");
-    $done({ response: { status: 403, body: "密码错误" } });
-    return;
-}
-
-// 现有的 cesua.js 脚本逻辑
 (async () => {
     try {
+        // 简单的 SHA-256 实现，用于密码哈希
+        async function sha256(str) {
+            const utf8 = new TextEncoder().encode(str);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+        // 设置脚本密码
+        const scriptPassword = 'Eric1069';
+        const hashedPassword = await sha256(scriptPassword);
+
+        // 从URL参数中读取用户输入的密码
+        const url = $request.url;
+        const urlParams = new URLSearchParams(url.split('?')[1]);
+        const userInputPassword = urlParams.get("X-Script-Password");
+
+        if (!userInputPassword) {
+            console.error("缺少密码");
+            $done({ response: { status: 403, body: "缺少密码" } });
+            return;
+        }
+        const userInputHashedPassword = await sha256(userInputPassword);
+
+        // 校验密码
+        if (userInputHashedPassword !== hashedPassword) {
+            console.error("密码错误");
+            $done({ response: { status: 403, body: "密码错误" } });
+            return;
+        }
+
         // 从 BoxJs 中读取设置
         const customCity = $.getdata("customCity") || "";
         const customLatitude = $.getdata("customLatitude") || "";
