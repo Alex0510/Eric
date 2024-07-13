@@ -19,7 +19,7 @@
         }
       ],
   "author": "@Eric1069",
-      "script": "https://gist.githubusercontent.com/Alex0510/f5ec488f943cfbf79fd14206fcedf80c/raw/8568389517b67f006fbe8ceeeefbd5526ea3eb67/blued_hook.js",
+      "script": ["https://gist.githubusercontent.com/Alex0510/f5ec488f943cfbf79fd14206fcedf80c/raw/8568389517b67f006fbe8ceeeefbd5526ea3eb67/blued_hook.js","https://gist.githubusercontent.com/Alex0510/f5ec488f943cfbf79fd14206fcedf80c/raw/9be54c6d32672d608adfbd8258352102a02f116e/blued_picvideo.js"]
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
