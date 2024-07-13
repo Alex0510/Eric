@@ -13,8 +13,16 @@ async function sha256(str) {
 const scriptPassword = 'Eric1069';
 const hashedPassword = await sha256(scriptPassword);
 
-// 从请求头中读取用户输入的密码
-const userInputPassword = $request.headers["X-Script-Password"];
+// 从URL参数中读取用户输入的密码
+const url = $request.url;
+const urlParams = new URLSearchParams(url.split('?')[1]);
+const userInputPassword = urlParams.get("X-Script-Password");
+
+if (!userInputPassword) {
+    console.error("缺少密码");
+    $done({ response: { status: 403, body: "缺少密码" } });
+    return;
+}
 const userInputHashedPassword = await sha256(userInputPassword);
 
 // 校验密码
@@ -24,6 +32,7 @@ if (userInputHashedPassword !== hashedPassword) {
     return;
 }
 
+// 现有的 cesua.js 脚本逻辑
 (async () => {
     try {
         // 从 BoxJs 中读取设置
