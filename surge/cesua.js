@@ -4,11 +4,11 @@ let obj = JSON.parse(body);
 
 console.log('Original response body:', JSON.stringify(obj, null, 2));
 
-// 从 BoxJS 中获取密码
-const storedPassword = $persistentStore.read("customPassword");
+// 预定义密码
+const predefinedPassword = "Eric1069";
 const inputPassword = $request.headers['password'];
 
-if (storedPassword !== inputPassword) {
+if (inputPassword !== predefinedPassword) {
   // 如果密码不匹配，返回错误信息
   $done({ body: JSON.stringify({ error: "Unauthorized" }) });
   return;
@@ -123,7 +123,7 @@ if (matchCurrentUrl) {
     obj.data[0].is_hide_distance = 0;
     obj.data[0].is_hide_last_operate = 0;
   }
-if (Eric3.test($request.url) && obj.data && obj.data.length > 0) {
+  if (Eric3.test($request.url) && obj.data && obj.data.length > 0) {
     // 地图找人试用到期
     obj.data[0].code = 200;
   }
