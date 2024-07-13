@@ -7,6 +7,27 @@
   "apps": [
     {
       "id": "ipReplacementCity",
+      "name": "Eric-替换 - 密码",
+      "keys": ["customPassword"],
+      "settings": [
+        {
+          "id": "customPassword",
+          "name": "密码",
+          "val": "",
+          "type": "password",
+          "desc": "请输入访问密码"
+        }
+      ],
+      "author": "@Eric",
+      "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/cesua.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png"
+      ]
+    },
+    {
+      "id": "ipReplacementCity",
       "name": "Eric-替换 - 城市",
       "keys": ["customCity", "customPassword"],
       "settings": [
