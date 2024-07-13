@@ -1,7 +1,7 @@
 {
-  "id": "Eric1069.app.sub",
-  "name": "Eric1069",
-  "author": "@Eric1069",
+  "id": "Eric.app.sub",
+  "name": "Eric",
+  "author": "@Eric",
   "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
   "repo": "https://github.com/Alex0510",
   "apps": [
@@ -13,12 +13,12 @@
         {
           "id": "EricPassword",
           "name": "脚本密码",
-          "val": "Eric1069",
+          "val": "",
           "type": "text",
           "desc": "请输入脚本密码"
         }
       ],
-      "author": "@Eric1069",
+      "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/f5ec488f943cfbf79fd14206fcedf80c/raw/e7bb6be50dc66dc575c16a0e9833a02c66a78dbc/blued_hook.js,https://gist.githubusercontent.com/Alex0510/f5ec488f943cfbf79fd14206fcedf80c/raw/e7bb6be50dc66dc575c16a0e9833a02c66a78dbc/blued_picvideo.js,https://gist.githubusercontent.com/Alex0510/f5ec488f943cfbf79fd14206fcedf80c/raw/e7bb6be50dc66dc575c16a0e9833a02c66a78dbc/blued_loction.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
