@@ -204,6 +204,100 @@ if (!verifyPassword(storedPassword)) {
 
                                         console.log('Updated last_operate:', targetData.last_operate);
                                         console.log('Updated distance:', targetData.location);
-                    
-                                        console.log('Updated avatar:', targetData.avatar);logUpdated:', targetData.location););
-(Updated:', targetData.location););
+                                        console.log('Updated avatar:', targetData.avatar);
+                                    } else {
+                                        console.error('Original response does not contain required data fields');
+                                    }
+
+                                    fetchedData.is_hide_distance = 0;
+                                    fetchedData.is_hide_last_operate = 0;
+
+                                    console.log('Modified fetched data:', JSON.stringify(fetchedData, null, 2));
+                                } else {
+                                    console.error('Fetched data does not contain required fields');
+                                }
+
+                                console.log('Modified response body:', JSON.stringify(obj, null, 2));
+                                $.done({ body: JSON.stringify(obj) });
+                            } else {
+                                console.error('Fetched data does not contain required fields');
+                                handleResponseError(obj);
+                            }
+                        } catch (parseError) {
+                            console.error('Error parsing data:', parseError);
+                            handleResponseError(obj);
+                        }
+                    }
+                });
+            } else {
+                if (Eric.test($request.url) && obj.data && obj.data.length > 0) {
+                    obj.data[0].is_open_shadow = 1;
+                    obj.data[0].has_right = 1;
+                }
+                if (Eric3.test($request.url) && obj.data && obj.data.length > 0) {
+                    obj.data[0].code = 200;
+                }
+                $.done({ body: JSON.stringify(obj) });
+            }
+
+            function handleResponseError(obj) {
+                if (obj.data && obj.data.length > 0) {
+                    obj.data[0].is_hide_distance = 0;
+                    obj.data[0].is_hide_last_operate = 0;
+                    obj.data[0].avatar = obj.data[0].latest_avatar;
+                    delete obj.data[0].distance;
+                }
+                $.done({ body: JSON.stringify(obj) });
+            }
+        } catch (error) {
+            console.error(error);
+            $.done({});
+        }
+    })();
+}
+
+function Env(name) {
+    this.name = name;
+    this.isSurge = typeof $httpClient !== 'undefined';
+    this.isQuanX = typeof $task !== 'undefined';
+    this.isLoon = typeof $loon !== 'undefined';
+    this.isShadowrocket = typeof $rocket !== 'undefined';
+
+    this.getdata = (key) => {
+        if (this.isSurge || this.isLoon) return $persistentStore.read(key);
+        if (this.isQuanX) return $prefs.valueForKey(key);
+        if (this.isShadowrocket) return $rocket.getData(key);
+    };
+
+    this.setdata = (val, key) => {
+        if (this.isSurge || this.isLoon) return $persistentStore.write(val, key);
+        if (this.isQuanX) return $prefs.setValueForKey(val, key);
+        if (this.isShadowrocket) return $rocket.setData(val, key);
+    };
+
+    this.msg = (title, subtitle, body, options) => {
+        if (this.isSurge || this.isLoon) $notification.post(title, subtitle, body, options);
+        if (this.isQuanX) $notify(title, subtitle, body, options);
+        if (this.isShadowrocket) $rocket.notify(title, subtitle, body, options);
+    };
+
+    this.log = (message) => console.log(message);
+
+    this.done = (value = {}) => {
+        if (this.isQuanX) return $done(value);
+        if (this.isSurge || this.isLoon || this.isShadowrocket) $done(value);
+    };
+
+    this.http = {
+        get: (options, callback) => {
+            if (this.isQuanX) $task.fetch(options).then(resp => callback(null, resp, resp.body), reason => callback(reason.error, null, null));
+            if (this.isSurge || this.isLoon) $httpClient.get(options, callback);
+            if (this.isShadowrocket) $rocket.httpGet(options.url, options.headers, callback);
+        },
+        post: (options, callback) => {
+            if (this.isQuanX) $task.fetch(options).then(resp => callback(null, resp, resp.body), reason => callback(reason.error, null, null));
+            if (this.isSurge || this.isLoon) $httpClient.post(options, callback);
+            if (this.isShadowrocket) $rocket.httpPost(options.url, options.headers, options.body, callback);
+        }
+    };
+}
