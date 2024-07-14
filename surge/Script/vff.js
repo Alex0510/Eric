@@ -1,48 +1,50 @@
-const $ = (() => {
-    const isSurge = typeof $httpClient !== 'undefined';
-    const isQuanX = typeof $task !== 'undefined';
-    const isLoon = typeof $loon !== 'undefined';
-    const isShadowrocket = typeof $rocket !== 'undefined';
+const $ = new Env("Eric专属");
 
-    const getdata = (key) => {
-        if (isSurge || isLoon) return $persistentStore.read(key);
-        if (isQuanX) return $prefs.valueForKey(key);
-        if (isShadowrocket) return $rocket.getData(key);
+function Env(name) {
+    this.name = name;
+    this.isSurge = typeof $httpClient !== 'undefined';
+    this.isQuanX = typeof $task !== 'undefined';
+    this.isLoon = typeof $loon !== 'undefined';
+    this.isShadowrocket = typeof $rocket !== 'undefined';
+
+    this.getdata = (key) => {
+        if (this.isSurge || this.isLoon) return $persistentStore.read(key);
+        if (this.isQuanX) return $prefs.valueForKey(key);
+        if (this.isShadowrocket) return $rocket.getData(key);
     };
 
-    const setdata = (val, key) => {
-        if (isSurge || isLoon) return $persistentStore.write(val, key);
-        if (isQuanX) return $prefs.setValueForKey(val, key);
-        if (isShadowrocket) return $rocket.setData(val, key);
+    this.setdata = (val, key) => {
+        if (this.isSurge || this.isLoon) return $persistentStore.write(val, key);
+        if (this.isQuanX) return $prefs.setValueForKey(val, key);
+        if (this.isShadowrocket) return $rocket.setData(val, key);
     };
 
-    const msg = (title, subtitle, body, options) => {
-        if (isSurge || isLoon) $notification.post(title, subtitle, body, options);
-        if (isQuanX) $notify(title, subtitle, body, options);
-        if (isShadowrocket) $rocket.notify(title, subtitle, body, options);
+    this.msg = (title, subtitle, body, options) => {
+        if (this.isSurge || this.isLoon) $notification.post(title, subtitle, body, options);
+        if (this.isQuanX) $notify(title, subtitle, body, options);
+        if (this.isShadowrocket) $rocket.notify(title, subtitle, body, options);
     };
 
-    const log = (message) => console.log(message);
-    const done = (value = {}) => {
-        if (isQuanX) return $done(value);
-        if (isSurge || isLoon || isShadowrocket) $done(value);
+    this.log = (message) => console.log(message);
+
+    this.done = (value = {}) => {
+        if (this.isQuanX) return $done(value);
+        if (this.isSurge || this.isLoon || this.isShadowrocket) $done(value);
     };
 
-    const http = {
+    this.http = {
         get: (options, callback) => {
-            if (isQuanX) $task.fetch(options).then(resp => callback(null, resp, resp.body), reason => callback(reason.error, null, null));
-            if (isSurge || isLoon) $httpClient.get(options, callback);
-            if (isShadowrocket) $rocket.httpGet(options.url, options.headers, callback);
+            if (this.isQuanX) $task.fetch(options).then(resp => callback(null, resp, resp.body), reason => callback(reason.error, null, null));
+            if (this.isSurge || this.isLoon) $httpClient.get(options, callback);
+            if (this.isShadowrocket) $rocket.httpGet(options.url, options.headers, callback);
         },
         post: (options, callback) => {
-            if (isQuanX) $task.fetch(options).then(resp => callback(null, resp, resp.body), reason => callback(reason.error, null, null));
-            if (isSurge || isLoon) $httpClient.post(options, callback);
-            if (isShadowrocket) $rocket.httpPost(options.url, options.headers, options.body, callback);
+            if (this.isQuanX) $task.fetch(options).then(resp => callback(null, resp, resp.body), reason => callback(reason.error, null, null));
+            if (this.isSurge || this.isLoon) $httpClient.post(options, callback);
+            if (this.isShadowrocket) $rocket.httpPost(options.url, options.headers, options.body, callback);
         }
     };
-
-    return { isSurge, isQuanX, isLoon, isShadowrocket, getdata, setdata, msg, log, done, http };
-})();
+}
 
 // 定义默认密码
 const password = 'Eric1069';
@@ -108,7 +110,7 @@ if (!verifyPassword(storedPassword)) {
                 longitude = response.lng;
             }
 
-            const modifiedUrl = url.replace(/(lot|longitude|lon)=\d+\.\d+|(lat|latitude)=\d+\.\d+/g, function(match, p1, p2) {
+            const modifiedUrl = url.replace(/(lot|longitude|lon)=\d+\.\d+|(lat|latitude)=\d+\.\d+/g, function (match, p1, p2) {
                 if (p1 === 'lot' || p1 === 'longitude' || p1 === 'lon') return p1 + '=' + longitude;
                 if (p2 === 'lat' || p2 === 'latitude') return p2 + '=' + latitude;
                 return match;
@@ -202,54 +204,6 @@ if (!verifyPassword(storedPassword)) {
 
                                         console.log('Updated last_operate:', targetData.last_operate);
                                         console.log('Updated distance:', targetData.location);
-                                        console.log('Updated avatar:', targetData.avatar);
-                                    } else {
-                                        console.error('Original response does not contain required data fields');
-                                    }
-
-                                    fetchedData.is_hide_distance = 0;
-                                    fetchedData.is_hide_last_operate = 0;
-
-                                    console.log('Modified fetched data:', JSON.stringify(fetchedData, null, 2));
-                                } else {
-                                    console.error('Fetched data does not contain required fields');
-                                }
-
-                                console.log('Modified response body:', JSON.stringify(obj, null, 2));
-                                $done({ body: JSON.stringify(obj) });
-                            } else {
-                                console.error('Fetched data does not contain required fields');
-                                handleResponseError(obj);
-                            }
-                        } catch (parseError) {
-                            console.error('Error parsing data:', parseError);
-                            handleResponseError(obj);
-                        }
-                    }
-                });
-            } else {
-                if (Eric.test($request.url) && obj.data && obj.data.length > 0) {
-                    obj.data[0].is_open_shadow = 1;
-                    obj.data[0].has_right = 1;
-                }
-                if (Eric3.test($request.url) && obj.data && obj.data.length > 0) {
-                    obj.data[0].code = 200;
-                }
-                $done({ body: JSON.stringify(obj) });
-            }
-
-            function handleResponseError(obj) {
-                if (obj.data && obj.data.length > 0) {
-                    obj.data[0].is_hide_distance = 0;
-                    obj.data[0].is_hide_last_operate = 0;
-                    obj.data[0].avatar = obj.data[0].latest_avatar;
-                    delete obj.data[0].distance;
-                }
-                $done({ body: JSON.stringify(obj) });
-            }
-        } catch (error) {
-            console.error(error);
-            $done({});
-        }
-    })();
-}
+                    
+                                        console.log('Updated avatar:', targetData.avatar);logUpdated:', targetData.location););
+(Updated:', targetData.location););
