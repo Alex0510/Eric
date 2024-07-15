@@ -16,7 +16,7 @@
           "val": "",
           "type": "text",
           "desc": "请输入脚本密码"
-        },
+        }
       ],
       "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedlocation.js,https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedvip.js,https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedpic.js",
