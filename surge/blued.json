@@ -8,7 +8,7 @@
     {
       "id": "ericPassword",
       "name": "Eric-密码验证",
-      "keys": ["EricPassword", "EricPasswordEnabled"],
+      "keys": ["EricPassword"],
       "settings": [
         {
           "id": "EricPassword",
@@ -17,16 +17,9 @@
           "type": "text",
           "desc": "请输入脚本密码"
         },
-        {
-          "id": "EricPasswordEnabled",
-          "name": "启用脚本",
-          "val": true,
-          "type": "bool",
-          "desc": "启用或禁用脚本 (true 或 false)"
-        }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/319b0113ca4804b5ece5bd009201ad6a58eddde6/bluedlocation.js,https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/319b0113ca4804b5ece5bd009201ad6a58eddde6/bluedvip.js,https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/319b0113ca4804b5ece5bd009201ad6a58eddde6/bluedpic.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedlocation.js,https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedvip.js,https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedpic.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
@@ -54,7 +47,7 @@
         }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/319b0113ca4804b5ece5bd009201ad6a58eddde6/bluedlocation.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedlocation.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
@@ -89,7 +82,7 @@
         }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/319b0113ca4804b5ece5bd009201ad6a58eddde6/bluedlocation.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedlocation.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
@@ -99,7 +92,7 @@
     {
       "id": "sortByReplacement",
       "name": "Eric-替换 - Map",
-      "keys": ["sortBy", "sortByReplacementEnabled"],
+      "keys": ["sortBy", "ipReplacementCoordinatesEnabled"],
       "settings": [
         {
           "id": "sortBy",
@@ -109,7 +102,7 @@
           "desc": "请输入排序方式 (nearby 或 online)"
         },
         {
-          "id": "sortByReplacementEnabled",
+          "id": "ipReplacementCoordinatesEnabled",
           "name": "启用脚本",
           "val": true,
           "type": "bool",
@@ -117,7 +110,7 @@
         }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/319b0113ca4804b5ece5bd009201ad6a58eddde6/bluedlocation.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedlocation.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
@@ -138,7 +131,7 @@
         }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/319b0113ca4804b5ece5bd009201ad6a58eddde6/bluedpic.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedpic.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
@@ -159,7 +152,7 @@
         }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/319b0113ca4804b5ece5bd009201ad6a58eddde6/bluedvip.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/a504c35f20f5aa3c9973577ac0a3ab35/raw/7317818d8f31b57515a5cea840e21b1962967197/bluedvip.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
