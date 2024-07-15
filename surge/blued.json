@@ -1,0 +1,170 @@
+{
+  "id": "Eric.app.sub",
+  "name": "Eric",
+  "author": "@Eric",
+  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
+  "repo": "https://github.com/Alex0510",
+  "apps": [
+    {
+      "id": "ericPassword",
+      "name": "Eric-密码验证",
+      "keys": ["EricPassword", "EricPasswordEnabled"],
+      "settings": [
+        {
+          "id": "EricPassword",
+          "name": "脚本密码",
+          "val": "",
+          "type": "text",
+          "desc": "请输入脚本密码"
+        },
+        {
+          "id": "EricPasswordEnabled",
+          "name": "启用脚本",
+          "val": true,
+          "type": "bool",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@Eric",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/blued_vip.js,https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/Blued_pic.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
+      ]
+    },
+    {
+      "id": "ipReplacementCity",
+      "name": "Eric-替换 - 城市",
+      "keys": ["customCity", "ipReplacementCityEnabled"],
+      "settings": [
+        {
+          "id": "customCity",
+          "name": "自定义城市",
+          "val": "",
+          "type": "text",
+          "desc": "请输入要替换的城市"
+        },
+        {
+          "id": "ipReplacementCityEnabled",
+          "name": "启用脚本",
+          "val": true,
+          "type": "bool",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@Eric",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/da40767862e75c66e1e0e8e12823e140fb375cc5/Blued_location.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png"
+      ]
+    },
+    {
+      "id": "ipReplacementCoordinates",
+      "name": "Eric-替换 - 经纬度",
+      "keys": ["customLatitude", "customLongitude", "ipReplacementCoordinatesEnabled"],
+      "settings": [
+        {
+          "id": "customLatitude",
+          "name": "自定义纬度",
+          "val": "",
+          "type": "text",
+          "desc": "设置自定义纬度值"
+        },
+        {
+          "id": "customLongitude",
+          "name": "自定义经度",
+          "val": "",
+          "type": "text",
+          "desc": "设置自定义经度值"
+        },
+        {
+          "id": "ipReplacementCoordinatesEnabled",
+          "name": "启用脚本",
+          "val": true,
+          "type": "bool",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@Eric",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/da40767862e75c66e1e0e8e12823e140fb375cc5/Blued_location.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png"
+      ]
+    },
+    {
+      "id": "sortByReplacement",
+      "name": "Eric-替换 - Map",
+      "keys": ["sortBy", "sortByReplacementEnabled"],
+      "settings": [
+        {
+          "id": "sortBy",
+          "name": "Map",
+          "val": "nearby",
+          "type": "text",
+          "desc": "请输入排序方式 (nearby 或 online)"
+        },
+        {
+          "id": "sortByReplacementEnabled",
+          "name": "启用脚本",
+          "val": true,
+          "type": "bool",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@Eric",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/da40767862e75c66e1e0e8e12823e140fb375cc5/Blued_location.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
+      ]
+    },
+    {
+      "id": "bluedPic",
+      "name": "Eric-BluedPic",
+      "keys": ["bluedPicEnabled"],
+      "settings": [
+        {
+          "id": "bluedPicEnabled",
+          "name": "启用脚本",
+          "val": true,
+          "type": "bool",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@Eric",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/Blued_pic.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
+      ]
+    },
+    {
+      "id": "bluedVip",
+      "name": "Eric-BluedVip",
+      "keys": ["bluedVipEnabled"],
+      "settings": [
+        {
+          "id": "bluedVipEnabled",
+          "name": "启用脚本",
+          "val": true,
+          "type": "bool",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@Eric",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/blued_vip.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
+      ]
+    }
+  ]
+}
