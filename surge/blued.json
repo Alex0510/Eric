@@ -22,7 +22,7 @@
           "name": "启用脚本",
           "val": true,
           "type": "bool",
-          "desc": "启用或禁用脚本"
+          "desc": "启用或禁用脚本 (true 或 false)"
         }
       ],
       "author": "@Eric",
@@ -50,7 +50,7 @@
           "name": "启用脚本",
           "val": true,
           "type": "bool",
-          "desc": "启用或禁用脚本"
+          "desc": "启用或禁用脚本 (true 或 false)"
         }
       ],
       "author": "@Eric",
@@ -85,7 +85,7 @@
           "name": "启用脚本",
           "val": true,
           "type": "bool",
-          "desc": "启用或禁用脚本"
+          "desc": "启用或禁用脚本 (true 或 false)"
         }
       ],
       "author": "@Eric",
@@ -113,7 +113,7 @@
           "name": "启用脚本",
           "val": true,
           "type": "bool",
-          "desc": "启用或禁用脚本"
+          "desc": "启用或禁用脚本 (true 或 false)"
         }
       ],
       "author": "@Eric",
@@ -134,7 +134,7 @@
           "name": "启用脚本",
           "val": true,
           "type": "bool",
-          "desc": "启用或禁用脚本"
+          "desc": "启用或禁用脚本 (true 或 false)"
         }
       ],
       "author": "@Eric",
@@ -155,7 +155,7 @@
           "name": "启用脚本",
           "val": true,
           "type": "bool",
-          "desc": "启用或禁用脚本"
+          "desc": "启用或禁用脚本 (true 或 false)"
         }
       ],
       "author": "@Eric",
