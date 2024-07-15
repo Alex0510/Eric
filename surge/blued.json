@@ -8,7 +8,7 @@
     {
       "id": "ericPassword",
       "name": "Eric-密码验证",
-      "keys": ["EricPassword"],
+      "keys": ["EricPassword","ipReplacementCoordinatesEnabled","bluedPicEnabled","bluedVipEnabled"],
       "settings": [
         {
           "id": "EricPassword",
@@ -16,6 +16,13 @@
           "val": "",
           "type": "text",
           "desc": "请输入脚本密码"
+        },
+        {
+          "id": "ipReplacementCoordinatesEnabled,bluedPicEnabled,bluedVipEnabled",
+          "name": "启用脚本",
+          "val": true,
+          "type": "bool",
+          "desc": "启用或禁用脚本 (true 或 false)"
         }
       ],
       "author": "@Eric",
