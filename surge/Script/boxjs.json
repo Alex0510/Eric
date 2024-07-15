@@ -78,10 +78,10 @@
     {
       "id": "sortByReplacement",
       "name": "Eric-替换 - Map",
-      "keys": ["customSortBy"],
+      "keys": ["SortBy"],
       "settings": [
         {
-          "id": "customSortBy",
+          "id": "SortBy",
           "name": "Map",
           "val": "nearby",
           "type": "text",
