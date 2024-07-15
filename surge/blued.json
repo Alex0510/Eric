@@ -36,7 +36,7 @@
     {
       "id": "ipReplacementCity",
       "name": "Eric-替换 - 城市",
-      "keys": ["customCity", "ipReplacementCityEnabled"],
+      "keys": ["customCity", "ipReplacementCoordinatesEnabled"],
       "settings": [
         {
           "id": "customCity",
@@ -46,7 +46,7 @@
           "desc": "请输入要替换的城市"
         },
         {
-          "id": "ipReplacementCityEnabled",
+          "id": "ipReplacementCoordinatesEnabled",
           "name": "启用脚本",
           "val": true,
           "type": "bool",
