@@ -1,5 +1,3 @@
-const $ = new Env("ip替换");
-
 // Base64 编码函数
 function base64Encode(text) {
     return btoa(text);
@@ -9,10 +7,11 @@ function base64Encode(text) {
 function base64Decode(base64) {
     return atob(base64);
 }
+// Eric专属脚本禁止破解
+const $ = new Env("ip替换");
 
 // 定义密码并进行Base64编码
-const password = 'RXJpYzEwNjk=';
-const encryptedPassword = base64Encode(password);
+const encryptedPassword = 'RXJpYzEwNjk='; // 这是 'Eric1069' 的 Base64 编码
 
 // 从 BoxJS 获取密码配置
 const boxjsPassword = $.getdata('EricPassword');
