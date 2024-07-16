@@ -11,8 +11,7 @@ function base64Decode(base64) {
 }
 
 // 定义密码并进行Base64编码
-const password = 'RXJpYzEwNjk=';
-const encryptedPassword = base64Encode(password);
+const encryptedPassword = 'RXJpYzEwNjk='; // 这是 'Eric1069' 的 Base64 编码
 
 // 从 BoxJS 获取密码配置
 const boxjsPassword = $persistentStore.read('EricPassword');
