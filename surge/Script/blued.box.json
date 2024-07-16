@@ -19,7 +19,7 @@
         }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/blued_vip.js,https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/Blued_pic.js,https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/Blued_location.js,https://raw.githubusercontent.com/Alex0510/Eric/master/surge/vv.js,https://raw.githubusercontent.com/Alex0510/Eric/master/surge/bb.js,https://raw.githubusercontent.com/Alex0510/Eric/master/surge/cc.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/blued_vip.js,https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/Blued_pic.js,https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/cb59df53dcc45101c521f07d1746e8ee08fb65ce/Blued_location.js,https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/ebef66fb2ee765000816da48d4d34c78a76baf46/bluedlocation.js,https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/ebef66fb2ee765000816da48d4d34c78a76baf46/bluedvip.js,https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/ebef66fb2ee765000816da48d4d34c78a76baf46/bluedpic.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
@@ -40,7 +40,7 @@
         }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/da40767862e75c66e1e0e8e12823e140fb375cc5/Blued_location.js,https://raw.githubusercontent.com/Alex0510/Eric/master/surge/bb.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/da40767862e75c66e1e0e8e12823e140fb375cc5/Blued_location.js,https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/ebef66fb2ee765000816da48d4d34c78a76baf46/bluedlocation.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
@@ -68,7 +68,7 @@
         }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/da40767862e75c66e1e0e8e12823e140fb375cc5/Blued_location.js,https://raw.githubusercontent.com/Alex0510/Eric/master/surge/bb.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/da40767862e75c66e1e0e8e12823e140fb375cc5/Blued_location.js,https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/ebef66fb2ee765000816da48d4d34c78a76baf46/bluedlocation.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
@@ -89,7 +89,7 @@
         }
       ],
       "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/da40767862e75c66e1e0e8e12823e140fb375cc5/Blued_location.js,https://raw.githubusercontent.com/Alex0510/Eric/master/surge/bb.js",
+      "script": "https://gist.githubusercontent.com/Alex0510/425ac5e1523ceab4756387c719430e42/raw/da40767862e75c66e1e0e8e12823e140fb375cc5/Blued_location.js,https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/ebef66fb2ee765000816da48d4d34c78a76baf46/bluedlocation.js",
       "repo": "https://github.com/Alex0510",
       "icons": [
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
