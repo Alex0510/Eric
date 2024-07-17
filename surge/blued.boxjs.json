@@ -1,0 +1,128 @@
+{
+  "id": "Ericgay.app.sub",
+  "name": "EricGay",
+  "author": "@EricGay",
+  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
+  "repo": "https://github.com/Alex0510",
+  "apps": [
+    {
+      "id": "ericPassword",
+      "name": "Eric-密码验证",
+      "keys": ["EricPassword", "scriptEnabled"],
+      "settings": [
+        {
+          "id": "EricPassword",
+          "name": "脚本密码",
+          "val": "",
+          "type": "text",
+          "desc": "请输入脚本密码"
+        },
+        {
+          "id": "scriptEnabled",
+          "name": "脚本启用开关",
+          "val": "true",
+          "type": "switch",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@EricGay",
+      "script": "https://gist.githubusercontent.com/Alex0510/2f220cbae58f770e572c688594d52393/raw/77205443fa067bba35489af31ebc6977549a3afc/blued-location.js,https://gist.githubusercontent.com/Alex0510/2f220cbae58f770e572c688594d52393/raw/77205443fa067bba35489af31ebc6977549a3afc/blued-pic.js,https://gist.githubusercontent.com/Alex0510/2f220cbae58f770e572c688594d52393/raw/77205443fa067bba35489af31ebc6977549a3afc/blued-vip.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
+      ]
+    },
+    {
+      "id": "ipReplacementCity",
+      "name": "Eric-替换 - 城市",
+      "keys": ["customCity", "scriptEnabled"],
+      "settings": [
+        {
+          "id": "customCity",
+          "name": "自定义城市",
+          "val": "",
+          "type": "text",
+          "desc": "请输入要替换的城市"
+        },
+        {
+          "id": "scriptEnabled",
+          "name": "脚本启用开关",
+          "val": "true",
+          "type": "switch",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@EricGay",
+      "script": "https://gist.githubusercontent.com/Alex0510/2f220cbae58f770e572c688594d52393/raw/77205443fa067bba35489af31ebc6977549a3afc/blued-location.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png"
+      ]
+    },
+    {
+      "id": "ipReplacementCoordinates",
+      "name": "Eric-替换 - 经纬度",
+      "keys": ["customLatitude", "customLongitude", "scriptEnabled"],
+      "settings": [
+        {
+          "id": "customLatitude",
+          "name": "自定义纬度",
+          "val": "",
+          "type": "text",
+          "desc": "设置自定义纬度值"
+        },
+        {
+          "id": "customLongitude",
+          "name": "自定义经度",
+          "val": "",
+          "type": "text",
+          "desc": "设置自定义经度值"
+        },
+        {
+          "id": "scriptEnabled",
+          "name": "脚本启用开关",
+          "val": "true",
+          "type": "switch",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@EricGay",
+      "script": "https://gist.githubusercontent.com/Alex0510/2f220cbae58f770e572c688594d52393/raw/77205443fa067bba35489af31ebc6977549a3afc/blued-location.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
+        "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png"
+      ]
+    },
+    {
+      "id": "sortByReplacement",
+      "name": "Eric-替换 - Map",
+      "keys": ["sortBy", "scriptEnabled"],
+      "settings": [
+        {
+          "id": "sortBy",
+          "name": "Map",
+          "val": "nearby",
+          "type": "text",
+          "desc": "请输入排序方式 (nearby 或 online)"
+        },
+        {
+          "id": "scriptEnabled",
+          "name": "脚本启用开关",
+          "val": "true",
+          "type": "switch",
+          "desc": "启用或禁用脚本"
+        }
+      ],
+      "author": "@EricGay",
+      "script": "https://gist.githubusercontent.com/Alex0510/2f220cbae58f770e572c688594d52393/raw/77205443fa067bba35489af31ebc6977549a3afc/blued-location.js",
+      "repo": "https://github.com/Alex0510",
+      "icons": [
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
+      ]
+    }
+  ]
+}
