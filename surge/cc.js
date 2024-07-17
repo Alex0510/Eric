@@ -1,4 +1,3 @@
-// Eric专属脚本禁止破解
 // 获取当前响应的body
 let body = $response.body;
 let obj = JSON.parse(body);
@@ -8,9 +7,6 @@ console.log('Original response body:', JSON.stringify(obj, null, 2));
 // 使用正则表达式提取当前请求URL中的用户ID
 const userIdRegex = /users\/(\d+)/;
 const matchCurrentUrl = $request.url.match(userIdRegex);
-
-const Eric = /users\/shadow/;
-const Eric3 = /users\?extra_info=.*/;
 
 if (matchCurrentUrl) {
   const userId = matchCurrentUrl[1];
@@ -70,9 +66,14 @@ if (matchCurrentUrl) {
               targetData.location = newDistance;
 
               // 设置is_hide_distance和is_hide_last_operate为0
-              targetData.is_hide_distance = 0;
-              targetData.is_hide_last_operate = 0;
-targetData.is_hide_follows_count = 0;
+targetData.is_hide_distance = 0;
+targetData.is_hide_last_operate = 0;          
+targetData.is_global_view_secretly = 1;
+targetData.is_invisible_all = 1;
+targetData.presonal_private_switch = 1;
+targetData.is_role_stealth = 1;
+targetData.black_allowed_count = 999;
+targetData.is_traceless_access = 1
 
               // 查看隐藏头像
               targetData.avatar = targetData.latest_avatar;
@@ -87,7 +88,7 @@ targetData.is_hide_follows_count = 0;
             // 修改来自 https://argo.blued.cn/users/${userId}/basic 的数据
             fetchedData.is_hide_distance = 0;
             fetchedData.is_hide_last_operate = 0;
-
+            
             console.log('Modified fetched data:', JSON.stringify(fetchedData, null, 2));
           } else {
             console.error('Fetched data does not contain required fields');
@@ -107,28 +108,25 @@ targetData.is_hide_follows_count = 0;
     }
   });
 } else {
-  if (Eric.test($request.url) && obj.data && obj.data.length > 0) {
-    // 地图显示头像和影子功能
-    obj.data[0].is_open_shadow = 1;
-    obj.data[0].has_right = 1;
-  }
-  if (Eric3.test($request.url) && obj.data && obj.data.length > 0) {
-    // 地图找人试用到期
-    obj.data[0].code = 200;
-  }else {
-    $done({ body: JSON.stringify(obj) });
-  }
+  $done({ body: JSON.stringify(obj) });
 }
 
 function handleResponseError(obj) {
-  // 请求失败时，返回原始响应并修改is_hide_distance和is_hide_last_operate
+  // 请求失败时,返回原始响应并修改is_hide_distance和is_hide_last_operate
   if (obj.data && obj.data.length > 0) {
     obj.data[0].is_hide_distance = 0;
     obj.data[0].is_hide_last_operate = 0;
-    obj.data[0].is_hide_follows_count = 0;
+   obj.data[0].is_global_view_secretly = 1;
+  obj.data[0].is_invisible_all = 1;
+  obj.data[0].presonal_private_switch = 1;
+  obj.data[0].is_role_stealth = 1;
+  obj.data[0].black_allowed_count = 999;
+  obj.data[0].is_traceless_access = 1;
+
     // 查看隐藏头像
     obj.data[0].avatar = obj.data[0].latest_avatar;
-  // 删除 distance
+    
+    // 删除 distance
     delete obj.data[0].distance;
   }
   $done({ body: JSON.stringify(obj) });
