@@ -1,182 +1,135 @@
-const $ = new Env("Eric捕获");
+// Eric专属脚本禁止破解
+// 获取当前响应的body
+let body = $response.body;
+let obj = JSON.parse(body);
 
-// Base64 编码函数
-function base64Encode(text) {
-    return btoa(text);
-}
+console.log('Original response body:', JSON.stringify(obj, null, 2));
 
-// Base64 解码函数
-function base64Decode(base64) {
-    return atob(base64);
-}
+// 使用正则表达式提取当前请求URL中的用户ID
+const userIdRegex = /users\/(\d+)/;
+const matchCurrentUrl = $request.url.match(userIdRegex);
 
-// 定义密码并进行Base64编码
-const encryptedPassword = 'RXJpYzEwNjk='; // 这是 'Eric1069' 的 Base64 编码
+const Eric = /users\/shadow/;
+const Eric3 = /users\?extra_info=.*/;
 
-// 从 BoxJS 获取密码配置
-const boxjsPassword = $persistentStore.read('EricPassword');
+if (matchCurrentUrl) {
+  const userId = matchCurrentUrl[1];
+  const url1 = `https://argo.blued.cn/users/${userId}/basic`;
 
-// 验证密码函数
-function verifyPassword(inputPassword) {
-    const encodedInputPassword = base64Encode(inputPassword);
-    return encodedInputPassword === encryptedPassword;
-}
+  console.log('User ID:', userId);
+  console.log('Fetching URL:', url1);
 
-// 如果 BoxJS 密码为空，则保存默认加密后的密码到 BoxJS
-if (!boxjsPassword) {
-    console.log('BoxJS password not found, saving default encrypted password.');
-    $persistentStore.write(encryptedPassword, 'EricPassword');
-} else {
-    console.log('BoxJS password found: ', boxjsPassword);
-}
+  // 从当前请求头部中提取authorization值
+  const authorization = $request.headers['authorization'];
+  console.log('Authorization header:', authorization);
 
-// 检查密码验证
-if (!verifyPassword(boxjsPassword)) {
-    console.error('密码验证失败');
-    $.msg("密码验证失败", "请检查 BoxJS 配置中的密码", "");
-    $.done({});
-} else {
-    console.log('Password verification successful.');
-    
-    // 获取当前响应的body
-    let body = $response.body;
-    let obj;
-    
-    try {
-        obj = JSON.parse(body);
-        console.log('Original response body:', JSON.stringify(obj, null, 2));
-    } catch (parseError) {
-        console.error('Error parsing response body:', parseError);
-        $.done({});
-        return;
-    }
+  // 设置请求头
+  const headers = {
+    'authority': 'argo.blued.cn',
+    'accept': '*/*',
+    'x-client-color': 'light',
+    'content-type': 'application/json',
+    'accept-encoding': 'gzip, deflate, br',
+    'user-agent': 'Mozilla/5.0 (iPhone; iOS 16.1.1; Scale/3.00) iOS/300907_0.9.7_6972_0921 (Asia/Shanghai) app/1',
+    'accept-language': 'zh-CN',
+    'authorization': authorization // 使用提取到的authorization值
+  };
 
-    // 使用正则表达式提取当前请求URL中的用户ID
-    const userIdRegex = /users\/(\d+)/;
-    const matchCurrentUrl = $request.url.match(userIdRegex);
-
-    if (matchCurrentUrl) {
-        const userId = matchCurrentUrl[1];
-        const url1 = `https://argo.blued.cn/users/${userId}/basic`;
-
-        console.log('User ID:', userId);
-        console.log('Fetching URL:', url1);
-
-        // 从当前请求头部中提取authorization值
-        const authorization = $request.headers['authorization'];
-        console.log('Authorization header:', authorization);
-
-        // 设置请求头
-        const headers = {
-            'authority': 'argo.blued.cn',
-            'accept': '*/*',
-            'x-client-color': 'light',
-            'content-type': 'application/json',
-            'accept-encoding': 'gzip, deflate, br',
-            'user-agent': 'Mozilla/5.0 (iPhone; iOS 16.1.1; Scale/3.00) iOS/300907_0.9.7_6972_0921 (Asia/Shanghai) app/1',
-            'accept-language': 'zh-CN',
-            'authorization': authorization // 使用提取到的authorization值
-        };
-
-        // 使用$httpClient.get方法获取另一个URL的响应
-        $httpClient.get({ url: url1, headers: headers }, function (error, response, data) {
-            if (error) {
-                console.error('Error fetching data:', error);
-                handleResponseError(obj); // 处理响应错误
-            } else {
-                try {
-                    // 解析另一个URL的响应数据
-                    let dataObj = JSON.parse(data);
-
-                    console.log('Fetched data:', JSON.stringify(dataObj, null, 2));
-
-                    // 确保dataObj包含data.last_operate和data.distance
-                    if (dataObj && dataObj.data && dataObj.data.length > 0) {
-                        const fetchedData = dataObj.data[0];
-
-                        if (fetchedData.last_operate !== undefined && fetchedData.distance !== undefined) {
-                            console.log('Fetched data contains required fields');
-
-                            // 提取并重命名数据
-                            const newLastOperate = fetchedData.last_operate;
-                            const newDistance = parseFloat(fetchedData.distance).toFixed(2) + 'km';
-
-                            // 替换目标URL响应内容中的值
-                            if (obj.data && obj.data.length > 0) {
-                                const targetData = obj.data[0];
-
-                                console.log('Original last_operate:', targetData.last_operate);
-                                console.log('Original distance:', targetData.distance);
-
-                                // 替换值
-                                targetData.last_operate = newLastOperate;
-                                targetData.location = newDistance;
-
-                                // 设置is_hide_distance和is_hide_last_operate为0
-                                targetData.is_hide_distance = 0;
-                                targetData.is_hide_last_operate = 0;
-                                targetData.is_global_view_secretly = 1;
-                                targetData.is_invisible_all = 1;
-                                targetData.presonal_private_switch = 1;
-                                targetData.is_role_stealth = 1;
-                                targetData.black_allowed_count = 999;
-                                targetData.is_traceless_access = 1;
-
-                                // 查看隐藏头像
-                                targetData.avatar = targetData.latest_avatar;
-
-                                console.log('Updated last_operate:', targetData.last_operate);
-                                console.log('Updated distance:', targetData.location);
-                                console.log('Updated avatar:', targetData.avatar);
-                            } else {
-                                console.error('Original response does not contain required data fields');
-                            }
-
-                            // 修改来自 https://argo.blued.cn/users/${userId}/basic 的数据
-                            fetchedData.is_hide_distance = 0;
-                            fetchedData.is_hide_last_operate = 0;
-
-                            console.log('Modified fetched data:', JSON.stringify(fetchedData, null, 2));
-                        } else {
-                            console.error('Fetched data does not contain required fields');
-                        }
-
-                        // 输出修改后的响应数据
-                        console.log('Modified response body:', JSON.stringify(obj, null, 2));
-                        $done({ body: JSON.stringify(obj) });
-                    } else {
-                        console.error('Fetched data does not contain required fields');
-                        handleResponseError(obj); // 处理数据缺少必需字段的情况
-                    }
-                } catch (parseError) {
-                    console.error('Error parsing fetched data:', parseError);
-                    handleResponseError(obj); // 处理数据解析错误
-                }
-            }
-        });
+  // 使用$httpClient.get方法获取另一个URL的响应
+  $httpClient.get({ url: url1, headers: headers }, function(error, response, data) {
+    if (error) {
+      console.error('Error fetching data:', error);
+      handleResponseError(obj); // 处理响应错误
     } else {
-        console.error('User ID not found in the URL.');
-        $done({ body: JSON.stringify(obj) });
-    }
+      try {
+        // 解析另一个URL的响应数据
+        let dataObj = JSON.parse(data);
 
-    function handleResponseError(obj) {
-        // 请求失败时,返回原始响应并修改is_hide_distance和is_hide_last_operate
-        if (obj.data && obj.data.length > 0) {
-            obj.data[0].is_hide_distance = 0;
-            obj.data[0].is_hide_last_operate = 0;
-            obj.data[0].is_global_view_secretly = 1;
-            obj.data[0].is_invisible_all = 1;
-            obj.data[0].presonal_private_switch = 1;
-            obj.data[0].is_role_stealth = 1;
-            obj.data[0].black_allowed_count = 999;
-            obj.data[0].is_traceless_access = 1;
+        console.log('Fetched data:', JSON.stringify(dataObj, null, 2));
 
-            // 查看隐藏头像
-            obj.data[0].avatar = obj.data[0].latest_avatar;
+        // 确保dataObj包含data.last_operate和data.distance
+        if (dataObj && dataObj.data && dataObj.data.length > 0) {
+          const fetchedData = dataObj.data[0];
 
-            // 删除 distance
-            delete obj.data[0].distance;
+          if (fetchedData.last_operate !== undefined && fetchedData.distance !== undefined) {
+            console.log('Fetched data contains required fields');
+
+            // 提取并重命名数据
+            const newLastOperate = fetchedData.last_operate;
+            const newDistance = parseFloat(fetchedData.distance).toFixed(2) + 'km';
+
+            // 替换目标URL响应内容中的值
+            if (obj.data && obj.data.length > 0) {
+              const targetData = obj.data[0];
+
+              console.log('Original last_operate:', targetData.last_operate);
+              console.log('Original distance:', targetData.distance);
+
+              // 替换值
+              targetData.last_operate = newLastOperate;
+              targetData.location = newDistance;
+
+              // 设置is_hide_distance和is_hide_last_operate为0
+              targetData.is_hide_distance = 0;
+              targetData.is_hide_last_operate = 0;
+targetData.is_hide_follows_count = 0;
+
+              // 查看隐藏头像
+              targetData.avatar = targetData.latest_avatar;
+
+              console.log('Updated last_operate:', targetData.last_operate);
+              console.log('Updated distance:', targetData.location);
+              console.log('Updated avatar:', targetData.avatar);
+            } else {
+              console.error('Original response does not contain required data fields');
+            }
+
+            // 修改来自 https://argo.blued.cn/users/${userId}/basic 的数据
+            fetchedData.is_hide_distance = 0;
+            fetchedData.is_hide_last_operate = 0;
+
+            console.log('Modified fetched data:', JSON.stringify(fetchedData, null, 2));
+          } else {
+            console.error('Fetched data does not contain required fields');
+          }
+
+          // 输出修改后的响应数据
+          console.log('Modified response body:', JSON.stringify(obj, null, 2));
+          $done({ body: JSON.stringify(obj) });
+        } else {
+          console.error('Fetched data does not contain required fields');
+          handleResponseError(obj); // 处理数据缺少必需字段的情况
         }
-        $done({ body: JSON.stringify(obj) });
+      } catch (parseError) {
+        console.error('Error parsing data:', parseError);
+        handleResponseError(obj); // 处理数据解析错误
+      }
     }
+  });
+} else {
+  if (Eric.test($request.url) && obj.data && obj.data.length > 0) {
+    // 地图显示头像和影子功能
+    obj.data[0].is_open_shadow = 1;
+    obj.data[0].has_right = 1;
+  }
+  if (Eric3.test($request.url) && obj.data && obj.data.length > 0) {
+    // 地图找人试用到期
+    obj.data[0].code = 200;
+  }else {
+    $done({ body: JSON.stringify(obj) });
+  }
+}
+
+function handleResponseError(obj) {
+  // 请求失败时，返回原始响应并修改is_hide_distance和is_hide_last_operate
+  if (obj.data && obj.data.length > 0) {
+    obj.data[0].is_hide_distance = 0;
+    obj.data[0].is_hide_last_operate = 0;
+    obj.data[0].is_hide_follows_count = 0;
+    // 查看隐藏头像
+    obj.data[0].avatar = obj.data[0].latest_avatar;
+  // 删除 distance
+    delete obj.data[0].distance;
+  }
+  $done({ body: JSON.stringify(obj) });
 }
