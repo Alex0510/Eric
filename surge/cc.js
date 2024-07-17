@@ -1,4 +1,4 @@
-const $ = new Env("bluedvip");
+const $ = new Env("Eric捕获");
 
 // Base64 编码函数
 function base64Encode(text) {
@@ -10,8 +10,8 @@ function base64Decode(base64) {
     return atob(base64);
 }
 
-// Base64编码
-const encryptedPassword = 'RXJpYzEwNjk='; 
+// 定义密码并进行Base64编码
+const encryptedPassword = 'RXJpYzEwNjk='; // 这是 'Eric1069' 的 Base64 编码
 
 // 从 BoxJS 获取密码配置
 const boxjsPassword = $persistentStore.read('EricPassword');
@@ -24,7 +24,10 @@ function verifyPassword(inputPassword) {
 
 // 如果 BoxJS 密码为空，则保存默认加密后的密码到 BoxJS
 if (!boxjsPassword) {
+    console.log('BoxJS password not found, saving default encrypted password.');
     $persistentStore.write(encryptedPassword, 'EricPassword');
+} else {
+    console.log('BoxJS password found: ', boxjsPassword);
 }
 
 // 检查密码验证
@@ -33,11 +36,20 @@ if (!verifyPassword(boxjsPassword)) {
     $.msg("密码验证失败", "请检查 BoxJS 配置中的密码", "");
     $.done({});
 } else {
+    console.log('Password verification successful.');
+    
     // 获取当前响应的body
     let body = $response.body;
-    let obj = JSON.parse(body);
-
-    console.log('Original response body:', JSON.stringify(obj, null, 2));
+    let obj;
+    
+    try {
+        obj = JSON.parse(body);
+        console.log('Original response body:', JSON.stringify(obj, null, 2));
+    } catch (parseError) {
+        console.error('Error parsing response body:', parseError);
+        $.done({});
+        return;
+    }
 
     // 使用正则表达式提取当前请求URL中的用户ID
     const userIdRegex = /users\/(\d+)/;
@@ -137,12 +149,13 @@ if (!verifyPassword(boxjsPassword)) {
                         handleResponseError(obj); // 处理数据缺少必需字段的情况
                     }
                 } catch (parseError) {
-                    console.error('Error parsing data:', parseError);
+                    console.error('Error parsing fetched data:', parseError);
                     handleResponseError(obj); // 处理数据解析错误
                 }
             }
         });
     } else {
+        console.error('User ID not found in the URL.');
         $done({ body: JSON.stringify(obj) });
     }
 
