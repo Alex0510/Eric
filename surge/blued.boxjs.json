@@ -8,7 +8,7 @@
     {
       "id": "ericPassword",
       "name": "Eric-密码验证",
-      "keys": ["EricPassword", "scriptEnabled"],
+      "keys": ["EricPassword"],
       "settings": [
         {
           "id": "EricPassword",
