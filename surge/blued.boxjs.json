@@ -26,17 +26,17 @@
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
       ]
     },
-        {
+    {
       "id": "bluedpic",
       "name": "Eric-pic 捕获",
-      "keys": [ "scriptEnabled"],
+      "keys": ["scriptEnabled"],
       "settings": [
         {
           "id": "scriptEnabled",
           "name": "脚本启用开关",
           "val": "true",
           "type": "switch",
-          "desc": "启用或禁用脚本"
+          "desc": "脚本启用为 true，禁用为 false"
         }
       ],
       "author": "@EricGay",
@@ -47,17 +47,17 @@
         "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png"
       ]
     },
-        {
+    {
       "id": "bluedvip",
       "name": "Eric-vip",
-      "keys": [ "scriptEnabled"],
+      "keys": ["scriptEnabled"],
       "settings": [
         {
           "id": "scriptEnabled",
           "name": "脚本启用开关",
           "val": "true",
           "type": "switch",
-          "desc": "启用或禁用脚本"
+          "desc": "脚本启用为 true，禁用为 false"
         }
       ],
       "author": "@EricGay",
@@ -85,7 +85,7 @@
           "name": "脚本启用开关",
           "val": "true",
           "type": "switch",
-          "desc": "启用或禁用脚本"
+          "desc": "脚本启用为 true，禁用为 false"
         }
       ],
       "author": "@EricGay",
@@ -120,7 +120,7 @@
           "name": "脚本启用开关",
           "val": "true",
           "type": "switch",
-          "desc": "启用或禁用脚本"
+          "desc": "脚本启用为 true，禁用为 false"
         }
       ],
       "author": "@EricGay",
@@ -148,7 +148,7 @@
           "name": "脚本启用开关",
           "val": "true",
           "type": "switch",
-          "desc": "启用或禁用脚本"
+          "desc": "脚本启用为 true，禁用为 false"
         }
       ],
       "author": "@EricGay",
