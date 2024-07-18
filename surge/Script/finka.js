@@ -1,5 +1,3 @@
-//11
-// 处理请求
 (async () => {
     try {
         // Base64 编码函数
@@ -13,7 +11,7 @@
         }
 
         // Base64编码
-        const encryptedPassword = 'RXJpYzEwNjk='; 
+        const encryptedPassword = 'RXJpYzEwNjk=';
 
         // 从 BoxJS 获取密码配置
         const boxjsPassword = $persistentStore.read('EricPassword');
@@ -114,7 +112,7 @@
         headers["X-App-Location"] = `${latitude},${longitude}`;
         headers["x-app-location"] = `${latitude},${longitude}`;
         console.log('Set X-App-Location:', headers["X-App-Location"]);
-        console.log('Set x-app-location:', headers["x-App-Location"]);
+console.log('Set x-app-location:', headers["x-app-location"]);
         // 修改请求体中的参数
         let body = $request.body || "";
 
@@ -143,30 +141,6 @@
     } catch (error) {
         console.error("Script execution failed:", error.message);
         $notification.post("脚本执行失败", error.message, "");
-        $done({});
-    }
-})();
-
-// 处理响应
-(() => {
-    try {
-        // 修改响应体中的参数
-        let responseBody = $response.body || "";
-
-        // 使用正则表达式匹配并替换参数
-        responseBody = responseBody.replace(/(count=)[0-9]+/, `$19999`);
-        responseBody = responseBody.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
-        responseBody = responseBody.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
-
-        console.log('Modified Response Body:', responseBody);
-
-        // 发送修改后的响应
-        $done({
-            body: responseBody
-        });
-    } catch (error) {
-        console.error("Script execution failed:", error.message);
-        $notification.post("响应处理失败", error.message, "");
         $done({});
     }
 })();
