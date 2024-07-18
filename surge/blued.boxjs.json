@@ -29,12 +29,12 @@
     {
       "id": "bluedpic",
       "name": "Eric-pic 捕获",
-      "keys": ["scriptEnabled"],
+      "keys": ["scriptpic"],
       "settings": [
         {
-          "id": "scriptEnabled",
+          "id": "scriptpic",
           "name": "脚本启用开关",
-          "val": "true",
+          "val": "",
           "type": "switch",
           "desc": "脚本启用为 true，禁用为 false"
         }
@@ -50,12 +50,12 @@
     {
       "id": "bluedvip",
       "name": "Eric-vip",
-      "keys": ["scriptEnabled"],
+      "keys": ["scriptvip"],
       "settings": [
         {
-          "id": "scriptEnabled",
+          "id": "scriptvip",
           "name": "脚本启用开关",
-          "val": "true",
+          "val": "",
           "type": "switch",
           "desc": "脚本启用为 true，禁用为 false"
         }
@@ -83,7 +83,7 @@
         {
           "id": "scriptEnabled",
           "name": "脚本启用开关",
-          "val": "true",
+          "val": "",
           "type": "switch",
           "desc": "脚本启用为 true，禁用为 false"
         }
@@ -118,7 +118,7 @@
         {
           "id": "scriptEnabled",
           "name": "脚本启用开关",
-          "val": "true",
+          "val": "",
           "type": "switch",
           "desc": "脚本启用为 true，禁用为 false"
         }
@@ -146,7 +146,7 @@
         {
           "id": "scriptEnabled",
           "name": "脚本启用开关",
-          "val": "true",
+          "val": "",
           "type": "switch",
           "desc": "脚本启用为 true，禁用为 false"
         }
