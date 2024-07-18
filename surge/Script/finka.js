@@ -1,4 +1,4 @@
-//10
+）//10
 (async () => {
     try {
         // Base64 编码函数
@@ -131,14 +131,7 @@
             body: body
         });
 
-        // 修改响应体中的参数
-        let responseBody = $response.body || "";
-
-        // 使用正则表达式匹配并替换参数
-        responseBody = responseBody.replace(/(findCount=)[0-9]+/, `$19999`);
-        responseBody = responseBody.replace(/(hide=)true/, `$1false`);
-
-        console.log('Modified Response Body:', responseBody);
+    
 
         // 发送修改后的请求
         $done({
