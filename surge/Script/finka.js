@@ -1,3 +1,4 @@
+// 请求和响应处理
 (async () => {
     try {
         // Base64 编码函数
@@ -125,14 +126,6 @@
 
         console.log('Modified Body:', body);
 
-        // 打印修改后的请求信息
-        console.log('Modified Request:', {
-            url: $request.url,
-            method: $request.method,
-            headers: headers,
-            body: body
-        });
-
         // 发送修改后的请求
         $done({
             url: $request.url,
@@ -149,8 +142,27 @@
 
 // 响应修改部分
 if ($response && $response.body) {
-    let responseBody = $response.body;
-    responseBody = responseBody.replace(/(findCount=)[0-9]+/, `$199999`);
-    responseBody = responseBody.replace(/(hide=)true/g, `$1false`);
-    $done({ body: responseBody });
+    try {
+        let responseBody = JSON.parse($response.body);
+
+        if (responseBody.data) {
+            // 修改 findCount
+            responseBody.data.findCount = 99999;
+
+            // 修改 hide 为 false
+            if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
+                responseBody.data.list.forEach(item => {
+                    if (item.hide) {
+                        item.hide = false;
+                    }
+                });
+            }
+        }
+
+        $done({ body: JSON.stringify(responseBody) });
+    } catch (error) {
+        console.error("Error modifying response body:", error.message);
+        $notification.post("响应体修改失败", error.message, "");
+        $done({});
+    }
 }
