@@ -1,4 +1,4 @@
-//6
+//7
 (async () => {
     try {
         // Base64 编码函数
@@ -110,16 +110,25 @@
 
         // 修改请求头中的 X-App-Location
         let headers = $request.headers || {};
-
         headers["X-App-Location"] = `${latitude},${longitude}`;
         console.log('Set X-App-Location:', headers["X-App-Location"]);
+
+        // 修改请求体中的参数
+        let body = $request.body || "";
+
+        // 使用正则表达式匹配并替换参数
+        body = body.replace(/(count=)[^&]*/, `$1${9999}`);
+        body = body.replace(/(latitude=)[^&]*/, `$1${latitude}`);
+        body = body.replace(/(longitude=)[^&]*/, `$1${longitude}`);
+
+        console.log('Modified Body:', body);
 
         // 打印修改后的请求信息
         console.log('Modified Request:', {
             url: $request.url,
             method: $request.method,
             headers: headers,
-            body: $request.body
+            body: body
         });
 
         // 发送修改后的请求
@@ -127,7 +136,7 @@
             url: $request.url,
             method: $request.method,
             headers: headers,
-            body: $request.body
+            body: body
         });
     } catch (error) {
         console.error("Script execution failed:", error.message);
