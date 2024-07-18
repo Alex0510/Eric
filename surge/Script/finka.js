@@ -1,4 +1,4 @@
-//5
+//6
 (async () => {
     try {
         // Base64 编码函数
@@ -15,8 +15,8 @@
         const encryptedPassword = 'RXJpYzEwNjk='; 
 
         // 从 BoxJS 获取密码配置
-        const boxjsPassword = $.getdata('EricPassword');
-        const scriptEnabled = $.getdata('scriptEnabled');
+        const boxjsPassword = $persistentStore.read('EricPassword');
+        const scriptEnabled = $persistentStore.read('scriptEnabled');
 
         // 验证密码函数
         function verifyPassword(inputPassword) {
@@ -26,28 +26,28 @@
 
         // 如果 BoxJS 密码为空，则保存默认加密后的密码到 BoxJS
         if (!boxjsPassword) {
-            $.setdata(encryptedPassword, 'EricPassword');
+            $persistentStore.write(encryptedPassword, 'EricPassword');
         }
 
         // 检查密码验证
         if (!verifyPassword(boxjsPassword)) {
             console.error('密码验证失败');
-            $.msg("密码验证失败", "请检查 BoxJS 配置中的密码", "");
-            $.done({});
+            $notification.post("密码验证失败", "请检查 BoxJS 配置中的密码", "");
+            $done({});
             return;
         }
 
         // 检查脚本是否启用
         if (scriptEnabled !== 'true') {
             console.log('Script is disabled via BoxJS.');
-            $.done({});
+            $done({});
             return;
         }
 
         // 从 BoxJS 中读取自定义城市和经纬度
-        const customCity = $.getdata("customCity") || "";
-        const customLatitude = $.getdata("customLatitude") || "";
-        const customLongitude = $.getdata("customLongitude") || "";
+        const customCity = $persistentStore.read("customCity") || "";
+        const customLatitude = $persistentStore.read("customLatitude") || "";
+        const customLongitude = $persistentStore.read("customLongitude") || "";
 
         console.log(`Custom City: ${customCity}`);
         console.log(`Custom Latitude: ${customLatitude}`);
@@ -60,8 +60,8 @@
         if (!customLatitude || !customLongitude) {
             if (!customCity) {
                 console.error('未配置自定义城市或经纬度');
-                $.msg("配置错误", "未配置自定义城市或经纬度，请在 BoxJS 中进行配置", "");
-                $.done({});
+                $notification.post("配置错误", "未配置自定义城市或经纬度，请在 BoxJS 中进行配置", "");
+                $done({});
                 return;
             }
 
@@ -102,8 +102,8 @@
                 }
             } catch (error) {
                 console.error("Error fetching coordinates:", error.message);
-                $.msg("获取经纬度失败", error.message, "");
-                $.done({});
+                $notification.post("获取经纬度失败", error.message, "");
+                $done({});
                 return;
             }
         }
@@ -131,7 +131,7 @@
         });
     } catch (error) {
         console.error("Script execution failed:", error.message);
-        $.msg("脚本执行失败", error.message, "");
-        $.done({});
+        $notification.post("脚本执行失败", error.message, "");
+        $done({});
     }
 })();
