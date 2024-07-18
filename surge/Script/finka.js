@@ -1,4 +1,3 @@
-// 请求处理部分
 (async () => {
     try {
         // Base64 编码函数
@@ -12,7 +11,7 @@
         }
 
         // Base64编码
-        const encryptedPassword = 'RXJpYzEwNjk='; 
+        const encryptedPassword = 'RXJpYzEwNjk=';
 
         // 从 BoxJS 获取密码配置
         const boxjsPassword = $persistentStore.read('EricPassword');
@@ -108,20 +107,21 @@
             }
         }
 
-        // 修改请求头中的 X-App-Location
+        // 修改请求头中的 x-app-location
         let headers = $request.headers || {};
-        headers["x-app-location"] = `${latitude},${longitude}`;
-
-        console.log('Set x-app-location:', headers["x-app-location"]);
+        if (headers.hasOwnProperty("x-app-location")) {
+            headers["x-app-location"] = `${latitude},${longitude}`;
+            console.log('Set x-app-location:', headers["x-app-location"]);
+        }
 
         // 修改请求体中的参数
         let body = $request.body || "";
         console.log('Original Body:', body);
 
         // 使用正则表达式匹配并替换参数
-        body = body.replace(/(count=)[0-9]+/, `$19999`);
-        body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
-        body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
+        body = body.replace(/(count=)[0-9]+/, `count=9999`);
+        body = body.replace(/(latitude=)[0-9.]+/, `latitude=${latitude}`);
+        body = body.replace(/(longitude=)[0-9.]+/, `longitude=${longitude}`);
 
         console.log('Modified Body:', body);
 
