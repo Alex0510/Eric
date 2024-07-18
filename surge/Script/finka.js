@@ -1,4 +1,3 @@
-//2
 (async () => {
     try {
         // Base64 编码函数
@@ -108,49 +107,50 @@
             }
         }
 
-       // 修改请求头中的 X-App-Location
-       let headers = $request.headers || {};
-        
-       headers["X-App-Location"] = `${latitude},${longitude}`;
-       headers["x-app-location"] = `${latitude},${longitude}`;
-        
-       console.log('Set X-App-Location:', headers["X-App-Location"]);
-       console.log('Set x-app-location:', headers["x-app-location"]);
+        // 修改请求头中的 X-App-Location
+        let headers = $request.headers || {};
+        headers["X-App-Location"] = `${latitude},${longitude}`;
+        headers["x-app-location"] = `${latitude},${longitude}`;
+        console.log('Set X-App-Location:', headers["X-App-Location"]);
+        console.log('Set x-app-location:', headers["x-app-location"]);
 
-       // 修改请求体中的参数
-       let body = $request.body || "";
-        
-       console.log('Original Body:', body);
+        // 修改请求体中的参数
+        let body = $request.body || "";
+        console.log('Original Body:', body);
 
-       // 确保body是字符串格式
-       if (typeof body !== 'string') {
-           body = JSON.stringify(body);
-       }
+        // 使用正则表达式匹配并替换参数
+        body = body.replace(/(count=)[0-9]+/, `$19999`);
+        body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
+        body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
 
-       // 使用正则表达式匹配并替换参数
-       body = body.replace(/(count=)[0-9]+/, `$1${9999}`).replace(/(latitude=)[0-9.]+/, `$1${latitude}`).replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
+        console.log('Modified Body:', body);
 
-        
-      console.log('Modified Body:', body);
+        // 打印修改后的请求信息
+        console.log('Modified Request:', {
+            url: $request.url,
+            method: $request.method,
+            headers: headers,
+            body: body
+        });
 
-      // 打印修改后的请求信息
-      console.log('Modified Request:', {
-          url: $request.url,
-          method: $request.method,
-          headers: headers,
-          body: body
-      });
-
-      // 发送修改后的请求
-      $done({
-          url: $request.url,
-          method: $request.method,
-          headers: headers,
-          body: body
-      });
+        // 发送修改后的请求
+        $done({
+            url: $request.url,
+            method: $request.method,
+            headers: headers,
+            body: body
+        });
     } catch (error) {
-      console.error("Script execution failed:", error.message);
-      $notification.post("脚本执行失败", error.message, "");
-      $done({});
+        console.error("Script execution failed:", error.message);
+        $notification.post("脚本执行失败", error.message, "");
+        $done({});
     }
 })();
+
+// 响应修改部分
+if ($response && $response.body) {
+    let responseBody = $response.body;
+    responseBody = responseBody.replace(/(findCount=)[0-9]+/, `$199999`);
+    responseBody = responseBody.replace(/(hide=)true/g, `$1false`);
+    $done({ body: responseBody });
+}
