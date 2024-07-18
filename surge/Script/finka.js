@@ -1,4 +1,4 @@
-// 请求和响应处理
+// 请求和响应处理1
 (async () => {
     try {
         // Base64 编码函数
@@ -149,7 +149,7 @@ if ($response && $response.body) {
             // 修改 findCount
             responseBody.data.findCount = 99999;
 
-            // 修改 hide 为 false
+            // 修改 list 中的 hide 为 false
             if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
                 responseBody.data.list.forEach(item => {
                     if (item.hide) {
