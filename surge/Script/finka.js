@@ -1,5 +1,4 @@
 
-const $ = new Env("finka");
 
 (async () => {
     try {
