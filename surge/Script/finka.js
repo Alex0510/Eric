@@ -10,10 +10,10 @@
             return atob(base64);
         }
 
-        // Base64编码
+        // 默认加密的密码
         const encryptedPassword = 'RXJpYzEwNjk=';
 
-        // 从 BoxJS 获取密码配置
+        // 从 BoxJS 获取配置
         const boxjsPassword = $persistentStore.read('EricPassword');
         const scriptEnabled = $persistentStore.read('scriptEnabled');
 
@@ -23,12 +23,12 @@
             return encodedInputPassword === encryptedPassword;
         }
 
-        // 如果 BoxJS 密码为空，则保存默认加密后的密码到 BoxJS
+        // 如果 BoxJS 没有配置密码，则保存默认密码
         if (!boxjsPassword) {
             $persistentStore.write(encryptedPassword, 'EricPassword');
         }
 
-        // 检查密码验证
+        // 验证密码
         if (!verifyPassword(boxjsPassword)) {
             console.error('密码验证失败');
             $notification.post("密码验证失败", "请检查 BoxJS 配置中的密码", "");
@@ -38,7 +38,7 @@
 
         // 检查脚本是否启用
         if (scriptEnabled !== 'true') {
-            console.log('Script is disabled via BoxJS.');
+            console.log('脚本已通过 BoxJS 禁用。');
             $done({});
             return;
         }
@@ -48,9 +48,9 @@
         const customLatitude = $persistentStore.read("customLatitude") || "";
         const customLongitude = $persistentStore.read("customLongitude") || "";
 
-        console.log(`Custom City: ${customCity}`);
-        console.log(`Custom Latitude: ${customLatitude}`);
-        console.log(`Custom Longitude: ${customLongitude}`);
+        console.log(`自定义城市: ${customCity}`);
+        console.log(`自定义纬度: ${customLatitude}`);
+        console.log(`自定义经度: ${customLongitude}`);
 
         let latitude = customLatitude;
         let longitude = customLongitude;
@@ -89,7 +89,7 @@
                     });
                 });
 
-                console.log("Response from coordinate API:", response);
+                console.log("从坐标 API 获取的响应:", response);
 
                 response = JSON.parse(response);
 
@@ -97,10 +97,10 @@
                     latitude = response.lat;
                     longitude = response.lng;
                 } else {
-                    throw new Error('Failed to fetch coordinates for the city.');
+                    throw new Error('获取城市经纬度失败。');
                 }
             } catch (error) {
-                console.error("Error fetching coordinates:", error.message);
+                console.error("获取经纬度时出错:", error.message);
                 $notification.post("获取经纬度失败", error.message, "");
                 $done({});
                 return;
@@ -111,19 +111,19 @@
         let headers = $request.headers || {};
         if (headers.hasOwnProperty("x-app-location")) {
             headers["x-app-location"] = `${latitude},${longitude}`;
-            console.log('Set x-app-location:', headers["x-app-location"]);
+            console.log('设置 x-app-location:', headers["x-app-location"]);
         }
 
         // 修改请求体中的参数
         let body = $request.body || "";
-        console.log('Original Body:', body);
+        console.log('原始请求体:', body);
 
         // 使用正则表达式匹配并替换参数
         body = body.replace(/(count=)[0-9]+/, `count=9999`);
         body = body.replace(/(latitude=)[0-9.]+/, `latitude=${latitude}`);
         body = body.replace(/(longitude=)[0-9.]+/, `longitude=${longitude}`);
 
-        console.log('Modified Body:', body);
+        console.log('修改后的请求体:', body);
 
         // 发送修改后的请求
         $done({
@@ -133,7 +133,7 @@
             body: body
         });
     } catch (error) {
-        console.error("Script execution failed:", error.message);
+        console.error("脚本执行失败:", error.message);
         $notification.post("脚本执行失败", error.message, "");
         $done({});
     }
@@ -159,7 +159,6 @@ try {
 
     $done({ body: JSON.stringify(responseBody) });
 } catch (error) {
-    console.error('Error parsing or modifying response:', error);
+    console.error('解析或修改响应时出错:', error);
     $done({ body: $response.body });
 }
-    
