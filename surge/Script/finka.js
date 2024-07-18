@@ -1,4 +1,4 @@
-//8
+//9
 (async () => {
     try {
         // Base64 编码函数
@@ -131,13 +131,20 @@
             body: body
         });
 
-        // 发送修改后的请求
+        // 修改响应体中的参数
+        let responseBody = $response.body || "";
+
+        responseBody = responseBody.replace(/(count=)[0-9]+/, `$19999`);
+        responseBody = responseBody.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
+        responseBody = responseBody.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
+
+        console.log('Modified Response Body:', responseBody);
+
+        // 发送修改后的响应
         $done({
-            url: $request.url,
-            method: $request.method,
-            headers: headers,
-            body: body
+            body: responseBody
         });
+
     } catch (error) {
         console.error("Script execution failed:", error.message);
         $notification.post("脚本执行失败", error.message, "");
