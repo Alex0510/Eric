@@ -1,4 +1,4 @@
-//9
+//10
 (async () => {
     try {
         // Base64 编码函数
@@ -134,11 +134,19 @@
         // 修改响应体中的参数
         let responseBody = $response.body || "";
 
-        responseBody = responseBody.replace(/(count=)[0-9]+/, `$19999`);
-        responseBody = responseBody.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
-        responseBody = responseBody.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
+        // 使用正则表达式匹配并替换参数
+        responseBody = responseBody.replace(/(findCount=)[0-9]+/, `$19999`);
+        responseBody = responseBody.replace(/(hide=)true/, `$1false`);
 
         console.log('Modified Response Body:', responseBody);
+
+        // 发送修改后的请求
+        $done({
+            url: $request.url,
+            method: $request.method,
+            headers: headers,
+            body: body
+        });
 
         // 发送修改后的响应
         $done({
