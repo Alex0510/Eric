@@ -1,4 +1,5 @@
-//1
+//2
+
 (async () => {
     try {
         // Base64 编码函数
@@ -110,10 +111,10 @@
         let headers = $request.headers;
 
         if (headers["X-App-Location"]) {
-            headers["X-App-Location"] = `${longitude},${latitude}`;
+            headers["X-App-Location"] = `${latitude},${longitude}`;
             console.log('Modified X-App-Location:', headers["X-App-Location"]);
         } else {
-            headers["X-App-Location"] = `${longitude},${latitude}`;
+            headers["X-App-Location"] = `${latitude},${longitude}`;
             console.log('Added X-App-Location:', headers["X-App-Location"]);
         }
 
