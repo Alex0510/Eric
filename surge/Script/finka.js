@@ -1,5 +1,4 @@
 
-
 (async () => {
     try {
         // Base64 编码函数
@@ -45,16 +44,27 @@
             return;
         }
 
-        // 从 boxjs 中读取自定义城市和经纬度
+        // 从 BoxJS 中读取自定义城市和经纬度
         const customCity = $.getdata("customCity") || "";
         const customLatitude = $.getdata("customLatitude") || "";
         const customLongitude = $.getdata("customLongitude") || "";
+
+        console.log(`Custom City: ${customCity}`);
+        console.log(`Custom Latitude: ${customLatitude}`);
+        console.log(`Custom Longitude: ${customLongitude}`);
 
         let latitude = customLatitude;
         let longitude = customLongitude;
 
         // 如果没有自定义经纬度，则通过自定义城市获取经纬度
         if (!customLatitude || !customLongitude) {
+            if (!customCity) {
+                console.error('未配置自定义城市或经纬度');
+                $.msg("配置错误", "未配置自定义城市或经纬度，请在 BoxJS 中进行配置", "");
+                $.done({});
+                return;
+            }
+
             const encodedCity = encodeURIComponent(customCity);
 
             const options = {
@@ -72,14 +82,25 @@
                 method: 'POST'
             };
 
-            let response = await $httpClient.post(options);
-            response = JSON.parse(response.body);
-            
-            if (response && response.lat && response.lng) {
-                latitude = response.lat;
-                longitude = response.lng;
-            } else {
-                console.error('Failed to fetch coordinates for the city.');
+            try {
+                let response = await new Promise((resolve, reject) => {
+                    $httpClient.post(options, (error, response, body) => {
+                        if (error) reject(error);
+                        else resolve(body);
+                    });
+                });
+
+                response = JSON.parse(response);
+
+                if (response && response.lat && response.lng) {
+                    latitude = response.lat;
+                    longitude = response.lng;
+                } else {
+                    throw new Error('Failed to fetch coordinates for the city.');
+                }
+            } catch (error) {
+                console.error(error.message);
+                $.msg("获取经纬度失败", error.message, "");
                 $.done({});
                 return;
             }
@@ -87,10 +108,13 @@
 
         // 修改请求头中的 X-App-Location
         let headers = $request.headers;
-        
+
         if (headers["X-App-Location"]) {
-            headers["X-App-Location"] = `${latitude},${longitude}`;
+            headers["X-App-Location"] = `${longitude},${latitude}`;
             console.log('Modified X-App-Location:', headers["X-App-Location"]);
+        } else {
+            headers["X-App-Location"] = `${longitude},${latitude}`;
+            console.log('Added X-App-Location:', headers["X-App-Location"]);
         }
 
         // 发送修改后的请求
@@ -101,7 +125,8 @@
             body: $request.body
         });
     } catch (error) {
-        console.error(error);
-        $done({});
+        console.error(error.message);
+        $.msg("脚本执行失败", error.message, "");
+        $.done({});
     }
 })();
