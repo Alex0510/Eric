@@ -112,9 +112,9 @@
         // 修改请求头中的 X-App-Location
         let headers = $request.headers || {};
         headers["X-App-Location"] = `${latitude},${longitude}`;
-        headers["x-App-Location"] = `${latitude},${longitude}`;
+        headers["x-app-location"] = `${latitude},${longitude}`;
         console.log('Set X-App-Location:', headers["X-App-Location"]);
-        console.log('Set x-App-Location:', headers["x-App-Location"]);
+        console.log('Set x-app-location:', headers["x-App-Location"]);
         // 修改请求体中的参数
         let body = $request.body || "";
 
