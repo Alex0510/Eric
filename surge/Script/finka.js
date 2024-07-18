@@ -119,9 +119,7 @@
         console.log('Original Body:', body);
 
         // 使用正则表达式匹配并替换参数
-        body = body.replace(/(count=)[0-9]+/, `$19999`);
-        body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
-        body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
+        body = body.replace(/(count=)[0-9]+/, `$19999`).replace(/(latitude=)[0-9.]+/, `$1${latitude}`).replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
 
         console.log('Modified Body:', body);
 
