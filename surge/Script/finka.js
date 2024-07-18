@@ -1,4 +1,4 @@
-//4
+//5
 (async () => {
     try {
         // Base64 编码函数
@@ -90,6 +90,8 @@
                     });
                 });
 
+                console.log("Response from coordinate API:", response);
+
                 response = JSON.parse(response);
 
                 if (response && response.lat && response.lng) {
@@ -99,7 +101,7 @@
                     throw new Error('Failed to fetch coordinates for the city.');
                 }
             } catch (error) {
-                console.error(error.message);
+                console.error("Error fetching coordinates:", error.message);
                 $.msg("获取经纬度失败", error.message, "");
                 $.done({});
                 return;
@@ -112,6 +114,14 @@
         headers["X-App-Location"] = `${latitude},${longitude}`;
         console.log('Set X-App-Location:', headers["X-App-Location"]);
 
+        // 打印修改后的请求信息
+        console.log('Modified Request:', {
+            url: $request.url,
+            method: $request.method,
+            headers: headers,
+            body: $request.body
+        });
+
         // 发送修改后的请求
         $done({
             url: $request.url,
@@ -120,7 +130,7 @@
             body: $request.body
         });
     } catch (error) {
-        console.error(error.message);
+        console.error("Script execution failed:", error.message);
         $.msg("脚本执行失败", error.message, "");
         $.done({});
     }
