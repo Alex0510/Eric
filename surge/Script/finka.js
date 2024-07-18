@@ -1,3 +1,4 @@
+
 (async () => {
     try {
         // Base64 编码函数
@@ -107,42 +108,75 @@
             }
         }
 
-        // 修改请求头中的 X-App-Location
-        let headers = $request.headers || {};
-        headers["X-App-Location"] = `${latitude},${longitude}`;
-        headers["x-app-location"] = `${latitude},${longitude}`;
-        console.log('Set X-App-Location:', headers["X-App-Location"]);
-        console.log('Set x-app-location:', headers["x-app-location"]);
+       // 修改请求头中的 X-App-Location
+       let headers = $request.headers || {};
+        
+       headers["X-App-Location"] = `${latitude},${longitude}`;
+       headers["x-app-location"] = `${latitude},${longitude}`;
+        
+       console.log('Set X-App-Location:', headers["X-App-Location"]);
+       console.log('Set x-app-location:', headers["x-app-location"]);
 
-        // 修改请求体中的参数
-        let body = $request.body || "";
-        console.log('Original Body:', body);
+       // 修改请求体中的参数
+       let body = $request.body || "";
+        
+       console.log('Original Body:', body);
 
-        // 使用正则表达式匹配并替换参数
-        body = body.replace(/(count=)[0-9]+/, `$19999`);
-        body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
-        body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
+       // 确保body是字符串格式
+       if (typeof body !== 'string') {
+           body = String(body);
+       }
 
-        console.log('Modified Body:', body);
+       // 使用正则表达式匹配并替换参数
+       body = body.replace(/(count=)[0-9]+/, `$19999`);
+       body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
+       body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
 
-        // 打印修改后的请求信息
-        console.log('Modified Request:', {
-            url: $request.url,
-            method: $request.method,
-            headers: headers,
-            body: body
-        });
+        
+      console.log('Modified Body:', body);
 
-        // 发送修改后的请求
-        $done({
-            url: $request.url,
-            method: $request.method,
-            headers: headers,
-            body: body
-        });
+      // 打印修改后的请求信息
+      console.log('Modified Request:', {
+          url: $request.url,
+          method: $request.method,
+          headers: headers,
+          body: body
+      });
+
+      // 发送修改后的请求
+      $done({
+          url: $request.url,
+          method: $request.method,
+          headers: headers,
+          body: body
+      });
     } catch (error) {
-        console.error("Script execution failed:", error.message);
-        $notification.post("脚本执行失败", error.message, "");
-        $done({});
+      console.error("Script execution failed:", error.message);
+      $notification.post("脚本执行失败", error.message, "");
+      $done({});
     }
 })();
+
+// 响应体处理逻辑
+try {
+    let responseBody = JSON.parse($response.body);
+
+    if (responseBody.data) {
+        // 修改 findCount
+        responseBody.data.findCount = 99999;
+
+        // 修改 list 中的 hide 为 false
+        if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
+            responseBody.data.list.forEach(item => {
+                if (item.hide) {
+                    item.hide = false;
+                }
+            });
+        }
+    }
+
+    $done({ body: JSON.stringify(responseBody) });
+} catch (error) {
+    console.error('Error parsing or modifying response:', error);
+    $done({ body: $response.body });
+}
