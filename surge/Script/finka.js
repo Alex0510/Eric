@@ -1,4 +1,3 @@
-//
 (async () => {
     try {
         // Base64 编码函数
@@ -108,7 +107,7 @@
             }
         }
 
-       // 修改请求头中的 X-App-Location
+        // 修改请求头中的 X-App-Location
         let headers = $request.headers || {};
         headers["X-App-Location"] = `${latitude},${longitude}`;
         headers["x-app-location"] = `${latitude},${longitude}`;
