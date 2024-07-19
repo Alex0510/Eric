@@ -1,4 +1,5 @@
-//1
+//12
+
 (async () => {
     try {
         // Base64 编码/解码函数
@@ -154,9 +155,15 @@
 
 // 响应处理逻辑
 try {
-    let responseBody = JSON.parse($response.body);
+    let responseBody;
 
-    console.log('原始响应体:', responseBody);
+    try {
+         responseBody = JSON.parse($response.body);
+         console.log('原始响应体:', responseBody);
+     } catch(e){
+         console.error('解析响应体时出错:', e);
+         throw new Error('解析响应体失败');
+     }
 
     if (responseBody.data) {
         // 修改 findCount
@@ -170,23 +177,23 @@ try {
                 }
             });
         }
-    }
+    } else{
+         console.warn('响应体中没有 data 字段');
+     }
 
     console.log('修改后的响应体:', responseBody);
 
     $done({ body: JSON.stringify(responseBody) });
 } catch (error) {
-    console.error('解析或修改响应时出错:', error);
-    let originalResponseBody;
+    console.error('处理响应时出错:', error.message);
 
-    try {
-         originalResponseBody = JSON.parse($response.body);
-         originalResponseBody.data.findCount = 99999;
-         if (originalResponseBody.data.list && Array.isArray(originalResponseBody.data.list)) {
-             originalResponseBody.data.list.forEach(item => { item.hide=false; });
-         }
+    try{
+         let originalResponseBody=JSON.parse($response.body);
+         originalResponseBody.data={findCount:99999,list:(originalResponseBody.data?.list||[]).map(item=>({...item,hide:false}))};
+         console.log('使用默认值修改后的响应体:', originalResponseBody);
          $done({body:JSON.stringify(originalResponseBody)});
      } catch(e){
+         console.error('使用默认值修改响应体时出错:', e);
          $done({body:$response.body});
      }
 }
