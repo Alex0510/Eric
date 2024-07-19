@@ -1,4 +1,3 @@
-//
 (async () => {
     try {
         // Base64 编码函数
@@ -157,8 +156,9 @@
         $notification.post("脚本执行失败", error.message, "");
         $done({});
     }
-})().finally(() => {
-    // 响应体处理逻辑
+})();
+
+(function handleResponse() {
     try {
         let responseBody = JSON.parse($response.body);
 
@@ -181,4 +181,4 @@
         console.error('Error parsing or modifying response:', error);
         $done({ body: $response.body });
     }
-});
+})();
