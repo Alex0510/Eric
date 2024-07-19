@@ -1,23 +1,24 @@
-//3
+//4
 (async () => {
     try {
-        // Base64 编码/解码函数
+        // Base64 编码函数
         function base64Encode(text) {
             return btoa(text);
         }
 
+        // Base64 解码函数
         function base64Decode(base64) {
             return atob(base64);
         }
 
-        // 加密后的密码
+        // Base64编码
         const encryptedPassword = 'RXJpYzEwNjk=';
 
-        // 从 BoxJS 获取密码和脚本启用状态
+        // 从 BoxJS 获取密码配置
         const boxjsPassword = $persistentStore.read('EricPassword');
         const scriptEnabled = $persistentStore.read('scriptEnabled');
 
-        // 密码验证函数
+        // 验证密码函数
         function verifyPassword(inputPassword) {
             const encodedInputPassword = base64Encode(inputPassword);
             return encodedInputPassword === encryptedPassword;
@@ -28,7 +29,7 @@
             $persistentStore.write(encryptedPassword, 'EricPassword');
         }
 
-        // 验证密码
+        // 检查密码验证
         if (!verifyPassword(boxjsPassword)) {
             console.error('密码验证失败');
             $notification.post("密码验证失败", "请检查 BoxJS 配置中的密码", "");
@@ -38,7 +39,7 @@
 
         // 检查脚本是否启用
         if (scriptEnabled !== 'true') {
-            console.log('脚本通过 BoxJS 被禁用。');
+            console.log('Script is disabled via BoxJS.');
             $done({});
             return;
         }
@@ -48,9 +49,9 @@
         const customLatitude = $persistentStore.read("customLatitude") || "";
         const customLongitude = $persistentStore.read("customLongitude") || "";
 
-        console.log(`自定义城市: ${customCity}`);
-        console.log(`自定义纬度: ${customLatitude}`);
-        console.log(`自定义经度: ${customLongitude}`);
+        console.log(`Custom City: ${customCity}`);
+        console.log(`Custom Latitude: ${customLatitude}`);
+        console.log(`Custom Longitude: ${customLongitude}`);
 
         let latitude = customLatitude;
         let longitude = customLongitude;
@@ -59,139 +60,121 @@
         if (!customLatitude || !customLongitude) {
             if (!customCity) {
                 console.error('未配置自定义城市或经纬度');
-                // 继续执行，不返回
-            } else {
-                const encodedCity = encodeURIComponent(customCity);
+                $done({});
+                return;
+            }
 
-                const options = {
-                    url: `https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/map/sou_suo/?ajaxtimestamp=${Date.now()}`,
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        "Accept": "*/*",
-                        "Origin": "https://jingweidu.bmcx.com",
-                        "Referer": "https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/jingweidu/api/?v=125b5a3c78f141a0_1754",
-                        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1",
-                        "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-                        "Accept-Encoding": "gzip, deflate, br"
-                    },
-                    body: `keyword=${encodedCity}`,
-                    method: 'POST'
-                };
+            const encodedCity = encodeURIComponent(customCity);
 
-                try {
-                    let response = await new Promise((resolve, reject) => {
-                        $httpClient.post(options, (error, response, body) => {
-                            if (error) reject(error);
-                            else resolve(body);
-                        });
+            const options = {
+                url: `https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/map/sou_suo/?ajaxtimestamp=${Date.now()}`,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "*/*",
+                    "Origin": "https://jingweidu.bmcx.com",
+                    "Referer": "https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/jingweidu/api/?v=125b5a3c78f141a0_1754",
+                    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1",
+                    "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+                    "Accept-Encoding": "gzip, deflate, br"
+                },
+                body: `keyword=${encodedCity}`,
+                method: 'POST'
+            };
+
+            try {
+                let response = await new Promise((resolve, reject) => {
+                    $httpClient.post(options, (error, response, body) => {
+                        if (error) reject(error);
+                        else resolve(body);
                     });
+                });
 
-                    console.log("从坐标 API 获取的响应:", response);
+                console.log("Response from coordinate API:", response);
 
-                    response = JSON.parse(response);
+                response = JSON.parse(response);
 
-                    if (response && response.lat && response.lng) {
-                        latitude = response.lat;
-                        longitude = response.lng;
-                    } else {
-                        throw new Error('无法获取城市的坐标。');
-                    }
-                } catch (error) {
-                    console.error("获取坐标时出错:", error.message);
-                    // 继续执行，不返回
+                if (response && response.lat && response.lng) {
+                    latitude = response.lat;
+                    longitude = response.lng;
+                } else {
+                    throw new Error('Failed to fetch coordinates for the city.');
                 }
+            } catch (error) {
+                console.error("Error fetching coordinates:", error.message);
+                $done({});
+                return;
             }
         }
 
-       // 修改请求头中的 X-App-Location
-       let headers = $request.headers || {};
-        
-       headers["X-App-Location"] = `${latitude},${longitude}`;
-       headers["x-app-location"] = `${latitude},${longitude}`;
-        
-       console.log('设置 X-App-Location:', headers["X-App-Location"]);
-       console.log('设置 x-app-location:', headers["x-app-location"]);
+        // 修改请求头中的 X-App-Location
+        let headers = $request.headers || {};
 
-       // 修改请求体中的参数
-       let body = $request.body || "";
-        
-       console.log('原始请求体:', body);
+        headers["X-App-Location"] = `${latitude},${longitude}`;
+        headers["x-app-location"] = `${latitude},${longitude}`;
 
-       // 确保 body 是字符串格式
-       if (typeof body !== 'string') {
-           body = String(body);
-       }
+        console.log('Set X-App-Location:', headers["X-App-Location"]);
+        console.log('Set x-app-location:', headers["x-app-location"]);
 
-       // 使用正则表达式匹配并替换参数
-       body = body.replace(/(count=)[0-9]+/, `$19999`);
-       body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
-       body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
+        // 修改请求体中的参数
+        let body = $request.body || "";
 
-        
-      console.log('修改后的请求体:', body);
+        console.log('Original Body:', body);
 
-      // 打印修改后的请求信息
-      console.log('修改后的请求:', {
-          url: $request.url,
-          method: $request.method,
-          headers: headers,
-          body: body
-      });
+        // 确保body是字符串格式
+        if (typeof body !== 'string') {
+            body = String(body);
+        }
 
-      // 发送修改后的请求
-      $done({
-          url: $request.url,
-          method: $request.method,
-          headers: headers,
-          body: body
-      });
+        // 使用正则表达式匹配并替换参数
+        body = body.replace(/(count=)[0-9]+/, `$19999`);
+        body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
+        body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
+
+        console.log('Modified Body:', body);
+
+        // 打印修改后的请求信息
+        console.log('Modified Request:', {
+            url: $request.url,
+            method: $request.method,
+            headers: headers,
+            body: body
+        });
+
+        // 发送修改后的请求
+        $done({
+            url: $request.url,
+            method: $request.method,
+            headers: headers,
+            body: body
+        });
+
     } catch (error) {
-      console.error("脚本执行失败:", error.message);
-      $notification.post("脚本执行失败", error.message, "");
-      $done({});
+        console.error("Script execution failed:", error.message);
+        $notification.post("脚本执行失败", error.message, "");
+        $done({});
     }
 })();
 
-// 响应处理逻辑
+// 响应体处理逻辑
 try {
-    let responseBody;
-
-    try {
-         responseBody = JSON.parse($response.body);
-         console.log('原始响应体:', responseBody);
-     } catch(e){
-         console.error('解析响应体时出错:', e);
-         throw new Error('解析响应体失败');
-     }
+    let responseBody = JSON.parse($response.body);
 
     if (responseBody.data) {
         // 修改 findCount
         responseBody.data.findCount = 99999;
 
-        // 将 list 中的 hide 设置为 false
+        // 修改 list 中的 hide 为 false
         if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
             responseBody.data.list.forEach(item => {
-                item.hide=false;
+                if (item.hide) {
+                    item.hide = false;
+                }
             });
         }
-    } else{
-         console.warn('响应体中没有 data 字段');
-         responseBody.data={findCount:99999,list:(responseBody.list||[]).map(item=>({...item,hide:false}))};
-     }
-
-    console.log('修改后的响应体:', responseBody);
+    }
 
     $done({ body: JSON.stringify(responseBody) });
 } catch (error) {
-    console.error('处理响应时出错:', error.message);
-
-    try{
-         let originalResponseBody=JSON.parse($response.body);
-         originalResponseBody.data={findCount:99999,list:(originalResponseBody.data?.list||[]).map(item=>({...item,hide=false}))};
-         console.log('使用默认值修改后的响应体:', originalResponseBody);
-         $done({body:JSON.stringify(originalResponseBody)});
-     } catch(e){
-         console.error('使用默认值修改响应体时出错:', e);
-         $done({body:$response.body});
-     }
+    console.error('Error parsing or modifying response:', error);
+    $done({ body: $response.body });
 }
