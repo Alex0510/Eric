@@ -1,7 +1,7 @@
-
+//
 (async () => {
     try {
-        // Base64 encode/decode functions
+        // Base64 编码/解码函数
         function base64Encode(text) {
             return btoa(text);
         }
@@ -10,25 +10,25 @@
             return atob(base64);
         }
 
-        // Encrypted password
+        // 加密后的密码
         const encryptedPassword = 'RXJpYzEwNjk=';
 
-        // Fetch password and script status from BoxJS
+        // 从 BoxJS 获取密码和脚本启用状态
         const boxjsPassword = $persistentStore.read('EricPassword');
         const scriptEnabled = $persistentStore.read('scriptEnabled');
 
-        // Password verification function
+        // 密码验证函数
         function verifyPassword(inputPassword) {
             const encodedInputPassword = base64Encode(inputPassword);
             return encodedInputPassword === encryptedPassword;
         }
 
-        // Save default encrypted password to BoxJS if not already set
+        // 如果 BoxJS 密码为空，则保存默认加密后的密码到 BoxJS
         if (!boxjsPassword) {
             $persistentStore.write(encryptedPassword, 'EricPassword');
         }
 
-        // Verify password
+        // 验证密码
         if (!verifyPassword(boxjsPassword)) {
             console.error('密码验证失败');
             $notification.post("密码验证失败", "请检查 BoxJS 配置中的密码", "");
@@ -36,26 +36,26 @@
             return;
         }
 
-        // Check if the script is enabled
+        // 检查脚本是否启用
         if (scriptEnabled !== 'true') {
-            console.log('Script is disabled via BoxJS.');
+            console.log('脚本通过 BoxJS 被禁用。');
             $done({});
             return;
         }
 
-        // Fetch custom city and coordinates from BoxJS
+        // 从 BoxJS 中读取自定义城市和经纬度
         const customCity = $persistentStore.read("customCity") || "";
         const customLatitude = $persistentStore.read("customLatitude") || "";
         const customLongitude = $persistentStore.read("customLongitude") || "";
 
-        console.log(`Custom City: ${customCity}`);
-        console.log(`Custom Latitude: ${customLatitude}`);
-        console.log(`Custom Longitude: ${customLongitude}`);
+        console.log(`自定义城市: ${customCity}`);
+        console.log(`自定义纬度: ${customLatitude}`);
+        console.log(`自定义经度: ${customLongitude}`);
 
         let latitude = customLatitude;
         let longitude = customLongitude;
 
-        // If no custom coordinates, fetch them based on the custom city
+        // 如果没有自定义经纬度，则通过自定义城市获取经纬度
         if (!customLatitude || !customLongitude) {
             if (!customCity) {
                 console.error('未配置自定义城市或经纬度');
@@ -88,7 +88,7 @@
                     });
                 });
 
-                console.log("Response from coordinate API:", response);
+                console.log("从坐标 API 获取的响应:", response);
 
                 response = JSON.parse(response);
 
@@ -96,51 +96,51 @@
                     latitude = response.lat;
                     longitude = response.lng;
                 } else {
-                    throw new Error('Failed to fetch coordinates for the city.');
+                    throw new Error('无法获取城市的坐标。');
                 }
             } catch (error) {
-                console.error("Error fetching coordinates:", error.message);
+                console.error("获取坐标时出错:", error.message);
                 $done({});
                 return;
             }
         }
 
-       // Modify request headers with coordinates
+       // 修改请求头中的 X-App-Location
        let headers = $request.headers || {};
         
        headers["X-App-Location"] = `${latitude},${longitude}`;
        headers["x-app-location"] = `${latitude},${longitude}`;
         
-       console.log('Set X-App-Location:', headers["X-App-Location"]);
-       console.log('Set x-app-location:', headers["x-app-location"]);
+       console.log('设置 X-App-Location:', headers["X-App-Location"]);
+       console.log('设置 x-app-location:', headers["x-app-location"]);
 
-       // Modify request body parameters
+       // 修改请求体中的参数
        let body = $request.body || "";
         
-       console.log('Original Body:', body);
+       console.log('原始请求体:', body);
 
-       // Ensure body is a string
+       // 确保 body 是字符串格式
        if (typeof body !== 'string') {
            body = String(body);
        }
 
-       // Replace parameters using regex
+       // 使用正则表达式匹配并替换参数
        body = body.replace(/(count=)[0-9]+/, `$19999`);
        body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
        body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
 
         
-      console.log('Modified Body:', body);
+      console.log('修改后的请求体:', body);
 
-      // Log modified request info
-      console.log('Modified Request:', {
+      // 打印修改后的请求信息
+      console.log('修改后的请求:', {
           url: $request.url,
           method: $request.method,
           headers: headers,
           body: body
       });
 
-      // Send modified request
+      // 发送修改后的请求
       $done({
           url: $request.url,
           method: $request.method,
@@ -148,21 +148,23 @@
           body: body
       });
     } catch (error) {
-      console.error("Script execution failed:", error.message);
+      console.error("脚本执行失败:", error.message);
       $notification.post("脚本执行失败", error.message, "");
       $done({});
     }
 })();
 
-// Response processing logic
+// 响应处理逻辑
 try {
     let responseBody = JSON.parse($response.body);
 
+    console.log('原始响应体:', responseBody);
+
     if (responseBody.data) {
-        // Modify findCount
+        // 修改 findCount
         responseBody.data.findCount = 99999;
 
-        // Set hide to false in list items
+        // 将 list 中的 hide 设置为 false
         if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
             responseBody.data.list.forEach(item => {
                 if (item.hide) {
@@ -172,8 +174,10 @@ try {
         }
     }
 
+    console.log('修改后的响应体:', responseBody);
+
     $done({ body: JSON.stringify(responseBody) });
 } catch (error) {
-    console.error('Error parsing or modifying response:', error);
+    console.error('解析或修改响应时出错:', error);
     $done({ body: $response.body });
 }
