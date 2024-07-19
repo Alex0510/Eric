@@ -1,3 +1,4 @@
+//1
 (async () => {
     try {
         // Base64 编码函数
@@ -105,80 +106,79 @@
             }
         }
 
-        // 修改请求头中的 X-App-Location
-        let headers = $request.headers || {};
+        // 请求拦截处理
+        if (typeof $request !== 'undefined') {
+            // 修改请求头中的 X-App-Location
+            let headers = $request.headers || {};
 
-        if (latitude !== null && longitude !== null) {
-            headers["X-App-Location"] = `${latitude},${longitude}`;
-            headers["x-app-location"] = `${latitude},${longitude}`;
+            if (latitude !== null && longitude !== null) {
+                headers["X-App-Location"] = `${latitude},${longitude}`;
+                headers["x-app-location"] = `${latitude},${longitude}`;
 
-            console.log('Set X-App-Location:', headers["X-App-Location"]);
-            console.log('Set x-app-location:', headers["x-app-location"]);
+                console.log('Set X-App-Location:', headers["X-App-Location"]);
+                console.log('Set x-app-location:', headers["x-app-location"]);
+            }
+
+            // 修改请求体中的参数
+            let body = $request.body || "";
+
+            console.log('Original Body:', body);
+
+            // 确保body是字符串格式
+            if (typeof body !== 'string') {
+                body = String(body);
+            }
+
+            // 使用正则表达式匹配并替换参数
+            body = body.replace(/(count=)[0-9]+/, `$19999`);
+            if (latitude !== null && longitude !== null) {
+                body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
+                body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
+            }
+
+            console.log('Modified Body:', body);
+
+            // 打印修改后的请求信息
+            console.log('Modified Request:', {
+                url: $request.url,
+                method: $request.method,
+                headers: headers,
+                body: body
+            });
+
+            // 发送修改后的请求
+            $done({
+                url: $request.url,
+                method: $request.method,
+                headers: headers,
+                body: body
+            });
         }
 
-        // 修改请求体中的参数
-        let body = $request.body || "";
+        // 响应拦截处理
+        if (typeof $response !== 'undefined') {
+            let responseBody = JSON.parse($response.body);
 
-        console.log('Original Body:', body);
+            if (responseBody.data) {
+                // 修改 findCount
+                responseBody.data.findCount = 99999;
 
-        // 确保body是字符串格式
-        if (typeof body !== 'string') {
-            body = String(body);
+                // 修改 list 中的 hide 为 false
+                if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
+                    responseBody.data.list.forEach(item => {
+                        if (item.hide) {
+                            item.hide = false;
+                        }
+                    });
+                }
+            }
+
+            $done({ body: JSON.stringify(responseBody) });
         }
-
-        // 使用正则表达式匹配并替换参数
-        body = body.replace(/(count=)[0-9]+/, `$19999`);
-        if (latitude !== null && longitude !== null) {
-            body = body.replace(/(latitude=)[0-9.]+/, `$1${latitude}`);
-            body = body.replace(/(longitude=)[0-9.]+/, `$1${longitude}`);
-        }
-
-        console.log('Modified Body:', body);
-
-        // 打印修改后的请求信息
-        console.log('Modified Request:', {
-            url: $request.url,
-            method: $request.method,
-            headers: headers,
-            body: body
-        });
-
-        // 发送修改后的请求
-        $done({
-            url: $request.url,
-            method: $request.method,
-            headers: headers,
-            body: body
-        });
 
     } catch (error) {
         console.error("Script execution failed:", error.message);
         $notification.post("脚本执行失败", error.message, "");
         $done({});
-    }
-})();
-
-(function handleResponse() {
-    try {
-        let responseBody = JSON.parse($response.body);
-
-        if (responseBody.data) {
-            // 修改 findCount
-            responseBody.data.findCount = 99999;
-
-            // 修改 list 中的 hide 为 false
-            if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
-                responseBody.data.list.forEach(item => {
-                    if (item.hide) {
-                        item.hide = false;
-                    }
-                });
-            }
-        }
-
-        $done({ body: JSON.stringify(responseBody) });
-    } catch (error) {
-        console.error('Error parsing or modifying response:', error);
-        $done({ body: $response.body });
     }
 })();
