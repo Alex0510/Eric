@@ -1,3 +1,4 @@
+//
 (async () => {
     try {
         // Base64 编码函数
@@ -156,28 +157,28 @@
         $notification.post("脚本执行失败", error.message, "");
         $done({});
     }
-})();
+})().finally(() => {
+    // 响应体处理逻辑
+    try {
+        let responseBody = JSON.parse($response.body);
 
-// 响应体处理逻辑
-try {
-    let responseBody = JSON.parse($response.body);
+        if (responseBody.data) {
+            // 修改 findCount
+            responseBody.data.findCount = 99999;
 
-    if (responseBody.data) {
-        // 修改 findCount
-        responseBody.data.findCount = 99999;
-
-        // 修改 list 中的 hide 为 false
-        if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
-            responseBody.data.list.forEach(item => {
-                if (item.hide) {
-                    item.hide = false;
-                }
-            });
+            // 修改 list 中的 hide 为 false
+            if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
+                responseBody.data.list.forEach(item => {
+                    if (item.hide) {
+                        item.hide = false;
+                    }
+                });
+            }
         }
-    }
 
-    $done({ body: JSON.stringify(responseBody) });
-} catch (error) {
-    console.error('Error parsing or modifying response:', error);
-    $done({ body: $response.body });
-}
+        $done({ body: JSON.stringify(responseBody) });
+    } catch (error) {
+        console.error('Error parsing or modifying response:', error);
+        $done({ body: $response.body });
+    }
+});
