@@ -1,4 +1,4 @@
-//
+//1
 (async () => {
     try {
         // Base64 编码/解码函数
@@ -59,49 +59,47 @@
         if (!customLatitude || !customLongitude) {
             if (!customCity) {
                 console.error('未配置自定义城市或经纬度');
-                $done({});
-                return;
-            }
+                // 继续执行，不返回
+            } else {
+                const encodedCity = encodeURIComponent(customCity);
 
-            const encodedCity = encodeURIComponent(customCity);
+                const options = {
+                    url: `https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/map/sou_suo/?ajaxtimestamp=${Date.now()}`,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Accept": "*/*",
+                        "Origin": "https://jingweidu.bmcx.com",
+                        "Referer": "https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/jingweidu/api/?v=125b5a3c78f141a0_1754",
+                        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1",
+                        "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+                        "Accept-Encoding": "gzip, deflate, br"
+                    },
+                    body: `keyword=${encodedCity}`,
+                    method: 'POST'
+                };
 
-            const options = {
-                url: `https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/map/sou_suo/?ajaxtimestamp=${Date.now()}`,
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Accept": "*/*",
-                    "Origin": "https://jingweidu.bmcx.com",
-                    "Referer": "https://jingweidu.bmcx.com/web_system/bmcx_com_www/system/file/jingweidu/api/?v=125b5a3c78f141a0_1754",
-                    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1",
-                    "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-                    "Accept-Encoding": "gzip, deflate, br"
-                },
-                body: `keyword=${encodedCity}`,
-                method: 'POST'
-            };
-
-            try {
-                let response = await new Promise((resolve, reject) => {
-                    $httpClient.post(options, (error, response, body) => {
-                        if (error) reject(error);
-                        else resolve(body);
+                try {
+                    let response = await new Promise((resolve, reject) => {
+                        $httpClient.post(options, (error, response, body) => {
+                            if (error) reject(error);
+                            else resolve(body);
+                        });
                     });
-                });
 
-                console.log("从坐标 API 获取的响应:", response);
+                    console.log("从坐标 API 获取的响应:", response);
 
-                response = JSON.parse(response);
+                    response = JSON.parse(response);
 
-                if (response && response.lat && response.lng) {
-                    latitude = response.lat;
-                    longitude = response.lng;
-                } else {
-                    throw new Error('无法获取城市的坐标。');
+                    if (response && response.lat && response.lng) {
+                        latitude = response.lat;
+                        longitude = response.lng;
+                    } else {
+                        throw new Error('无法获取城市的坐标。');
+                    }
+                } catch (error) {
+                    console.error("获取坐标时出错:", error.message);
+                    // 继续执行，不返回
                 }
-            } catch (error) {
-                console.error("获取坐标时出错:", error.message);
-                $done({});
-                return;
             }
         }
 
@@ -179,5 +177,16 @@ try {
     $done({ body: JSON.stringify(responseBody) });
 } catch (error) {
     console.error('解析或修改响应时出错:', error);
-    $done({ body: $response.body });
+    let originalResponseBody;
+
+    try {
+         originalResponseBody = JSON.parse($response.body);
+         originalResponseBody.data.findCount = 99999;
+         if (originalResponseBody.data.list && Array.isArray(originalResponseBody.data.list)) {
+             originalResponseBody.data.list.forEach(item => { item.hide=false; });
+         }
+         $done({body:JSON.stringify(originalResponseBody)});
+     } catch(e){
+         $done({body:$response.body});
+     }
 }
