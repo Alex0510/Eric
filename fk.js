@@ -1,5 +1,4 @@
-//12
-
+//2
 (async () => {
     try {
         // Base64 编码/解码函数
@@ -172,13 +171,12 @@ try {
         // 将 list 中的 hide 设置为 false
         if (responseBody.data.list && Array.isArray(responseBody.data.list)) {
             responseBody.data.list.forEach(item => {
-                if (item.hide) {
-                    item.hide = false;
-                }
+                item.hide=false;
             });
         }
     } else{
          console.warn('响应体中没有 data 字段');
+         responseBody.data={findCount:99999,list:(responseBody.list||[]).map(item=>({...item,hide:false}))};
      }
 
     console.log('修改后的响应体:', responseBody);
@@ -189,7 +187,7 @@ try {
 
     try{
          let originalResponseBody=JSON.parse($response.body);
-         originalResponseBody.data={findCount:99999,list:(originalResponseBody.data?.list||[]).map(item=>({...item,hide:false}))};
+         originalResponseBody.data={findCount:99999,list:(originalResponseBody.data?.list||[]).map(item=>({...item,hide=false}))};
          console.log('使用默认值修改后的响应体:', originalResponseBody);
          $done({body:JSON.stringify(originalResponseBody)});
      } catch(e){
