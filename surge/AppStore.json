@@ -9,7 +9,7 @@
     {
       "id": "appData",
       "name": "App 数据查询",
-      "keys": ["region", "appName", "purchaseType"],
+      "keys": ["region", "appName", "purchaseType", "appId"],
       "settings": [
         {
           "id": "region",
@@ -31,9 +31,16 @@
           "val": "",
           "type": "text",
           "desc": "请输入购买方式，例如 '内购', '本体'"
+        },
+        {
+          "id": "appId",
+          "name": "应用 ID",
+          "val": "",
+          "type": "text",
+          "desc": "请输入应用的 App Store ID"
         }
       ],
-      "author": "@EricGay"
+      'author': '@EricGay'
     }
   ]
 }
