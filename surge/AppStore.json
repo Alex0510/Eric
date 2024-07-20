@@ -1,0 +1,39 @@
+
+{
+  "id": "Ericgay.app.sub",
+  "name": "EricGay",
+  "author": "@EricGay",
+  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
+  "repo": "https://t.me/Mr_Alex",
+  "apps": [
+    {
+      "id": "appData",
+      "name": "App 数据查询",
+      "keys": ["region", "appName", "purchaseType"],
+      "settings": [
+        {
+          "id": "region",
+          "name": "地区",
+          "val": "",
+          "type": "text",
+          "desc": "请输入地区代码，例如 'us', 'cn'"
+        },
+        {
+          "id": "appName",
+          "name": "应用名字",
+          "val": "",
+          "type": "text",
+          "desc": "请输入应用名字，例如 'surge-5', 'code-app'"
+        },
+        {
+          "id": "purchaseType",
+          "name": "购买方式",
+          "val": "",
+          "type": "text",
+          "desc": "请输入购买方式，例如 '内购', '本体'"
+        }
+      ],
+      "author": "@EricGay"
+    }
+  ]
+}
