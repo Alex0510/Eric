@@ -39,7 +39,7 @@
           "type": "text",
           "desc": "请输入应用的 App Store ID"
         }
-      ],
+      ]
     }
   ]
 }
