@@ -34,14 +34,15 @@ async function main() {
     const region = $.getdata('region');
     const appName = $.getdata('appName');
     const purchaseType = $.getdata('purchaseType');
+    const appId = $.getdata('appId');
 
-    if (!region || !appName || !purchaseType) {
+    if (!region || !appName || !purchaseType || !appId) {
         notify('BoxJS 环境变量未设置，请检查');
         $done();
         return;
     }
 
-    const url = `https://apps.apple.com/${region}/app/${appName}`;
+    const url = `https://apps.apple.com/${region}/app/${appName}/id${appId}`;
     const html = await requestUrl(url);
 
     // 根据购买类型解析价格信息（这里只是示例，你可以根据实际需求修改解析逻辑）
