@@ -1,4 +1,4 @@
-#!name=blued增强脚本--Eric首发，转载请注明出处,免费分享禁止转卖
+#!name=blued增强脚本已完善--Eric首发，转载请注明出处,免费分享禁止转卖
 #!desc=查看会员隐藏距离，查看会员保密的最后在线时间，地图找人次数到期，地图显示头像和影子功能，捕获闪照视频,全球随意修改定位(需使用boxjs可自定义修改参数)等功能
 #说明:需要使用boxjs进行密码验证，否则无法使用所有功能，脚本有任何问题可通过TG联系，可使用surge、loon、需自行测试quantumults、shadowrocket是否支持；
 #更新说明:2024-07-09可查看会员模糊真实头像功能;https://jingweidu.bmcx.com可查看具体位置的经纬度；感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加修改经纬度坐标或直接修改城市二选一即可：https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.box.json
@@ -8,7 +8,7 @@
 #更新说明:2024-07-18新增单独脚本可使用boxjs控制脚本启用和禁用功能，默认开启全部脚本，输入密码后开启脚本后保存即可无须点击运行
 #更新说明:2024-07-19更新翻咔定位功能及附近的人查看头像
 #更新说明:2024-07-20更新Hornet定位功能
-
+#更新说明:2024-07-28修复影子头像查看功能，新增地图找人无限使用次数。
 
 [MITM]
 hostname =  %APPEND% api.finka.cn,gethornet.com,api.theorangemeetingplace.com,api.sqaces.com,social.blued.cn,argo.blued.cn,::/0,0.0.0.0/0,<ip-address>,*.bldimg.com,-blued.irisdt.cn,-120.53.131.149,-live-im.blued.cn,-h*.blued.cn,-95.161.76.101,-101.23.128.20,-129.226.78.144,-112.28.199.148,-120.53.131.149,-129.226.78.144
