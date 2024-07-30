@@ -1,0 +1,9 @@
+#!name=ASSPP增强脚本--Eric
+#!desc=增加端口同时查询版本号id
+
+[MITM]
+hostname =  %APPEND% api.timbrd.com
+
+
+[Script]
+ASSPP = type=http-response,pattern=https://api.timbrd.com/apple/app-version/index.php,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://gist.githubusercontent.com/Alex0510/33b4fbf293d169a3f8516f514b0d8a48/raw/asspp.js
