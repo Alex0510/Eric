@@ -16,14 +16,14 @@
 #surge使用：
 #1.添加surge_boxjs地址：https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.surge.sgmodule
 #2.添加surge_blued地址：https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Module/blued.sgmodule
-#3.以上模块添加完毕后开启surge运行后在使用浏览器打开http://www.boxjs.com添加boxjs订阅地址:https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.box.json，订阅后在boxjs里输入密码和开启脚本保存即可，无需点击运行(开启为true；禁用为false)
+#3.以上模块添加完毕后开启surge运行后在使用浏览器打开http://boxjs.com添加boxjs订阅地址:https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.box.json，订阅后在boxjs里输入密码和开启脚本保存即可，无需点击运行(开启为true；禁用为false)
 #4.必须手动在surge的mitm里添加<ip-address>进行解析,不使用时禁用，避免影响其他APP使用。
 
 #loon使用
 #1.添加loon_boxjs地址：https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.loon.plugin
 #2.添加loon插件转换地址：https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/main/modules/script-hub.beta.loon.plugin
-#3.以上模块添加完毕后开启loon运行后在使用浏览器打开http://www.boxjs.com添加boxjs订阅地址:https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.box.json,订阅后在boxjs里输入密码和开启脚本保存即可，无需点击运行(开启为true；禁用为false)
-#4.loon需使用插件进行转换模块需使用浏览器打开script.hub,模块地址:https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Module/blued.sgmodule按页面提示操作进行转换，将转换后的插件地址添加到loon插件；
+#3.以上模块添加完毕后开启loon运行后在使用浏览器打开http://boxjs.com添加boxjs订阅地址:https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.box.json,订阅后在boxjs里输入密码和开启脚本保存即可，无需点击运行(开启为true；禁用为false)
+#4.loon需使用插件进行转换模块需使用浏览器打开https://script.hub,模块地址:https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Module/blued.sgmodule按页面提示操作进行转换，将转换后的插件地址添加到loon插件；
 #5.必须手动在mitm里添加*进行解析，不使用时禁用，避免影响其他APP使用。
 
 
