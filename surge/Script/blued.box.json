@@ -85,7 +85,7 @@
           "name": "Map",
           "val": "",
           "type": "text",
-          "desc": "请输入排序方式 (nearby 或 online)"
+          "desc": "填写(nearby 或 online)此参数仅适用于地图找人，不使用地图找人无需设置保留空即可 "
         },
         {
           "id": "scriptEnabled",
@@ -127,7 +127,7 @@
           "name": "Map",
           "val": "",
           "type": "text",
-          "desc": "请输入排序方式 (nearby 或 online)"
+          "desc": "填写(nearby 或 online)此参数仅适用于地图找人，不使用地图找人无需设置保留空即可"
         },
         {
           "id": "scriptEnabled",
