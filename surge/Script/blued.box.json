@@ -71,7 +71,7 @@
     {
       "id": "ipReplacementCity",
       "name": "Eric-替换 - 城市",
-      "keys": ["customCity", "scriptEnabled"],
+      "keys": ["customCity", "sortBy", "scriptEnabled"],
       "settings": [
         {
           "id": "customCity",
@@ -79,6 +79,13 @@
           "val": "",
           "type": "text",
           "desc": "请输入要替换的城市"
+        },
+        {
+          "id": "sortBy",
+          "name": "Map",
+          "val": "",
+          "type": "text",
+          "desc": "请输入排序方式 (nearby 或 online)"
         },
         {
           "id": "scriptEnabled",
@@ -99,7 +106,7 @@
     {
       "id": "ipReplacementCoordinates",
       "name": "Eric-替换 - 经纬度",
-      "keys": ["customLatitude", "customLongitude", "scriptEnabled"],
+      "keys": ["customLatitude", "customLongitude", "sortBy", "scriptEnabled"],
       "settings": [
         {
           "id": "customLatitude",
@@ -116,6 +123,13 @@
           "desc": "设置自定义经度值"
         },
         {
+          "id": "sortBy",
+          "name": "Map",
+          "val": "",
+          "type": "text",
+          "desc": "请输入排序方式 (nearby 或 online)"
+        },
+        {
           "id": "scriptEnabled",
           "name": "脚本启用开关",
           "val": "true",
@@ -129,34 +143,6 @@
       "icons": [
         "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png",
         "https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios15-location-arrow-status-icon.png"
-      ]
-    },
-    {
-      "id": "sortByReplacement",
-      "name": "Eric-替换 - Map",
-      "keys": ["sortBy", "scriptEnabled"],
-      "settings": [
-        {
-          "id": "sortBy",
-          "name": "Map",
-          "val": "nearby",
-          "type": "text",
-          "desc": "请输入排序方式 (nearby 或 online)"
-        },
-        {
-          "id": "scriptEnabled",
-          "name": "脚本启用开关",
-          "val": "true",
-          "type": "switch",
-          "desc": "脚本启用为 true，禁用为 false"
-        }
-      ],
-      "author": "@Eric",
-      "script": "https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedlocation.js",
-      "repo": "https://t.me/Mr_Alex",
-      "icons": [
-        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
-        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png"
       ]
     }
   ]
