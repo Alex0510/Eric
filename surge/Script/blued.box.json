@@ -1,7 +1,7 @@
 {
   "id": "Ericgay.app.sub",
-  "name": "EricGay",
-  "author": "@EricGay",
+  "name": "Blued-Eric",
+  "author": "@Eric",
   "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
   "repo": "https://t.me/+2T-oJk2FFts4NDZl",
   "apps": [
@@ -18,7 +18,7 @@
           "desc": "请输入脚本密码"
         }
       ],
-      "author": "@EricGay",
+      "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedlocation.js,https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedvip.js,https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedpic.js,https://gist.githubusercontent.com/Alex0510/85c95aeaf2283ab825702d27ed229a54/raw/Finka.js",
       "repo": "https://t.me/Mr_Alex",
       "icons": [
@@ -39,7 +39,7 @@
           "desc": "脚本启用为 true，禁用为 false"
         }
       ],
-      "author": "@EricGay",
+      "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedpic.js",
       "repo": "https://t.me/Mr_Alex",
       "icons": [
@@ -60,7 +60,7 @@
           "desc": "脚本启用为 true，禁用为 false"
         }
       ],
-      "author": "@EricGay",
+      "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedvip.js",
       "repo": "https://t.me/Mr_Alex",
       "icons": [
@@ -88,7 +88,7 @@
           "desc": "脚本启用为 true，禁用为 false"
         }
       ],
-      "author": "@EricGay",
+      "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedlocation.js,https://gist.githubusercontent.com/Alex0510/85c95aeaf2283ab825702d27ed229a54/raw/Finka.js",
       "repo": "https://t.me/Mr_Alex",
       "icons": [
@@ -123,7 +123,7 @@
           "desc": "脚本启用为 true，禁用为 false"
         }
       ],
-      "author": "@EricGay",
+      "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedlocation.js,https://gist.githubusercontent.com/Alex0510/85c95aeaf2283ab825702d27ed229a54/raw/Finka.js",
       "repo": "https://t.me/Mr_Alex",
       "icons": [
@@ -151,7 +151,7 @@
           "desc": "脚本启用为 true，禁用为 false"
         }
       ],
-      "author": "@EricGay",
+      "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedlocation.js",
       "repo": "https://t.me/Mr_Alex",
       "icons": [
