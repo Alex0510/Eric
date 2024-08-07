@@ -30,7 +30,7 @@
 
 
 [MITM]
-hostname =  %APPEND% api.finka.cn,gethornet.com,api.theorangemeetingplace.com,api.sqaces.com,social.blued.cn,argo.blued.cn,*.bldimg.com,-blued.irisdt.cn,-120.53.131.149,-live-im.blued.cn,-h*.blued.cn,-95.161.76.101,-101.23.128.20,-129.226.78.144,,-120.53.131.149,-129.226.78.144,149.154.167.151,149.154.175.54,138.113.16.55,112.28.199.148,103.56.118.166,91.108.56.162,149.154.165.111,112.28.199.148,138.113.16.55,91.108.56.162,138.113.16.55,153.99.227.206,119.29.29.29,-120.53.132.216,-web.bldimg.com,-103.56.118.166
+hostname =  %APPEND% api.finka.cn,gethornet.com,api.theorangemeetingplace.com,api.sqaces.com,social.blued.cn,argo.blued.cn,*.bldimg.com,-blued.irisdt.cn,-120.53.131.149,-live-im.blued.cn,-h*.blued.cn,-95.161.76.101,-101.23.128.20,-129.226.78.144,,-120.53.131.149,-129.226.78.144,149.154.167.151,149.154.175.54,138.113.16.55,112.28.199.148,103.56.118.166,91.108.56.162,149.154.165.111,112.28.199.148,138.113.16.55,91.108.56.162,138.113.16.55,153.99.227.206,119.29.29.29,-120.53.132.216,-web.bldimg.com,-103.56.118.166,-240.0.0.135
 
 [Script]
 blued_pic = type=http-request,pattern=^https:\/\/(burn-chatfiles|chatfiles)\.bldimg\.com\/(chatfiles|ingfiles|burn_chatfiles\/(videos|users))\/.*(mp4|jpg|(jpg|png)).*,script-path=https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedpic.js,requires-body=0,max-size=0,debug=0
