@@ -1,10 +1,8 @@
 #!name=blued增强脚本已完善--Eric全网独发，转载请注明出处,免费分享禁止转卖
-#!homepage=https://t.me/+2T-oJk2FFts4NDZl
-#!desc=查看会员隐藏距离，查看会员保密的最后在线时间，地图找人次数到期，地图显示头像和影子功能，捕获闪照视频,全球随意修改定位(需使用boxjs可自定义修改参数)等功能
-#!homepage=https://t.me/+A1cOYwvOdeI4MWNl
+#!desc=https://t.me/+A1cOYwvOdeI4MWNl查看会员隐藏距离，查看会员保密的最后在线时间，地图找人次数到期，地图显示头像和影子功能，捕获闪照视频,全球随意修改定位(需使用boxjs可自定义修改参数)等功能
 #!icon=https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png
 #!category=Blued_Chat
-#重点使用说明:所有功能均需要使用boxjs进行密码验证，否则无法使用所有功能，boxjs需填写密码和开启脚本填写true，禁用脚本填写false保存即可无需运行，仅支持surge、loon软件自备；模块删除了全部ip解析功能，如若规则失效手动自行添加mitm:surge添加<ip-address>，loon添加*即可，不使用时禁用，避免影响其他APP使用
+#重点使用说明:所有功能均需要使用boxjs进行密码验证，否则无法使用所有功能，boxjs需填写密码和开启脚本填写true，禁用脚本填写false必须手动保存方可生效无需运行，仅支持surge、loon软件自备；
 #更新说明:2024-07-09可查看会员模糊真实头像功能;使用https://jingweidu.bmcx.com可查看具体位置的经纬度；感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加修改经纬度坐标或直接修改城市二选一即可
 #更新说明:2024-07-10更新闪照、视频捕获功能防止销毁或撤回，07-21新增日志输出，链接可通过日志查看避免通知栏跳转后丢失
 #更新说明:2024-07-12更新附近的群组定位功能，更新具体保密位置和最后上线时间
