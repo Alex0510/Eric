@@ -27,7 +27,7 @@
 #4.loon需使用插件进行转换模块需使用浏览器打开https://script.hub,模块地址:https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Module/blued.sgmodule按页面提示操作进行转换，将转换后的插件地址添加到loon插件；
 #5.以上4步完成基本都可以使用，如果规则未生效自行手动在mitm里添加*进行解析，如果出现网络错误自行抓包，去抓包记录找mitm失败的ip手动添加到mitm里前面加-禁止解析，不使用时禁用，避免影响其他APP使用。
 
-[URL Rewrite]
+[Rule]
 URL-REGEX,https://argo.blued.cn/blued/promote.*,Reject
 URL-REGEX,https://argo.blued.cn/blued/adms/.*,Reject
 URL-REGEX,https://argo.blued.cn/blued/splash.*,Reject
