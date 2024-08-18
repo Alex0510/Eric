@@ -1,9 +1,13 @@
 #!name=酷狗概念版自动领取VIP--Eric
-#!desc=每日9点自动领取VIP，第一使用打开酷狗概念版天天签到领VIP页面获取参数，提示获取成功即可
+#!desc=每日9点自动领取VIP，第一使用打开酷狗概念版天天签到领VIP页面获取参数，提示获取成功即可，去除启动广告
 #!category=酷狗概念版
 [MITM]
 hostname =  %APPEND% gateway.kugou.com
 
+[Rule]
+URL-REGEX,https://gateway.kugou.com/ads.gateway/v3/stat_expose.*,REJECT
+DOMAIN-SUFFIX,adservice.kugou.com,REJECT
+DOMAIN-SUFFIX,install2.kugou.com,REJECT
 
 [Script]
 酷狗领取VIP = type=cron,cronexp=0 9 * * *,script-path=https://gist.githubusercontent.com/Alex0510/1c389019c264a7d3ddbe4dbcf77d4295/raw/kugou_auto.js
