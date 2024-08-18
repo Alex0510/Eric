@@ -1,0 +1,10 @@
+#!name=酷狗概念版自动领取VIP--Eric
+#!desc=每日自动领取VIP
+
+[MITM]
+hostname =  %APPEND% gateway.kugou.com
+
+
+[Script]
+酷狗签到 = type=cron,cronexp=0 9 * * *,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/kugou.js
+酷狗cookie = type=http-request,pattern=https://gateway.kugou.com/youth/v1/(recharge/receive_vip_listen_song|activity/get_month_vip_record).*,requires-body=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/kugou.js
