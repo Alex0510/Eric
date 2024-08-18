@@ -69,9 +69,9 @@ if ($request.url) {
     let originalUrl = getFromStorage('originalUrl');
 
     // 输出持久化数据到日志
-    $.log('URL Params:', JSON.stringify(urlParams));
-    $.log('Header Params:', JSON.stringify(headerParams));
-    $.log('Original URL:', originalUrl);
+    $.log('读取的 URL Params:', JSON.stringify(urlParams));
+    $.log('读取的 Header Params:', JSON.stringify(headerParams));
+    $.log('读取的 Original URL:', originalUrl);
 
     // 检查是否成功读取
     if (Object.keys(urlParams).length === 0 || Object.keys(headerParams).length === 0) {
