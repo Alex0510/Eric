@@ -1,5 +1,5 @@
 #!name=酷狗概念版自动领取VIP--Eric
-#!desc=每日9点自动领取VIP
+#!desc=每日9点自动领取VIP，第一使用打开酷狗概念版天天签到领VIP页面获取参数，提示获取成功即可
 
 [MITM]
 hostname =  %APPEND% gateway.kugou.com
