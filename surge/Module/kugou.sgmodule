@@ -1,5 +1,5 @@
 #!name=酷狗概念版自动领取VIP--Eric
-#!desc=每日9点自动领取VIP，第一使用打开酷狗概念版天天签到领VIP页面获取参数，提示获取成功即可，去除启动广告
+#!desc=每日凌晨0点10分自动领取VIP，第一使用打开酷狗概念版天天签到领VIP页面获取参数，提示获取成功即可，去除启动广告
 #!category=酷狗概念版
 
 [Rule]
@@ -13,5 +13,5 @@ hostname =  %APPEND% *.kugou.com
 
 
 [Script]
-酷狗领取VIP = type=cron,cronexp=0 9 * * *,script-path=https://gist.githubusercontent.com/Alex0510/1c389019c264a7d3ddbe4dbcf77d4295/raw/kugou_auto.js
+酷狗领取VIP = type=cron,cronexp=10 0 * * *,script-path=https://gist.githubusercontent.com/Alex0510/1c389019c264a7d3ddbe4dbcf77d4295/raw/kugou_auto.js
 酷狗数据 = type=http-request,pattern=https://gateway.kugou.com/youth/v1/(recharge/receive_vip_listen_song|activity/get_month_vip_record).*,requires-body=0,script-path=https://gist.githubusercontent.com/Alex0510/1c389019c264a7d3ddbe4dbcf77d4295/raw/kugou.js
