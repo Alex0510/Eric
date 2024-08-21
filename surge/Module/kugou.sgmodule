@@ -10,7 +10,8 @@ DOMAIN-SUFFIX,adservice.kugou.com,REJECT
 DOMAIN-SUFFIX,install2.kugou.com,REJECT
 DOMAIN-SUFFIX,adstats.tencentmusic.com,REJECT
 DOMAIN-SUFFIX,tmead.y.qq.com,REJECT
-
+DOMAIN-SUFFIX,ad.tencentmusic.com,REJECT
+DOMAIN-SUFFIX,api-adservices.apple.com,REJECT
 
 [MITM]
 hostname =  %APPEND% *.kugou.com
