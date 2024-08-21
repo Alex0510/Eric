@@ -15,7 +15,7 @@ DOMAIN-SUFFIX,tmead.y.qq.com,REJECT
 DOMAIN-SUFFIX,ad.tencentmusic.com,REJECT
 DOMAIN-SUFFIX,api-adservices.apple.com,REJECT
 DOMAIN-SUFFIX,us.l.qq.com,REJECT
-
+DOMAIN-SUFFIX,p.l.qq.com,REJECT
 [MITM]
 hostname =  %APPEND% *.kugou.com
 
