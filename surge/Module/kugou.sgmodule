@@ -4,6 +4,7 @@
 
 [Rule]
 URL-REGEX,https://gateway.kugou.com/ads.gateway/.*,REJECT
+URL-REGEX,https://gatewayretry.kugou.com/ads.gateway/.*,REJECT
 DOMAIN-SUFFIX,adservice.kugou.com,REJECT
 DOMAIN-SUFFIX,install2.kugou.com,REJECT
 
