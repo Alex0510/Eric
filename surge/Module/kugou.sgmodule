@@ -6,6 +6,7 @@
 URL-REGEX,https://gateway.kugou.com/ads.gateway/.*,REJECT
 URL-REGEX,https://gateway3.kugou.com/ads.gateway/.*,REJECT
 URL-REGEX,https://gatewayretry.kugou.com/ads.gateway/.*,REJECT
+URL-REGEX,^http:\/\/mobilelog\.kugou\.com\/adtrackconfig\.json$,REJECT
 DOMAIN-SUFFIX,adservice.kugou.com,REJECT
 DOMAIN-SUFFIX,install2.kugou.com,REJECT
 DOMAIN-SUFFIX,adstats.tencentmusic.com,REJECT
