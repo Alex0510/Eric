@@ -6,6 +6,7 @@
 URL-REGEX,https://gateway.kugou.com/ads.gateway/.*,REJECT
 URL-REGEX,https://gateway3.kugou.com/ads.gateway/.*,REJECT
 URL-REGEX,https://gatewayretry.kugou.com/ads.gateway/.*,REJECT
+URL-REGEX,https://gateway.kugou.com/youth/api/user/v1/init.*,REJECT
 URL-REGEX,^http:\/\/mobilelog\.kugou\.com\/adtrackconfig\.json$,REJECT
 URL-REGEX,https://tmeadcomm.y.qq.com/maproxy/getPbCompressAd,REJECT
 DOMAIN-SUFFIX,adservice.kugou.com,REJECT
