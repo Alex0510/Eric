@@ -1,0 +1,8 @@
+#!name=TestFlight--Eric
+#!desc=TestFlight测试未满时，可自动获取测试资格，打开测试链接自动跳转到TestFlight即可
+
+[MITM]
+hostname =  %APPEND% testflight.apple.com
+
+[Script]
+TestFlight = type=http-request,pattern=https://testflight.apple.com/v3/accounts/.*/ru/.*,requires-body=0,script-path=https://gist.githubusercontent.com/Alex0510/914c430cf40a3850fda78492166a833c/raw/TestFlight_Auto.js
