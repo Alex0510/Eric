@@ -5,8 +5,7 @@
   "repo": "https://t.me/Mr_Alex",
   "apps": [
     {
-      "id": "testFlightJoin",
-      "name": "TestFlight_auto",
+      "name": "TestFlight",
       "keys": ["ruParams"],
       "settings": [
         {
@@ -14,12 +13,10 @@
           "name": "tf测试参数",
           "val": "[]",
           "type": "text",
-          "desc": "请输入tf链接后的参数的 JSON 数组，例如 [\"iuPtNzvE\", \"anotherParam\"]"
+          "desc": "请输入tf测试链接后的参数的 JSON 数组，例如 [\"iuPtNzvE\", \"anotherParam\"]"
         }
       ],
-      "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedlocation.js",
-      "repo": "https://t.me/Mr_Alex",
       "icons": [
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png"
