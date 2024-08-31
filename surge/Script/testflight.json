@@ -1,12 +1,12 @@
 {
-   "id": "testflight.app.sub",
+  "id": "testflight.app.sub",
   "name": "testflight-Eric",
   "author": "@Eric",
   "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
   "repo": "https://t.me/Mr_Alex",
   "apps": [
     {
-      "id": "TestFlight"
+      "id": "TestFlight",
       "name": "testflight-Eric",
       "keys": ["ruParams"],
       "settings": [
@@ -17,11 +17,11 @@
           "type": "text",
           "desc": "请输入tf测试链接后的参数的 JSON 数组，例如 [\"iuPtNzvE\", \"anotherParam\"]"
         }
-      ]
-    "author": "@Eric",
+      ],
+      "author": "@Eric",
       "script": "https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedlocation.js,https://gist.githubusercontent.com/Alex0510/85c95aeaf2283ab825702d27ed229a54/raw/Finka.js",
       "repo": "https://t.me/Mr_Alex",
-       "icons": [
+      "icons": [
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
         "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png"
       ]
