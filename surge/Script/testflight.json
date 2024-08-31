@@ -1,12 +1,12 @@
 {
-  "name": "TestFlight 自动加入",
+  "name": "TestFlight_auto",
   "author": "@Eric",
   "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
   "repo": "https://t.me/Mr_Alex",
   "apps": [
     {
       "id": "testFlightJoin",
-      "name": "TestFlight 自动加入",
+      "name": "TestFlight_auto",
       "keys": ["ruParams"],
       "settings": [
         {
