@@ -11,10 +11,10 @@
       "settings": [
         {
           "id": "ruParams",
-          "name": "ru 参数",
+          "name": "tf测试参数",
           "val": "[]",
           "type": "text",
-          "desc": "请输入 ru 参数的 JSON 数组，例如 [\"iuPtNzvE\", \"anotherParam\"]"
+          "desc": "请输入tf链接后的参数的 JSON 数组，例如 [\"iuPtNzvE\", \"anotherParam\"]"
         }
       ],
       "author": "@Eric",
