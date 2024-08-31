@@ -6,6 +6,7 @@
   "repo": "https://t.me/Mr_Alex",
   "apps": [
     {
+      "id": "TestFlight"
       "name": "testflight-Eric",
       "keys": ["ruParams"],
       "settings": [
