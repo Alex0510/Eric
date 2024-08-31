@@ -1,12 +1,12 @@
 {
-   "id": "testflight-Eric.app.sub",
+   "id": "testflight.app.sub",
   "name": "testflight-Eric",
   "author": "@Eric",
   "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
   "repo": "https://t.me/Mr_Alex",
   "apps": [
     {
-      "name": "TestFlight",
+      "name": "testflight-Eric",
       "keys": ["ruParams"],
       "settings": [
         {
