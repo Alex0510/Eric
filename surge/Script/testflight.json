@@ -2,7 +2,7 @@
   "id": "testflight.app.sub",
   "name": "testflight-Eric",
   "author": "@Eric",
-  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png",
+  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/TestFlight.png",
   "repo": "https://t.me/Mr_Alex",
   "apps": [
     {
@@ -22,8 +22,8 @@
       "script": "https://gist.githubusercontent.com/Alex0510/914c430cf40a3850fda78492166a833c/raw/testflight.js",
       "repo": "https://t.me/Mr_Alex",
       "icons": [
-        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png",
-        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/MR-X.png"
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/TestFlight.png",
+        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/TestFlight.png"
       ]
     }
   ]
