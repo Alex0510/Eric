@@ -9,4 +9,4 @@ hostname =  %APPEND% testflight.apple.com
 
 [Script]
 TestFlight_auto = type=http-request,pattern=https://testflight.apple.com/v3/accounts/.*/ru/.*,requires-body=0,script-path=https://gist.githubusercontent.com/Alex0510/914c430cf40a3850fda78492166a833c/raw/TestFlight_Auto.js
-TestFlight_cron = type=cron,cronexp=* */10 * * *,script-path=https://gist.githubusercontent.com/Alex0510/914c430cf40a3850fda78492166a833c/raw/TestFlight_cron.js,script-update-interval=0
+TestFlight_cron = type=cron,cronexp=*/10 * * * *,script-path=https://gist.githubusercontent.com/Alex0510/914c430cf40a3850fda78492166a833c/raw/TestFlight_cron.js,script-update-interval=0
