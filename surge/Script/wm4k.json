@@ -15,7 +15,7 @@
           "name": "scheme参数",
           "val": "",
           "type": "text",
-          "desc": "请输入浏览器的scheme，例如alook"
+          "desc": "请输入浏览器的scheme，例如alook或senplayer"
         }
       ],
       "author": "@Eric",
