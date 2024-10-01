@@ -2,6 +2,8 @@
 #!desc=无需VIP可观看全部视频
 #!category=完美4k
 
+[General]
+force-http-engine-hosts = :8762
 [MITM]
 hostname =  %APPEND% 111.229.140.167 111.229.140.167:8762
 
