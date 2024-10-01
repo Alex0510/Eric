@@ -8,11 +8,11 @@
     {
       "id": "video",
       "name": "video-Eric",
-      "keys": ["scheme", "customScheme"],
+      "keys": ["scheme"],
       "settings": [
         {
           "id": "scheme",
-          "name": "选择浏览器",
+          "name": "浏览器",
           "val": "Safari",
           "type": "select",
           "items": [
@@ -33,14 +33,7 @@
               "label": "影音宝"
             }
           ],
-          "desc": "请选择浏览器（如选择自定义浏览器则清空此项）"
-        },
-        {
-          "id": "customScheme",
-          "name": "自定义Scheme",
-          "val": "",
-          "type": "text",
-          "desc": "如使用自定义浏览器，请输入 Scheme（如选择预设浏览器则清空此项）"
+          "desc": "请选择浏览器"
         }
       ],
       "author": "@Eric",
