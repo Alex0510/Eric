@@ -17,19 +17,19 @@
           "type": "select",
           "items": [
             {
-              "name": "Safari",
+              "label": "Safari",
               "keys": "Safari"
             },
             {
-              "name": "alook",
+              "label": "alook",
               "keys": "alook"
             },
             {
-              "name": "SenPlayer",
+              "label": "SenPlayer",
               "keys": "SenPlayer"
             },
             {
-              "name": "影音宝",
+              "label": "影音宝",
               "keys": "yybp"
             }
           ],
