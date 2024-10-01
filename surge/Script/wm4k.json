@@ -17,11 +17,11 @@
           "type": "select",
           "items": [
             {
-              "name": "Safari浏览器",
+              "name": "Safari",
               "keys": "Safari"
             },
             {
-              "name": "alook浏览器",
+              "name": "alook",
               "keys": "alook"
             },
             {
@@ -33,7 +33,7 @@
               "keys": "yybp"
             }
           ],
-          "desc": "请选择浏览器观看视频，例如Safari, alook, SenPlayer, 影音宝等"
+          "desc": "请选择浏览器"
         }
       ],
       "author": "@Eric",
