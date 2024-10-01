@@ -8,7 +8,7 @@
     {
       "id": "video",
       "name": "video-Eric",
-      "keys": ["scheme", "customScheme"],
+      "keys": ["scheme", "Scheme"],
       "settings": [
         {
           "id": "scheme",
