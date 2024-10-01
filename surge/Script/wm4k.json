@@ -8,7 +8,7 @@
     {
       "id": "video",
       "name": "video-Eric",
-      "keys": ["scheme", "scheme"],
+      "keys": ["scheme"||"scheme"],
       "settings": [
         {
           "id": "scheme",
@@ -38,13 +38,6 @@
             }
           ],
           "desc": "请选择浏览器"
-        },
-        {
-          "id": "scheme",
-          "name": "自定义浏览器",
-          "val": "",
-          "type": "text",
-          "desc": "如果想使用其他浏览器，请在此输入自定义 Scheme"
         }
       ],
       "author": "@Eric",
