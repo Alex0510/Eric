@@ -12,10 +12,10 @@
       "settings": [
         {
           "id": "scheme",
-          "name": "scheme参数",
+          "name": "自定义浏览器",
           "val": "Safari",
           "type": "select",
-          "options": [
+          "items": [
             {
               "name": "Safari浏览器",
               "val": "Safari"
