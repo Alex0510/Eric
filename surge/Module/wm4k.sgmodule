@@ -1,0 +1,9 @@
+#!name=完美4k免费看--Eric
+#!desc=无需VIP可观看全部视频
+#!category=完美4k
+
+[MITM]
+hostname =  %APPEND% 111.229.140.167
+
+[Script]
+完美4k = type=http-response,pattern=http://111.229.140.167:8762/apptov5/v1/vod/getVod,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/refs/heads/master/surge/Script/wm4k.js
