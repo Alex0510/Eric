@@ -2,7 +2,7 @@
   "id": "wm4k.app.sub",
   "name": "wm4k解锁-Eric",
   "author": "@Eric",
-  "icon": "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/TestFlight.png",
+  "icon": "",
   "repo": "https://t.me/Mr_Alex",
   "apps": [
     {
@@ -13,7 +13,7 @@
         {
           "id": "scheme",
           "name": "scheme参数",
-          "val": "[]",
+          "val": "",
           "type": "text",
           "desc": "请输入浏览器的scheme，例如alook"
         }
@@ -22,8 +22,8 @@
       "script": "https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/tangtoutiao.js",
       "repo": "https://t.me/Mr_Alex",
       "icons": [
-        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/TestFlight.png",
-        "https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/TestFlight.png"
+        "",
+        ""
       ]
     }
   ]
