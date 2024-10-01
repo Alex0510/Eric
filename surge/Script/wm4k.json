@@ -1,36 +1,36 @@
 {
-  "id": "wm4k.app.sub",
+  "id": "video.app.sub",
   "name": "自定义浏览器-Eric",
   "author": "@Eric",
   "icon": "",
   "repo": "https://t.me/Mr_Alex",
   "apps": [
     {
-      "id": "wm4k",
-      "name": "wm4k-Eric",
+      "id": "video",
+      "name": "video-Eric",
       "keys": ["scheme"],
       "settings": [
         {
           "id": "scheme",
           "name": "自定义浏览器",
           "val": "Safari",
-          "type": "select",
+          "type": "selects",
           "items": [
             {
-              "label": "Safari",
-              "key": "Safari"
+              "key": "Safari",
+              "label": "Safari"
             },
             {
-              "label": "alook",
-              "key": "alook"
+              "key": "alook",
+              "label": "alook"
             },
             {
-              "label": "SenPlayer",
-              "key": "SenPlayer"
+              "key": "SenPlayer",
+              "label": "SenPlayer"
             },
             {
-              "label": "影音宝",
-              "key": "yybp"
+              "key": "影音宝",
+              "label": "yybp"
             }
           ],
           "desc": "请选择浏览器"
