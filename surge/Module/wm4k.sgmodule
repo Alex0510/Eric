@@ -5,7 +5,7 @@
 [General]
 force-http-engine-hosts = :8762
 [MITM]
-hostname =  %APPEND% 111.229.140.167:8762,omts.tc.qq.com
+hostname =  %APPEND% 111.229.140.167:8762,omts.tc.qq.com,v16m-default.akamaized.net
 
 [Script]
 4k跳转播放 = type=http-request,pattern=https?:\/\/(omts\.tc\.qq\.com|v16m-default.akamaized.net)\/[^\s]+(m3u8|video_mp4)[^\s]*,requires-body=0,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/refs/heads/master/surge/Script/4k.js
