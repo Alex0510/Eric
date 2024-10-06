@@ -31,6 +31,10 @@
             {
               "key": "yybp",
               "label": "影音宝"
+            },
+            {
+              "key": "zoeplay",
+              "label": "Zoe播放器"
             }
           ],
           "desc": "请选择浏览器"
