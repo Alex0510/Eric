@@ -1,6 +1,6 @@
 /*
 [rewrite_local]
-https:\/\/sl\.eric\.vpn url script-analyze-echo-response slvpn.js
+https:\/\/sl\.eric\.vpn url script-analyze-echo-response https://raw.githubusercontent.com/Alex0510/Eric/refs/heads/master/surge/Script/SLVPN.js
 
 [MITM]
 hostname = sl.eric.vpn
