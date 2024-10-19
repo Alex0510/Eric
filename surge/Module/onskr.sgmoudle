@@ -1,8 +1,8 @@
 #!name=onskr--Eric
 #!desc=某v自动更新并获取最新节点，适配surge，loon自行测试，quantumults不适配
 
-[Proxy Group]
-♽Ericonskr = select, url=http://captive.apple.com/generate_204, policy-path=https://onskr.vpn.eric, update-interval=0, no-alert=0, hidden=0, include-all-proxies=0
+#手动添加策略组[Proxy Group]
+#♽Ericonskr = select, url=http://captive.apple.com/generate_204, policy-path=https://onskr.vpn.eric, update-interval=0, no-alert=0, hidden=0, include-all-proxies=0
 
 [MITM]
 hostname =  %APPEND% *.vpn.eric
