@@ -10,4 +10,4 @@ hostname =  %APPEND% *.vpn.eric
 
 [Script]
 onskrVPN = type=http-request,pattern=https://onskr.vpn.eric,requires-body=0,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/refs/heads/master/surge/Script/ericonskr.js
-onskr = type=http-response,pattern=https://ioa.onskrgames.uk/getLines,requires-body=1,script-path=https://raw.githubusercontent.com/Alex0510/Eric/refs/heads/master/surge/Script/onskr.js,max-size=0,binary-body-mode=0
+onskr = type=http-response,pattern=https?://api.skrapp.net/api/serverlist,requires-body=1,script-path=https://raw.githubusercontent.com/Alex0510/Eric/refs/heads/master/surge/Script/onskr.js,max-size=0,binary-body-mode=0
