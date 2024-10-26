@@ -8,6 +8,7 @@
     {
       "id": "ericPassword",
       "name": "Eric-密码验证",
+      "descs_html": ["<a target='_blank' href='https://t.me/+2T-oJk2FFts4NDZl'>密码获取链接</a>"],
       "keys": ["EricPassword"],
       "settings": [
         {
@@ -29,14 +30,27 @@
     {
       "id": "bluedpic",
       "name": "Eric-pic 捕获",
+      "descs_html": [
+        "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>"
+      ],
       "keys": ["scriptpic"],
       "settings": [
         {
           "id": "scriptpic",
           "name": "脚本启用开关",
-          "val": "true",
-          "type": "switch",
-          "desc": "脚本启用为 true，禁用为 false"
+          "val": "enabled",
+          "type": "selects",
+          "items": [
+            {
+              "key": "true",
+              "label": "启用"
+            },
+            {
+              "key": "false",
+              "label": "禁用"
+            }
+          ],
+          "desc": "选择启用或禁用脚本"
         }
       ],
       "author": "@Eric",
@@ -50,14 +64,27 @@
     {
       "id": "bluedvip",
       "name": "Eric-vip",
+      "descs_html": [
+        "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>"
+      ],
       "keys": ["scriptvip"],
       "settings": [
         {
           "id": "scriptvip",
           "name": "脚本启用开关",
-          "val": "true",
-          "type": "switch",
-          "desc": "脚本启用为 true，禁用为 false"
+          "val": "enabled",
+          "type": "selects",
+          "items": [
+            {
+              "key": "true",
+              "label": "启用"
+            },
+            {
+              "key": "false",
+              "label": "禁用"
+            }
+          ],
+          "desc": "选择启用或禁用脚本"
         }
       ],
       "author": "@Eric",
@@ -71,6 +98,9 @@
     {
       "id": "ipReplacementCity",
       "name": "Eric- 城市定位",
+      "descs_html": [
+        "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>"
+      ],
       "keys": ["customCity", "sortBy", "scriptEnabled"],
       "settings": [
         {
@@ -84,15 +114,35 @@
           "id": "sortBy",
           "name": "Map",
           "val": "",
-          "type": "text",
-          "desc": "填写(nearby 或 online)此参数仅适用于地图找人，不使用地图找人无需设置保留空即可 "
+          "type": "selects",
+          "items": [
+            {
+              "key": "nearby",
+              "label": "附近的人"
+            },
+            {
+              "key": "online",
+              "label": "在线的人"
+            }
+          ],
+          "desc": "填写(nearby 或 online)此参数仅适用于地图找人，不使用地图找人无需设置保留空即可"
         },
         {
           "id": "scriptEnabled",
           "name": "脚本启用开关",
-          "val": "true",
-          "type": "switch",
-          "desc": "脚本启用为 true，禁用为 false"
+          "val": "enabled",
+          "type": "selects",
+          "items": [
+            {
+              "key": "true",
+              "label": "启用"
+            },
+            {
+              "key": "false",
+              "label": "禁用"
+            }
+          ],
+          "desc": "选择启用或禁用脚本"
         }
       ],
       "author": "@Eric",
@@ -106,6 +156,9 @@
     {
       "id": "ipReplacementCoordinates",
       "name": "Eric- 经纬度精确定位",
+      "descs_html": [
+        "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>"
+      ],
       "keys": ["customLatitude", "customLongitude", "sortBy", "scriptEnabled"],
       "settings": [
         {
@@ -126,15 +179,35 @@
           "id": "sortBy",
           "name": "Map",
           "val": "",
-          "type": "text",
+          "type": "selects",
+          "items": [
+            {
+              "key": "nearby",
+              "label": "附近的人"
+            },
+            {
+              "key": "online",
+              "label": "在线的人"
+            }
+          ],
           "desc": "填写(nearby 或 online)此参数仅适用于地图找人，不使用地图找人无需设置保留空即可"
         },
         {
           "id": "scriptEnabled",
           "name": "脚本启用开关",
-          "val": "true",
-          "type": "switch",
-          "desc": "脚本启用为 true，禁用为 false"
+          "val": "enabled",
+          "type": "selects",
+          "items": [
+            {
+              "key": "true",
+              "label": "启用"
+            },
+            {
+              "key": "false",
+              "label": "禁用"
+            }
+          ],
+          "desc": "选择启用或禁用脚本"
         }
       ],
       "author": "@Eric",
