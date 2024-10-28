@@ -97,7 +97,7 @@
     },
     {
       "id": "ipReplacementCity",
-      "name": "Eric- 城市定位",
+      "name": "Eric- 城市定位(二选一)",
       "descs_html": [
         "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>"
       ],
@@ -155,7 +155,7 @@
     },
     {
       "id": "ipReplacementCoordinates",
-      "name": "Eric- 经纬度精确定位",
+      "name": "Eric- 经纬度精确定位(二选一)",
       "descs_html": [
         "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>"
       ],
