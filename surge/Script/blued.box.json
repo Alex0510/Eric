@@ -29,7 +29,7 @@
     },
     {
       "id": "bluedpic",
-      "name": "Eric-pic 捕获",
+      "name": "Eric-pic闪照捕获",
       "descs_html": [
         "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>"
       ],
@@ -63,7 +63,7 @@
     },
     {
       "id": "bluedvip",
-      "name": "Eric-vip",
+      "name": "Eric-vip增强功能",
       "descs_html": [
         "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>"
       ],
