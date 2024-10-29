@@ -99,7 +99,8 @@
       "id": "ipReplacementCity",
       "name": "Eric- 城市定位(二选一)",
       "descs_html": [
-        "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>"
+        "<p style='line-height: 24px;padding-top:20px;'>1.脚本选择启用或禁用后点击保存后生效.</p>",
+        "<a target='_blank' href='https://lbsyun.baidu.com/index.php?title=jspopularGL/guide/getkey'>百度地图API申请教程</a>"
       ],
       "keys": ["customCity", "sortBy", "scriptEnabled"],
       "settings": [
