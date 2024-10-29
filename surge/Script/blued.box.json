@@ -103,7 +103,7 @@
         "<p style='line-height: 24px;padding-top:20px;'>2.采用百度地图API进行查询，由于key每日有使用限额，额度使用完无法使用自定义城市定位，🉑自行申请百度地图API进行填写.<p>",
         "<a target='_blank' href='https://lbsyun.baidu.com/index.php?title=jspopularGL/guide/getkey'>百度地图API申请教程</a>"
       ],
-      "keys": ["customCity", "sortBy", "scriptEnabled"],
+      "keys": ["customCity", "sortBy", "AK", "scriptEnabled"],
       "settings": [
         {
           "id": "customCity",
