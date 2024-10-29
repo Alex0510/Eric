@@ -111,6 +111,13 @@
           "desc": "请输入要替换的城市"
         },
         {
+          "id": "AK",
+          "name": "百度地图API",
+          "val": "",
+          "type": "text",
+          "desc": "请输入百度地图API"
+        },
+        {
           "id": "sortBy",
           "name": "Map",
           "val": "",
