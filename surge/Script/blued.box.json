@@ -121,7 +121,7 @@
         },
         {
           "id": "sortBy",
-          "name": "Map",
+          "name": "地图找人",
           "val": "",
           "type": "selects",
           "items": [
