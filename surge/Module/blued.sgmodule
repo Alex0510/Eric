@@ -17,7 +17,7 @@
 #更新说明：2024-08-09去除所有广告，优化新版直播流等页面改为旧版
 #频道获取密码https://t.me/+2T-oJk2FFts4NDZl，群组聊天https://t.me/+A1cOYwvOdeI4MWNl
 
-#不会抓ip的使用这个ip检测链接的ip手动添加到mitm里或boxjs里面获取：https://ping.huatuo.qq.com/index.php?btype=logic&rmdip=argo.blued.cn
+#不会抓ip的使用这个ip检测链接的ip手动添加到mitm里或boxjs里面获取：https://ping.huatuo.qq.com/index.php?btype=logic&rmdip=argo.blued.cn和https://ping.huatuo.qq.com/index.php?btype=logic&rmdip=social.blued.cn
 #surge使用：
 #1.添加surge_boxjs模块地址：https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.surge.sgmodule
 #2.添加surge_blued模块地址：https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Module/blued.sgmodule
