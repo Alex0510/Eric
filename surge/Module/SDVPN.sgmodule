@@ -1,0 +1,11 @@
+
+#!name=赛盾VPN--Eric
+#!desc=提取节点
+
+[MITM]
+hostname =  %APPEND% ga-bp12jenvgkuxtp83g76ya.aliyunga0019.com,roudie.cn,saidun.fun
+
+
+[Script]
+
+赛盾vpn = type=http-response,pattern=http://(ga-bp12jenvgkuxtp83g76ya.aliyunga0019.com|(roudie.cn|saidun.fun))/saidun/version2/v2_node_protocol,requires-body=1,script-path=https://gist.githubusercontent.com/Alex0510/af758aed5857889a227d5c68ec7fbac7/raw/44ba725456b414373141c9d3a0471f50ad3c762f/SDVPN.js,max-size=0,binary-body-mode=0,script-update-interval=0
