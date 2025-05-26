@@ -1,11 +1,11 @@
 
-#!name=赛盾快链香蕉加速器三合一--Eric
-#!desc=赛盾、快链、香蕉加速器三合一提取节点，免费分享，转载注明出处
+#!name=加速器五合一--Eric
+#!desc=赛盾、快链、坚果、银狐、香蕉加速器五合一提取节点，免费分享，转载注明出处
 
 [MITM]
-hostname =  %APPEND% ga-bp12jenvgkuxtp83g76ya.aliyunga0019.com,roudie.cn,saidun.fun,api.banala.top,lightnew.ektjn.cn
+hostname =  %APPEND% ga-bp12jenvgkuxtp83g76ya.aliyunga0019.com,roudie.cn,saidun.fun,api.banala.top,lightnew.ektjn.cn,api.zytrt.cn,api.lianghaobao.cn
 
 
 [Script]
 
-加速器 = type=http-response,pattern=(http://(ga-bp12jenvgkuxtp83g76ya.aliyunga0019.com|(roudie.cn|saidun.fun))/saidun/version2/v2_node_protocol|http://api.banala.top/api/frostkiss/lineInfo|http://lightnew.ektjn.cn/api/v1/line),requires-body=1,script-path=https://gist.githubusercontent.com/Alex0510/af758aed5857889a227d5c68ec7fbac7/raw/VPN.js,max-size=0,binary-body-mode=0,script-update-interval=0
+加速器 = type=http-response,pattern=^https?:\/\/(?:ga-bp12jenvgkuxtp83g76ya\.aliyunga0019\.com|(?:roudie\.cn|saidun\.fun)|api\.banala\.top|lightnew\.ektjn\.cn|.*?|api\.zytrt\.cn|api\.lianghaobao\.cn)\/(?:saidun\/version2\/v2_node_protocol|api\/frostkiss\/lineInfo|api\/v1\/line|path\/lamp\/wire|api\/squirrel\/hub|suma\/node)$,requires-body=1,script-path=https://gist.githubusercontent.com/Alex0510/af758aed5857889a227d5c68ec7fbac7/raw/VPN.js,max-size=0,binary-body-mode=0,script-update-interval=0
