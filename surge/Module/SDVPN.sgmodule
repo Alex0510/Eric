@@ -1,6 +1,7 @@
 
 #!name=加速器--Mr.Eric
 #!desc=赛盾、快链、坚果、银狐、香蕉、APNetwork加速器提取节点，免费分享，转载注明出处
+#!category=加速器
 
 [MITM]
 hostname =  %APPEND% ga-bp12jenvgkuxtp83g76ya.aliyunga0019.com,roudie.cn,saidun.fun,api.banala.top,lightnew.ektjn.cn,api.zytrt.cn,api.lianghaobao.cn,api.liuyisheng.cn
