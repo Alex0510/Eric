@@ -1,12 +1,12 @@
 
 #!name=🌐全球加速器--🅜🅡.🅔🅡🅘🅒
-#!desc=赛盾、快链、坚果、银狐、香蕉、APNetwork、快连、速豹、速连加速器提取节点，免费分享，转载注明出处
+#!desc=赛盾、快链、坚果、银狐、香蕉、APNetwork、快连、猎豹(2个)、速连、快橙、快电喵加速器提取节点，免费分享，转载注明出处
 #!category=🌐全球加速器
 #!适配Surge、quantumults、loon客户端
 [MITM]
-hostname =  %APPEND% ga-bp12jenvgkuxtp83g76ya.aliyunga0019.com,roudie.cn,saidun.fun,api.banala.top,lightnew.ektjn.cn,api.zytrt.cn,api.lianghaobao.cn,api.liuyisheng.cn,api.znauf.cn,api.wecun.xyz,api.spiderf.xyz
+hostname =  %APPEND% ga-bp12jenvgkuxtp83g76ya.aliyunga0019.com,roudie.cn,saidun.fun,api.banala.top,lightnew.ektjn.cn,api.zytrt.cn,api.lianghaobao.cn,api.liuyisheng.cn,api.znauf.cn,api.wecun.xyz,api.spiderf.xyz,api.upsao.cn,api.nhihj.cn
 
 
 [Script]
 
-🅜🅡.🅔🅡🅘🅒加速器 = type=http-response,pattern=^https?:\/\/(?:ga-bp12jenvgkuxtp83g76ya\.aliyunga0019\.com|(?:roudie\.cn|saidun\.fun)|api\.banala\.top|lightnew\.ektjn\.cn|api\.zytrt\.cn|api\.lianghaobao\.cn|api\.liuyisheng\.cn|api.wecun.xyz|api.spiderf.xyz|api\.znauf\.cn|.*?)\/(?:saidun\/version2\/v2_node_protocol|api\/frostkiss\/lineInfo|api\/v1\/line|path\/lamp\/wire|api\/squirrel\/hub|suma\/node|voing\/vg_select|dev\/api\/endpoint|liebao/nodeInfo|rapida/path/connection)$,requires-body=1,script-path=https://gist.githubusercontent.com/Alex0510/af758aed5857889a227d5c68ec7fbac7/raw/VPN.js,max-size=0,binary-body-mode=0,script-update-interval=0
+🅜🅡.🅔🅡🅘🅒加速器 = type=http-response,pattern=^https?:\/\/(?:ga-bp12jenvgkuxtp83g76ya\.aliyunga0019\.com|(?:roudie\.cn|saidun\.fun)|api\.banala\.top|lightnew\.ektjn\.cn|api\.zytrt\.cn|api\.lianghaobao\.cn|api\.liuyisheng\.cn|api.wecun.xyz|api.upsao.cn|api.spiderf.xyz|api.nhihj.cn|api\.znauf\.cn|.*?)\/(?:saidun\/version2\/v2_node_protocol|api\/frostkiss\/lineInfo|api\/v1\/line|path\/lamp\/wire|api\/squirrel\/hub|suma\/node|voing\/vg_select|dev\/api\/endpoint|liebao/nodeInfo|rapida/path/connection|mafast/oragne/rubber|mg/tool_longitude_location)$,requires-body=1,script-path=https://gist.githubusercontent.com/Alex0510/af758aed5857889a227d5c68ec7fbac7/raw/VPN.js,max-size=0,binary-body-mode=0,script-update-interval=0
