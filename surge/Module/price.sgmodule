@@ -7,4 +7,4 @@
 汇率&黄金信息 = script-name=汇率&黄金监控, update-interval={{{update_interval}}}
 
 [Script]
-汇率&黄金监控 = type=generic, script-path=https://raw.githubusercontent.com/Alex0510/Eric/refs/heads/master/surge/Script/price.js,
+汇率&黄金监控 = type=generic, script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/Price.js,
