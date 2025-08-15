@@ -1,0 +1,10 @@
+#!name=交管12123监控
+#!desc=查询交管车辆信息及驾驶证信息，请勿暴露自己的token
+#!author=Mr.Eric
+#!version=2025.08.12
+
+[Panel]
+交管12123信息 = script-name=交管12123, update-interval={{{update_interval}}}
+
+[Script]
+交管12123 = type=generic, script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/12123.js,
