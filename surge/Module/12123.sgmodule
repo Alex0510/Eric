@@ -2,9 +2,11 @@
 #!desc=查询交管车辆信息及驾驶证信息，请勿暴露自己的token
 #!author=Mr.Eric
 #!version=2025.08.12
+[MITM]
+hostname = %APPEND% miniappcsfw.122.gov.cn:8443
 
 [Panel]
 交管12123信息 = script-name=交管12123, update-interval={{{update_interval}}}
 
 [Script]
-交管12123 = type=generic, script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/12123.js,
+交管12123 = type=http-request,pattern=^https:\/\/miniappcsfw\.122\.gov\.cn:8443\/openapi\/invokeApi\/business\/biz,requires-body=1,script-path=https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/12123.js,max-size=0,binary-body-mode=0,
