@@ -3,11 +3,12 @@ name: Password Brute Force
 on:
   workflow_dispatch:  # 允许手动触发
   schedule:
-    - cron: '0 */2 * * *'  # 每6小时运行一次
+    - cron: '0 */1 * * *'  # 每6小时运行一次
 
 jobs:
   brute-force:
     runs-on: ubuntu-latest
+    continue-on-error: true  # 即使步骤失败也继续
     
     steps:
     - name: Checkout repository
@@ -128,15 +129,16 @@ jobs:
                 exit(0)  # 成功退出
             else:
                 print("❌ 本轮爆破失败，未找到正确密码")
-                exit(1)  # 失败退出
+                exit(0)  # 改为正常退出，避免workflow失败
         EOF
         
         # 运行爆破脚本，直到成功找到密码
         while true; do
           echo "开始新一轮爆破尝试..."
           python brute_force.py
-          if [ $? -eq 0 ]; then
+          if [ -f "password.txt" ]; then
             echo "密码已找到!"
+            cat password.txt
             break
           fi
           echo "等待10分钟后继续尝试..."
