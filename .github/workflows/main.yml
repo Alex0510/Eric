@@ -142,7 +142,7 @@ jobs:
             break
           fi
           echo "等待10分钟后继续尝试..."
-          sleep 600  # 等待10分钟后再试
+          sleep 300  # 等待5分钟后再试
         done
 
     - name: Upload result
