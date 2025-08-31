@@ -11,10 +11,10 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.9'
 
@@ -133,6 +133,7 @@ jobs:
         
         # 运行爆破脚本，直到成功找到密码
         while true; do
+          echo "开始新一轮爆破尝试..."
           python brute_force.py
           if [ $? -eq 0 ]; then
             echo "密码已找到!"
@@ -144,7 +145,7 @@ jobs:
 
     - name: Upload result
       if: success()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: password-result
         path: password.txt
