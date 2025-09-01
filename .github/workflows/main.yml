@@ -3,7 +3,7 @@ name: Password Brute Force
 on:
   workflow_dispatch:  # 允许手动触发
   schedule:
-    - cron: '*/30 * * * *'  # 每30分钟运行一次
+    - cron: '*/05 * * * *'  # 每5分钟运行一次
 
 jobs:
   brute-force:
