@@ -2,6 +2,7 @@
 // @name         GitHub 增强版
 // @namespace    https://github.com/
 // @version      6.0.4
+// @author       Mr.Eric
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。增加打开分支链接功能。
 // @match        https://github.com/*
 // @run-at       document-start
@@ -38,7 +39,7 @@
   };
 
   /************************
-   * Repo 信息解析（修复版）
+   * Repo 信息解析
    ************************/
   function getDefaultBranch() {
     var el = document.querySelector('meta[name="octolytics-dimension-repository_default_branch"]');
@@ -172,7 +173,7 @@
     desc.innerHTML = '需要GitHub Personal Access Token来保存文件修改。<br>'
       + '1. 前往 <a href="https://github.com/settings/tokens" target="_blank">GitHub Tokens</a><br>'
       + '2. 生成新Token (需要 repo 权限)';
-
+      + '3. 请勿泄露token，避免盗库，概不负责';
     const input = document.createElement('input');
     input.type = 'password';
     input.placeholder = '输入GitHub Personal Access Token';
@@ -185,7 +186,7 @@
       box-sizing: border-box;
     `;
 
-    // 记住我复选框
+    // 复选框
     const rememberContainer = document.createElement('div');
     rememberContainer.style.cssText = `
       display: flex;
@@ -846,7 +847,7 @@
   }
 
   /************************
-   * Rescue 功能面板 - 增强版（添加分支链接功能）
+   * Rescue 功能面板 - 增强版
    ************************/
   async function buildRescueLinks() {
     var wrap = document.createElement('div');
