@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         GitHub 增强版
+// @name         GitHub 功能增强版
 // @namespace    https://github.com/
-// @version      6.0.4
+// @version      6.0.5
 // @author       Mr.Eric
-// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。增加打开分支链接功能。
+// @description  GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。
 // @match        https://github.com/*
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
@@ -35,11 +35,12 @@
     USER_INFO: 'github_user_info',
     FILE_HISTORY: 'github_file_history',
     USER_SETTINGS: 'github_user_settings',
-    REMEMBER_TOKEN: 'github_remember_token'
+    REMEMBER_TOKEN: 'github_remember_token',
+    SELECTED_BRANCH: 'github_selected_branch' // 新增：存储选择的分支
   };
 
   /************************
-   * Repo 信息解析
+   * Repo 信息解析（修复版）
    ************************/
   function getDefaultBranch() {
     var el = document.querySelector('meta[name="octolytics-dimension-repository_default_branch"]');
@@ -173,7 +174,7 @@
     desc.innerHTML = '需要GitHub Personal Access Token来保存文件修改。<br>'
       + '1. 前往 <a href="https://github.com/settings/tokens" target="_blank">GitHub Tokens</a><br>'
       + '2. 生成新Token (需要 repo 权限)';
-      + '3. 请勿泄露token，避免盗库，概不负责';
+
     const input = document.createElement('input');
     input.type = 'password';
     input.placeholder = '输入GitHub Personal Access Token';
@@ -186,7 +187,7 @@
       box-sizing: border-box;
     `;
 
-    // 复选框
+    // 记住我复选框
     const rememberContainer = document.createElement('div');
     rememberContainer.style.cssText = `
       display: flex;
@@ -463,7 +464,7 @@
     const footer = document.createElement('div');
     footer.style.cssText = `
       padding: 10px;
-      background: #f6f8fa;
+      background: 'none';
       border-top: 1px solid #d0d7de;
       display: flex;
       justify-content: space-between;
@@ -817,7 +818,7 @@
                 ${isPublic ? '公开' : '私有'}
               </span>
             </div>
-            <div style="font-size: 13px; color: #586069; margin-bottom: 8px;">${description}</div>
+            <div style="font-size: 13px; color: 'none'; margin-bottom: 8px;">${description}</div>
             <div style="font-size: 11px; color: #6a737d; margin-bottom: 12px;">创建于: ${createdAt}</div>
             <div style="display: flex; gap: 8px;">
               <a href="${gist.html_url}" target="_blank" style="font-size: 12px; color: #0366d6; text-decoration: none;">查看</a>
@@ -847,7 +848,7 @@
   }
 
   /************************
-   * Rescue 功能面板 - 增强版
+   * Rescue 功能面板 - 修复自动关闭问题并添加分支保存功能
    ************************/
   async function buildRescueLinks() {
     var wrap = document.createElement('div');
@@ -898,12 +899,20 @@
       select.style.fontSize = '12px';
       select.style.padding = '2px';
       
+      // 获取保存的分支选择
+      const savedBranch = GM_getValue(STORAGE_KEYS.SELECTED_BRANCH, branch);
+      
       branches.forEach(b => {
         var option = document.createElement('option');
         option.value = b;
         option.textContent = b;
-        if (b === branch) option.selected = true;
+        if (b === savedBranch) option.selected = true;
         select.appendChild(option);
+      });
+      
+      // 添加分支选择变化事件
+      select.addEventListener('change', function() {
+        GM_setValue(STORAGE_KEYS.SELECTED_BRANCH, this.value);
       });
       
       selectWrap.appendChild(selectLabel);
@@ -1065,6 +1074,11 @@
       boxShadow: '0 6px 20px rgba(0,0,0,.15)'
     });
 
+    // 修复：阻止面板内部点击事件冒泡
+    panel.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
       panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
@@ -1073,9 +1087,12 @@
       }
     });
 
-    // 点击外部关闭面板
+    // 点击外部关闭面板 - 修复：更精确的关闭控制
     document.addEventListener('click', function(e) {
-      if (panel.style.display === 'block' && 
+      const panel = document.getElementById('__gh_rescue_panel__');
+      const btn = document.getElementById('__gh_rescue_btn__');
+      
+      if (panel && panel.style.display === 'block' && 
           !panel.contains(e.target) && 
           e.target !== btn) {
         panel.style.display = 'none';
@@ -1184,6 +1201,16 @@
     // 打开GitHub设置
     GM_registerMenuCommand('打开GitHub设置', function() {
       openGitHubSettings();
+    });
+
+    // 新增：清除保存的分支选择
+    GM_registerMenuCommand('清除分支记忆', function() {
+      GM_deleteValue(STORAGE_KEYS.SELECTED_BRANCH);
+      GM_notification({
+        title: '已清除分支记忆',
+        text: '下次将使用默认分支',
+        timeout: 2000
+      });
     });
   }
 
