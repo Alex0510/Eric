@@ -174,7 +174,7 @@
     desc.innerHTML = '需要GitHub Personal Access Token来保存文件修改。<br>'
       + '1. 前往 <a href="https://github.com/settings/tokens" target="_blank">GitHub Tokens</a><br>'
       + '2. 生成新Token (需要 repo 权限)';
-
+      + '3. 重点：请勿泄露token信息，避免盗库，概不负责';
     const input = document.createElement('input');
     input.type = 'password';
     input.placeholder = '输入GitHub Personal Access Token';
