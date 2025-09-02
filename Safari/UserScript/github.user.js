@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         GitHub 功能增强版
 // @namespace    https://github.com/
-// @version      6.0.5
+// @version      6.0.7
 // @author       Mr.Eric
-// @description  GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。
+// @description  修复 GitHub 下载 ZIP / Raw ，自动获取所有分支选择下载，添加文件编辑和保存功能。面板获取Gist库等功能。
 // @match        https://github.com/*
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
@@ -36,7 +36,8 @@
     FILE_HISTORY: 'github_file_history',
     USER_SETTINGS: 'github_user_settings',
     REMEMBER_TOKEN: 'github_remember_token',
-    SELECTED_BRANCH: 'github_selected_branch' // 新增：存储选择的分支
+    SELECTED_BRANCH: 'github_selected_branch',
+    GISTS_PAGE: 'github_gists_page'
   };
 
   /************************
@@ -174,7 +175,7 @@
     desc.innerHTML = '需要GitHub Personal Access Token来保存文件修改。<br>'
       + '1. 前往 <a href="https://github.com/settings/tokens" target="_blank">GitHub Tokens</a><br>'
       + '2. 生成新Token (需要 repo 权限)';
-      + '3. 重点：请勿泄露token信息，避免盗库，概不负责';
+      + '3. 请勿泄露token给他人，避免盗库被删，概不负责';
     const input = document.createElement('input');
     input.type = 'password';
     input.placeholder = '输入GitHub Personal Access Token';
@@ -464,7 +465,7 @@
     const footer = document.createElement('div');
     footer.style.cssText = `
       padding: 10px;
-      background: 'none';
+      background: #f6f8fa;
       border-top: 1px solid #d0d7de;
       display: flex;
       justify-content: space-between;
@@ -665,11 +666,11 @@
   }
 
   /************************
-   * GitHub 设置功能
+   * GitHub Gists 功能 - 修复显示不全问题
    ************************/
-  async function fetchUserGists() {
+  async function fetchUserGists(page = 1, perPage = 30) {
     try {
-      const response = await fetch('https://api.github.com/gists', {
+      const response = await fetch(`https://api.github.com/gists?page=${page}&per_page=${perPage}`, {
         headers: getAuthHeaders()
       });
       
@@ -684,7 +685,22 @@
       }
       
       const gists = await response.json();
-      return gists;
+      const linkHeader = response.headers.get('Link');
+      
+      // 检查是否有更多页面
+      let hasNextPage = false;
+      let nextPage = page + 1;
+      
+      if (linkHeader) {
+        const links = linkHeader.split(',');
+        hasNextPage = links.some(link => link.includes('rel="next"'));
+      }
+      
+      return {
+        gists,
+        hasNextPage,
+        nextPage
+      };
     } catch (error) {
       console.error('获取Gists失败:', error);
       throw error;
@@ -702,8 +718,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 70%;
-      height: 70%;
+      width: 80%;
+      height: 80%;
       background: white;
       z-index: 2147483646;
       border: 1px solid #ccc;
@@ -716,7 +732,7 @@
     
     const header = document.createElement('div');
     header.style.cssText = `
-      padding: 10px;
+      padding: 15px;
       background: #f6f8fa;
       border-bottom: 1px solid #d0d7de;
       display: flex;
@@ -727,17 +743,18 @@
     const title = document.createElement('span');
     title.textContent = 'Your Gists';
     title.style.fontWeight = 'bold';
+    title.style.fontSize = '16px';
     
     const closeBtn = document.createElement('button');
     closeBtn.textContent = '×';
     closeBtn.style.cssText = `
       background: none;
       border: none;
-      font-size: 20px;
+      font-size: 24px;
       cursor: pointer;
       padding: 0;
-      width: 24px;
-      height: 24px;
+      width: 30px;
+      height: 30px;
     `;
     closeBtn.onclick = () => hideGistsPanel();
     
@@ -748,24 +765,48 @@
     content.id = '__gh_gists_content__';
     content.style.cssText = `
       flex: 1;
-      padding: 12px;
+      padding: 15px;
       overflow-y: auto;
+      position: relative;
     `;
     
     const footer = document.createElement('div');
     footer.style.cssText = `
-      padding: 10px;
+      padding: 15px;
       background: #f6f8fa;
       border-top: 1px solid #d0d7de;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
     `;
+    
+    const status = document.createElement('div');
+    status.id = '__gh_gists_status__';
+    status.style.fontSize = '13px';
+    status.style.color = '#586069';
+    
+    const buttonGroup = document.createElement('div');
+    buttonGroup.style.display = 'flex';
+    buttonGroup.style.gap = '10px';
     
     const newGistBtn = makeBtn('新建 Gist', () => {
       window.open('https://gist.github.com', '_blank');
     });
+    newGistBtn.style.padding = '6px 12px';
     
-    footer.appendChild(newGistBtn);
+    const loadMoreBtn = makeBtn('加载更多', () => {
+      const currentPage = GM_getValue(STORAGE_KEYS.GISTS_PAGE, 1);
+      loadUserGists(currentPage + 1, true);
+    }, '加载更多Gist');
+    loadMoreBtn.id = '__gh_load_more_btn__';
+    loadMoreBtn.style.display = 'none';
+    loadMoreBtn.style.padding = '6px 12px';
+    
+    buttonGroup.appendChild(newGistBtn);
+    buttonGroup.appendChild(loadMoreBtn);
+    
+    footer.appendChild(status);
+    footer.appendChild(buttonGroup);
     
     panel.appendChild(header);
     panel.appendChild(content);
@@ -780,7 +821,7 @@
     panel.style.display = 'flex';
     
     // 加载Gists
-    loadUserGists();
+    loadUserGists(1);
   }
 
   function hideGistsPanel() {
@@ -788,58 +829,101 @@
     if (panel) panel.style.display = 'none';
   }
 
-  async function loadUserGists() {
+  async function loadUserGists(page = 1, append = false) {
     const content = document.getElementById('__gh_gists_content__');
-    if (!content) return;
+    const status = document.getElementById('__gh_gists_status__');
+    const loadMoreBtn = document.getElementById('__gh_load_more_btn__');
     
-    content.innerHTML = '<div style="text-align: center; padding: 20px;">加载中...</div>';
+    if (!content || !status) return;
+    
+    if (!append) {
+      content.innerHTML = '<div style="text-align: center; padding: 40px;">加载中...</div>';
+      loadMoreBtn.style.display = 'none';
+    }
     
     try {
-      const gists = await fetchUserGists();
+      const result = await fetchUserGists(page);
+      const gists = result.gists;
       
-      if (gists.length === 0) {
-        content.innerHTML = '<div style="text-align: center; padding: 20px;">没有找到Gists</div>';
+      if (gists.length === 0 && !append) {
+        content.innerHTML = '<div style="text-align: center; padding: 40px;">没有找到Gists</div>';
+        status.textContent = '没有Gists';
         return;
       }
       
-      let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px;">';
+      // 保存当前页码
+      GM_setValue(STORAGE_KEYS.GISTS_PAGE, page);
+      
+      let html = '';
+      
+      if (append) {
+        html = content.innerHTML;
+        // 移除"没有更多内容"的消息（如果有）
+        html = html.replace('<div style="text-align: center; padding: 20px; color: #586069;">没有更多Gists了</div>', '');
+      } else {
+        html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">';
+      }
       
       gists.forEach(gist => {
-        const filename = Object.keys(gist.files)[0];
+        const filename = Object.keys(gist.files)[0] || '无文件名';
+        const file = gist.files[filename];
         const description = gist.description || '无描述';
         const isPublic = gist.public;
         const createdAt = new Date(gist.created_at).toLocaleDateString();
+        const updatedAt = new Date(gist.updated_at).toLocaleDateString();
         
         html += `
-          <div style="border: 1px solid #e1e4e8; border-radius: 6px; padding: 12px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <span style="font-weight: 500;">${filename}</span>
-              <span style="font-size: 12px; color: ${isPublic ? '#0366d6' : '#6a737d'};">
+          <div style="border: 1px solid #e1e4e8; border-radius: 8px; padding: 16px; background: #fff;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <span style="font-weight: 500; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${filename}">${filename}</span>
+              <span style="font-size: 12px; color: ${isPublic ? '#0366d6' : '#6a737d'}; padding: 2px 6px; border: 1px solid ${isPublic ? '#0366d6' : '#6a737d'}; border-radius: 12px;">
                 ${isPublic ? '公开' : '私有'}
               </span>
             </div>
-            <div style="font-size: 13px; color: 'none'; margin-bottom: 8px;">${description}</div>
-            <div style="font-size: 11px; color: #6a737d; margin-bottom: 12px;">创建于: ${createdAt}</div>
-            <div style="display: flex; gap: 8px;">
-              <a href="${gist.html_url}" target="_blank" style="font-size: 12px; color: #0366d6; text-decoration: none;">查看</a>
-              <a href="${gist.html_url}/raw" target="_blank" style="font-size: 12px; color: #0366d6; text-decoration: none;">Raw</a>
+            <div style="font-size: 13px; color: #586069; margin-bottom: 10px; height: 40px; overflow: hidden; text-overflow: ellipsis;">${description}</div>
+            <div style="font-size: 11px; color: #6a737d; margin-bottom: 12px;">
+              <div>创建: ${createdAt}</div>
+              <div>更新: ${updatedAt}</div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <a href="${gist.html_url}" target="_blank" style="font-size: 12px; color: #0366d6; text-decoration: none; padding: 4px 8px; border: 1px solid #0366d6; border-radius: 4px;">查看</a>
+              <a href="${gist.html_url}/raw" target="_blank" style="font-size: 12px; color: #0366d6; text-decoration: none; padding: 4px 8px; border: 1px solid #0366d6; border-radius: 4px;">Raw</a>
+              ${file.language ? `<span style="font-size: 11px; color: #6a737d; padding: 4px 8px; background: #f6f8fa; border-radius: 4px;">${file.language}</span>` : ''}
             </div>
           </div>
         `;
       });
       
-      html += '</div>';
+      if (!append) {
+        html += '</div>';
+      }
+      
+      // 添加"加载更多"按钮或"没有更多内容"消息
+      if (result.hasNextPage) {
+        loadMoreBtn.style.display = 'inline-block';
+        loadMoreBtn.onclick = () => loadUserGists(page + 1, true);
+      } else if (gists.length > 0) {
+        html += '<div style="text-align: center; padding: 20px; color: #586069;">没有更多Gists了</div>';
+        loadMoreBtn.style.display = 'none';
+      }
+      
       content.innerHTML = html;
+      status.textContent = `已加载 ${gists.length * page} 个Gist`;
+      
     } catch (error) {
       console.error('加载Gists失败:', error);
       content.innerHTML = `
-        <div style="text-align: center; padding: 20px; color: #cb2431;">
-          <p>加载Gists失败: ${error.message}</p>
-          <button onclick="showAuthDialog()" style="margin-top: 10px; padding: 5px 10px; background: #2ea44f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        <div style="text-align: center; padding: 40px; color: #cb2431;">
+          <p style="margin-bottom: 16px;">加载Gists失败: ${error.message}</p>
+          <button onclick="location.reload()" style="margin: 5px; padding: 8px 16px; background: #2ea44f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            重试
+          </button>
+          <button onclick="showAuthDialog()" style="margin: 5px; padding: 8px 16px; background: #0366d6; color: white; border: none; border-radius: 4px; cursor: pointer;">
             重新认证
           </button>
         </div>
       `;
+      status.textContent = '加载失败';
     }
   }
 
@@ -848,7 +932,7 @@
   }
 
   /************************
-   * Rescue 功能面板 - 修复自动关闭问题并添加分支保存功能
+   * Rescue 功能面板
    ************************/
   async function buildRescueLinks() {
     var wrap = document.createElement('div');
