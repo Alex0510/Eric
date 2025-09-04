@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub 助手增强版
 // @namespace    https://github.com/
-// @version      6.0.11
+// @version      6.0.13
 // @author       Mr.Eric
 // @license      GNU GPLv3
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。
@@ -613,12 +613,22 @@
     buttonGroup.style.display = 'flex';
     buttonGroup.style.gap = '8px';
 
-    // 使用新的本地保存调用
-    const saveLocalBtn = makeBtn('💾 保存到本地', () => saveCurrentEditorFileLocally(), '保存文件到本地设备');
-    const saveGithubBtn = makeBtn('🚀 保存到GitHub', () => saveFileToGitHub(), '保存文件到GitHub仓库');
-    const cancelBtn = makeBtn('取消', () => hideEditor(), '关闭编辑器');
-    saveGithubBtn.style.background = colors.buttonBg;
-    saveGithubBtn.style.color = colors.buttonText;
+    // 在编辑面板的按钮创建部分，将现有的按钮样式代码替换为以下内容：
+
+const saveLocalBtn = makeBtn('💾 保存到本地', () => saveCurrentEditorFileLocally(), '保存文件到本地设备');
+const saveGithubBtn = makeBtn('🚀 保存到GitHub', () => saveFileToGitHub(), '保存文件到GitHub仓库');
+const cancelBtn = makeBtn('取消', () => hideEditor(), '关闭编辑器');
+
+// 添加额外的样式调整
+[saveLocalBtn, saveGithubBtn, cancelBtn].forEach(btn => {
+    btn.style.margin = '0 8px 0 0';
+    btn.style.padding = '8px 12px';
+    btn.style.fontSize = '8px';
+    btn.style.minWidth = '90px';
+});
+
+saveGithubBtn.style.background = colors.buttonBg;
+saveGithubBtn.style.color = colors.buttonText;
 
     buttonGroup.appendChild(saveLocalBtn);
     buttonGroup.appendChild(saveGithubBtn);
@@ -1364,9 +1374,10 @@
       fileSection.appendChild(fileTitle);
       fileSection.appendChild(fileName);
 
-      var rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
-      fileSection.appendChild(makeLink(rawUrl, '🌐 打开Raw文件'));
-      
+      // 将"打开Raw文件"改为按钮格式
+      const rawBtn = makeBtn('🌐 打开Raw文件', () => window.open(rawUrl, '_blank'), '在新标签页中打开Raw文件');
+      fileSection.appendChild(rawBtn);
+
       const downloadBtn = makeBtn('⬇️ 下载文件', function () { 
         downloadViaGM(rawUrl, filePath); 
       }, '下载当前文件');
