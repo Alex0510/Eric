@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         GitHub 助手增强版
 // @namespace    https://github.com/
-// @version      6.0.13
+// @version      6.0.14
 // @author       Mr.Eric
-// @license      MIT
-// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。
+// @license      GNU GPLv3
+// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小。
 // @match        https://github.com/*
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest
@@ -41,7 +41,11 @@
     REMEMBER_TOKEN: 'github_remember_token',
     SELECTED_BRANCH: 'github_selected_branch',
     GISTS_PAGE: 'github_gists_page',
-    GIT_URL_TYPE: 'github_git_url_type'
+    GIT_URL_TYPE: 'github_git_url_type',
+    EDITOR_POSITION: 'github_editor_position',
+    EDITOR_SIZE: 'github_editor_size',
+    GISTS_POSITION: 'github_gists_position',
+    GISTS_SIZE: 'github_gists_size'
   };
 
   // ========== 检测暗色模式 ==========
@@ -99,6 +103,166 @@
       shadow: darkMode ? '0 4px 20px rgba(0,0,0,0.3)' : '0 4px 20px rgba(0,0,0,0.15)',
       link: darkMode ? '#58a6ff' : '#0366d6'
     };
+  }
+
+  // ========== 拖拽和调整大小功能 ==========
+  function addDragAndResizeFunctionality(panel, storageKeyPrefix) {
+    if (!panel) return;
+    
+    const colors = getAdaptiveColors();
+    const header = panel.querySelector('div:first-child');
+    if (!header) return;
+    
+    // 恢复保存的位置和大小
+    const savedPosition = GM_getValue(storageKeyPrefix + '_POSITION');
+    const savedSize = GM_getValue(storageKeyPrefix + '_SIZE');
+    
+    if (savedPosition) {
+      panel.style.left = savedPosition.left + 'px';
+      panel.style.top = savedPosition.top + 'px';
+      panel.style.transform = 'none';
+    }
+    
+    if (savedSize) {
+      panel.style.width = savedSize.width + 'px';
+      panel.style.height = savedSize.height + 'px';
+    }
+    
+    // 添加拖拽功能
+    let isDragging = false;
+    let startX, startY, initialLeft, initialTop;
+    
+    // 确保面板有定位和初始尺寸
+    panel.style.position = 'fixed';
+    if (!savedPosition) {
+      panel.style.left = '50%';
+      panel.style.top = '50%';
+      panel.style.transform = 'translate(-50%, -50%)';
+    }
+    panel.style.minWidth = '300px';
+    panel.style.minHeight = '200px';
+    
+    // 添加拖拽手柄（使用标题栏）
+    header.style.cursor = 'move';
+    header.addEventListener('mousedown', startDrag);
+    
+    function startDrag(e) {
+      if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+      
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      
+      // 获取当前面板位置
+      const rect = panel.getBoundingClientRect();
+      initialLeft = rect.left;
+      initialTop = rect.top;
+      
+      // 移除transform以使用left/top定位
+      panel.style.transform = 'none';
+      panel.style.left = initialLeft + 'px';
+      panel.style.top = initialTop + 'px';
+      
+      document.addEventListener('mousemove', onDrag);
+      document.addEventListener('mouseup', stopDrag);
+      e.preventDefault();
+    }
+    
+    function onDrag(e) {
+      if (!isDragging) return;
+      
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      
+      const newLeft = initialLeft + dx;
+      const newTop = initialTop + dy;
+      
+      // 确保面板不会完全移出视图
+      const maxLeft = window.innerWidth - 50;
+      const maxTop = window.innerHeight - 50;
+      
+      panel.style.left = Math.max(0, Math.min(newLeft, maxLeft)) + 'px';
+      panel.style.top = Math.max(0, Math.min(newTop, maxTop)) + 'px';
+    }
+    
+    function stopDrag() {
+      isDragging = false;
+      
+      // 保存位置
+      const left = parseInt(panel.style.left, 10);
+      const top = parseInt(panel.style.top, 10);
+      GM_setValue(storageKeyPrefix + '_POSITION', { left, top });
+      
+      document.removeEventListener('mousemove', onDrag);
+      document.removeEventListener('mouseup', stopDrag);
+    }
+    
+    // 添加调整大小功能
+    const resizeHandleSize = 12;
+    const resizeHandle = document.createElement('div');
+    resizeHandle.style.cssText = `
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: ${resizeHandleSize}px;
+        height: ${resizeHandleSize}px;
+        cursor: nwse-resize;
+        z-index: 1000;
+    `;
+    
+    // 创建调整大小的三角形指示器
+    resizeHandle.innerHTML = `
+        <svg width="${resizeHandleSize}" height="${resizeHandleSize}" style="position:absolute; bottom:0; right:0;">
+            <path d="M${resizeHandleSize} 0L0 ${resizeHandleSize}L${resizeHandleSize} ${resizeHandleSize}Z" 
+                  fill="${colors.textSecondary}"/>
+        </svg>
+    `;
+    
+    panel.appendChild(resizeHandle);
+    panel.style.resize = 'none'; // 确保CSS resize属性不会干扰
+    
+    let isResizing = false;
+    let startWidth, startHeight;
+    
+    resizeHandle.addEventListener('mousedown', startResize);
+    
+    function startResize(e) {
+      isResizing = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startWidth = parseInt(document.defaultView.getComputedStyle(panel).width, 10);
+      startHeight = parseInt(document.defaultView.getComputedStyle(panel).height, 10);
+      
+      document.addEventListener('mousemove', onResize);
+      document.addEventListener('mouseup', stopResize);
+      e.preventDefault();
+    }
+    
+    function onResize(e) {
+      if (!isResizing) return;
+      
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      
+      // 设置最小尺寸限制
+      const minWidth = 300;
+      const minHeight = 200;
+      
+      panel.style.width = Math.max(minWidth, startWidth + dx) + 'px';
+      panel.style.height = Math.max(minHeight, startHeight + dy) + 'px';
+    }
+    
+    function stopResize() {
+      isResizing = false;
+      
+      // 保存尺寸
+      const width = parseInt(panel.style.width, 10);
+      const height = parseInt(panel.style.height, 10);
+      GM_setValue(storageKeyPrefix + '_SIZE', { width, height });
+      
+      document.removeEventListener('mousemove', onResize);
+      document.removeEventListener('mouseup', stopResize);
+    }
   }
 
   // ========== 小工具 / 兼容剪贴板 ==========
@@ -600,35 +764,39 @@
       background: ${colors.bgSecondary}; 
       border-top: 1px solid ${colors.border}; 
       display: flex; 
-      justify-content: space-between; 
-      align-items: center;
+      flex-direction: column;
+      gap: 10px;
     `;
 
     const status = document.createElement('div');
     status.id = '__gh_editor_status__';
     status.style.fontSize = '12px';
     status.style.color = colors.textSecondary;
+    status.style.width = '100%';
 
     const buttonGroup = document.createElement('div');
-    buttonGroup.style.display = 'flex';
-    buttonGroup.style.gap = '8px';
+    buttonGroup.style.cssText = `
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      width: 100%;
+    `;
 
-    // 在编辑面板的按钮创建部分，将现有的按钮样式代码替换为以下内容：
+    // 创建按钮
+    const saveLocalBtn = makeBtn('💾 保存到本地', () => saveCurrentEditorFileLocally(), '保存文件到本地设备');
+    const saveGithubBtn = makeBtn('🚀 保存到GitHub', () => saveFileToGitHub(), '保存文件到GitHub仓库');
+    const cancelBtn = makeBtn('取消', () => hideEditor(), '关闭编辑器');
 
-const saveLocalBtn = makeBtn('💾 保存到本地', () => saveCurrentEditorFileLocally(), '保存文件到本地设备');
-const saveGithubBtn = makeBtn('🚀 保存到GitHub', () => saveFileToGitHub(), '保存文件到GitHub仓库');
-const cancelBtn = makeBtn('取消', () => hideEditor(), '关闭编辑器');
+    // 添加额外的样式调整
+    [saveLocalBtn, saveGithubBtn, cancelBtn].forEach(btn => {
+      btn.style.margin = '0';
+      btn.style.padding = '8px 12px';
+      btn.style.fontSize = '8px';
+      btn.style.minWidth = '90px';
+    });
 
-// 添加额外的样式调整
-[saveLocalBtn, saveGithubBtn, cancelBtn].forEach(btn => {
-    btn.style.margin = '0 8px 0 0';
-    btn.style.padding = '8px 12px';
-    btn.style.fontSize = '8px';
-    btn.style.minWidth = '90px';
-});
-
-saveGithubBtn.style.background = colors.buttonBg;
-saveGithubBtn.style.color = colors.buttonText;
+    saveGithubBtn.style.background = colors.buttonBg;
+    saveGithubBtn.style.color = colors.buttonText;
 
     buttonGroup.appendChild(saveLocalBtn);
     buttonGroup.appendChild(saveGithubBtn);
@@ -642,6 +810,9 @@ saveGithubBtn.style.color = colors.buttonText;
     modal.appendChild(footer);
 
     document.documentElement.appendChild(modal);
+
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(modal, 'EDITOR');
 
     // ESC 关闭
     document.addEventListener('keydown', function (e) {
@@ -916,6 +1087,10 @@ saveGithubBtn.style.color = colors.buttonText;
     panel.appendChild(footer);
 
     document.documentElement.appendChild(panel);
+
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(panel, 'GISTS');
+
     return panel;
   }
 
