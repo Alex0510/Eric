@@ -3,7 +3,7 @@
 // @namespace    https://github.com/
 // @version      6.0.13
 // @author       Mr.Eric
-// @license      GNU GPLv3
+// @license      MIT
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。
 // @match        https://github.com/*
 // @run-at       document-start
