@@ -23,7 +23,7 @@
 // @require      https://cdn.jsdelivr.net/npm/intersection-observer@0.12.2/intersection-observer.js
 // @require      https://cdn.jsdelivr.net/npm/resize-observer-polyfill@1.5.1/dist/ResizeObserver.global.min.js
 // @require      https://cdn.jsdelivr.net/npm/url-polyfill@1.1.12/url-polyfill.min.js
-// @require      https://cdn.jsdelivr.net/npm/details-element-polyfill@latest/dist/details-element-polyfill.min.js
+// @require      https://cdn.jsdelivr.net/npm/details-element-polyfill@2.4.0/dist/details-element-polyfill.min.js
 // @require      https://cdn.jsdelivr.net/npm/web-animations-js@2.3.2/web-animations.min.js
 // @downloadURL  https://raw.githubusercontent.com/Alex0510/Eric/master/Safari/UserScript/github.user.js
 // @updateURL    https://raw.githubusercontent.com/Alex0510/Eric/master/Safari/UserScript/github.user.js
