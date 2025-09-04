@@ -27,7 +27,7 @@
 // @require      https://cdn.jsdelivr.net/npm/details-element-polyfill@2.4.0/dist/details-element-polyfill.min.js
 // @require      https://cdn.jsdelivr.net/npm/web-animations-js@2.3.2/web-animations.min.js
 // @downloadURL  https://raw.githubusercontent.com/Alex0510/Eric/master/Safari/UserScript/github.user.js
-// @updateURL    https://raw.githubusercontent.com/Alex0510/Eric/master/Safari/UserScript/github.user.js
+// @updateURL    https://update.greasyfork.org/scripts/548289/GitHub%20助手增强版.user.js
 // ==/UserScript==
 
 (function () {
