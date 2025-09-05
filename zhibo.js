@@ -1,4 +1,4 @@
-主播：薇薇vv
+主播：薇薇vva
 图片：https://77live.ynolbs.com/7702/liveHost/9f139d1ecabeafeb619be720e460fd27
 直播地址：http://02b.sz-bbw.com/live/cx_352611.flv?auth_key=1630659619-33688-0-2b7955c3f631fecc1f124f4028ee3079
 
@@ -346,7 +346,7 @@
 图片：https://77live.ynolbs.com/7701/liveHost/d5affadd8c1b06eea83d764b353e1555
 直播地址：http://xihuan.wwratt.cn:81/0d44f225eac208e0f868fbc5943660a7
 
-主播：bw户外工厂妹@
+主播：bw户外工厂妹
 图片：https://77live.ynolbs.com/7707/liveHost/2190fb04dcb8783dd85cafc27c39378a
 直播地址：http://d3.xishuaicaotang.com/live/cx_3033.flv?auth_key=1630677539-91909-0-f8950ae70470c79e194c1a6c2e90f73a
 
