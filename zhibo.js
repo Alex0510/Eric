@@ -342,7 +342,7 @@
 图片：https://77live.ynolbs.com/7704/live/images/live_img11.jpg
 直播地址：http://02b.dgguangyu.cn/live/cx_7099.flv?auth_key=1630666440-75466-0-3ecff390e118cacf10accc3c82e94bfd
 
-主播：小可爱
+主播：小可爱il
 图片：https://77live.ynolbs.com/7701/liveHost/d5affadd8c1b06eea83d764b353e1555
 直播地址：http://xihuan.wwratt.cn:81/0d44f225eac208e0f868fbc5943660a7
 
