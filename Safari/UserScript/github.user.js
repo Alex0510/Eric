@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         GitHub 助手增强版
 // @namespace    https://github.com/
-// @version      6.0.16
+// @version      6.0.19
 // @author       Mr.Eric
 // @license      MIT
-// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。
+// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流功能。
 // @icon         https://raw.githubusercontent.com/Alex0510/Eric/e8511263f6e8b232bc18ad4e8b221de3bf94f1a3/Icons/github.png
 // @match        https://github.com/*
 // @run-at       document-start
@@ -47,7 +47,8 @@
     EDITOR_POSITION: 'github_editor_position',
     EDITOR_SIZE: 'github_editor_size',
     GISTS_POSITION: 'github_gists_position',
-    GISTS_SIZE: 'github_gists_size'
+    GISTS_SIZE: 'github_gists_size',
+    WORKFLOWS_PAGE: 'github_workflows_page'
   };
 
   // 添加触摸事件支持的CSS样式
@@ -83,6 +84,46 @@
       border-bottom: 2px solid #a0a0a0;
     }
     
+    /* Gists面板头部样式 */
+    .gh-gists-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: #2d2d2d;
+      border-bottom: 1px solid #444;
+    }
+    
+    .gh-gists-title {
+      font-weight: bold;
+      font-size: 16px;
+      color: #e6e6e6;
+    }
+    
+    .gh-gists-header-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    
+    .gh-gists-close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      color: #e6e6e6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .gh-gists-close-btn:hover {
+      color: #58a6ff;
+    }
+    
     @media (max-width: 768px) {
       .gh-panel {
         min-width: 280px !important;
@@ -92,6 +133,11 @@
       .gh-resize-handle {
         width: 30px;
         height: 30px;
+      }
+      
+      .gh-gists-header-buttons {
+        flex-direction: column;
+        gap: 5px;
       }
     }
     
@@ -1057,255 +1103,531 @@
       alert('保存到GitHub失败: ' + error.message);
     }
   }
-// ========== Gists 功能（分页修复） ==========
-async function fetchUserGists(page = 1, perPage = 30) {
-  try {
-    const response = await fetch(`https://api.github.com/gists?page=${page}&per_page=${perPage}`, {
-      headers: getAuthHeaders()
-    });
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        clearGitHubToken();
-        updateUIWithAuthStatus();
-        throw new Error('Token已失效，请重新认证');
+  // ========== Gists 功能（分页修复） ==========
+  async function fetchUserGists(page = 1, perPage = 30) {
+    try {
+      const response = await fetch(`https://api.github.com/gists?page=${page}&per_page=${perPage}`, {
+        headers: getAuthHeaders()
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          clearGitHubToken();
+          updateUIWithAuthStatus();
+          throw new Error('Token已失效，请重新认证');
+        }
+        throw new Error('获取Gists失败: ' + response.status);
       }
-      throw new Error('获取Gists失败: ' + response.status);
-    }
 
-    const gists = await response.json();
-    const linkHeader = response.headers.get('Link');
-    let hasNextPage = false;
-    let nextPage = page + 1;
-    if (linkHeader) {
-      const links = linkHeader.split(',');
-      hasNextPage = links.some(link => link.includes('rel="next"'));
-    }
+      const gists = await response.json();
+      const linkHeader = response.headers.get('Link');
+      let hasNextPage = false;
+      let nextPage = page + 1;
+      if (linkHeader) {
+        const links = linkHeader.split(',');
+        hasNextPage = links.some(link => link.includes('rel="next"'));
+      }
 
-    return { gists, hasNextPage, nextPage };
-  } catch (error) {
-    console.error('获取Gists失败:', error);
-    throw error;
-  }
-}
-
-function createGistsPanel() {
-  const panelId = '__gh_gists_panel__';
-  if (document.getElementById(panelId)) return document.getElementById(panelId);
-
-  const colors = getAdaptiveColors();
-  const panel = document.createElement('div');
-  panel.id = panelId;
-  panel.style.cssText = `
-    position: fixed;
-    width: 80%;
-    height: 80%;
-    background: ${colors.bgPrimary};
-    color: ${colors.textPrimary};
-    z-index: 2147483646;
-    border: 1px solid ${colors.border};
-    box-shadow: ${colors.shadow};
-    display: none;
-    flex-direction: column;
-    border-radius: 8px;
-    overflow: hidden;
-  `;
-
-  // 创建头部布局
-  const header = document.createElement('div');
-  header.className = 'gh-gists-header';
-  
-  const title = document.createElement('span');
-  title.className = 'gh-gists-title';
-  title.textContent = 'Your Gists';
-  
-  // 头部只保留标题
-  header.appendChild(title);
-  
-  const content = document.createElement('div');
-  content.id = '__gh_gists_content__';
-  content.style.cssText = `
-    flex: 1; 
-    padding: 15px; 
-    overflow-y: auto; 
-    position: relative;
-    background: ${colors.bgPrimary};
-  `;
-
-  const footer = document.createElement('div');
-  footer.style.cssText = `
-    padding: 15px; 
-    background: ${colors.bgSecondary}; 
-    border-top: 1px solid ${colors.border}; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  `;
-
-  const status = document.createElement('div');
-  status.id = '__gh_gists_status__';
-  status.style.fontSize = '13px';
-  status.style.color = colors.textSecondary;
-
-  const buttonGroup = document.createElement('div');
-  buttonGroup.style.display = 'flex';
-  buttonGroup.style.gap = '10px';
-  buttonGroup.style.flexWrap = 'wrap';
-
-  // 新建Gist按钮
-  const newGistBtn = makeBtn('新建 Gist', () => window.open('https://gist.github.com', '_blank'));
-  newGistBtn.style.padding = '6px 12px';
-  newGistBtn.style.margin = '0';
-
-  // 加载更多按钮
-  const loadMoreBtn = makeBtn('加载更多', () => {
-    const currentPage = GM_getValue(STORAGE_KEYS.GISTS_PAGE, 1);
-    loadUserGists(currentPage + 1, true);
-  }, '加载更多Gist');
-  loadMoreBtn.id = '__gh_load_more_btn__';
-  loadMoreBtn.style.display = 'none';
-  loadMoreBtn.style.padding = '6px 12px';
-  loadMoreBtn.style.margin = '0';
-
-  // 关闭按钮
-  const closeBtn = makeBtn('关闭', () => hideGistsPanel());
-  closeBtn.style.padding = '6px 12px';
-  closeBtn.style.margin = '0';
-
-  buttonGroup.appendChild(loadMoreBtn);
-  buttonGroup.appendChild(newGistBtn);
-  buttonGroup.appendChild(closeBtn);
-
-  footer.appendChild(status);
-  footer.appendChild(buttonGroup);
-
-  panel.appendChild(header);
-  panel.appendChild(content);
-  panel.appendChild(footer);
-
-  document.documentElement.appendChild(panel);
-
-  // 添加拖拽和调整大小功能
-  addDragAndResizeFunctionality(panel, 'GISTS');
-
-  return panel;
-}
-
-function showGistsPanel() {
-  const panel = document.getElementById('__gh_gists_panel__') || createGistsPanel();
-  panel.style.display = 'flex';
-  loadUserGists(1);
-}
-
-function hideGistsPanel() {
-  const panel = document.getElementById('__gh_gists_panel__');
-  if (panel) {
-    panel.style.display = 'none';
-    // 清除内容，以便下次打开时重新加载
-    const content = document.getElementById('__gh_gists_content__');
-    if (content) {
-      content.innerHTML = '';
-    }
-    const status = document.getElementById('__gh_gists_status__');
-    if (status) {
-      status.textContent = '';
+      return { gists, hasNextPage, nextPage };
+    } catch (error) {
+      console.error('获取Gists失败:', error);
+      throw error;
     }
   }
-}
 
-async function loadUserGists(page = 1, append = false) {
-  const content = document.getElementById('__gh_gists_content__');
-  const status = document.getElementById('__gh_gists_status__');
-  const loadMoreBtn = document.getElementById('__gh_load_more_btn__');
-  if (!content || !status) return;
+  function createGistsPanel() {
+    const panelId = '__gh_gists_panel__';
+    if (document.getElementById(panelId)) return document.getElementById(panelId);
 
-  const colors = getAdaptiveColors();
+    const colors = getAdaptiveColors();
+    const panel = document.createElement('div');
+    panel.id = panelId;
+    panel.style.cssText = `
+      position: fixed;
+      width: 80%;
+      height: 80%;
+      background: ${colors.bgPrimary};
+      color: ${colors.textPrimary};
+      z-index: 2147483646;
+      border: 1px solid ${colors.border};
+      box-shadow: ${colors.shadow};
+      display: none;
+      flex-direction: column;
+      border-radius: 8px;
+      overflow: hidden;
+    `;
 
-  if (!append) {
-    content.innerHTML = '<div style="text-align: center; padding: 40px;">加载中...</div>';
+    // 创建头部布局
+    const header = document.createElement('div');
+    header.className = 'gh-gists-header';
+    
+    const title = document.createElement('span');
+    title.className = 'gh-gists-title';
+    title.textContent = 'Your Gists';
+    
+    // 头部只保留标题
+    header.appendChild(title);
+    
+    const content = document.createElement('div');
+    content.id = '__gh_gists_content__';
+    content.style.cssText = `
+      flex: 1; 
+      padding: 15px; 
+      overflow-y: auto; 
+      position: relative;
+      background: ${colors.bgPrimary};
+    `;
+
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+      padding: 15px; 
+      background: ${colors.bgSecondary}; 
+      border-top: 1px solid ${colors.border}; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    `;
+
+    const status = document.createElement('div');
+    status.id = '__gh_gists_status__';
+    status.style.fontSize = '13px';
+    status.style.color = colors.textSecondary;
+
+    const buttonGroup = document.createElement('div');
+    buttonGroup.style.display = 'flex';
+    buttonGroup.style.gap = '10px';
+    buttonGroup.style.flexWrap = 'wrap';
+
+    // 新建Gist按钮
+    const newGistBtn = makeBtn('新建 Gist', () => window.open('https://gist.github.com', '_blank'));
+    newGistBtn.style.padding = '6px 12px';
+    newGistBtn.style.margin = '0';
+
+    // 加载更多按钮
+    const loadMoreBtn = makeBtn('加载更多', () => {
+      const currentPage = GM_getValue(STORAGE_KEYS.GISTS_PAGE, 1);
+      loadUserGists(currentPage + 1, true);
+    }, '加载更多Gist');
+    loadMoreBtn.id = '__gh_load_more_btn__';
     loadMoreBtn.style.display = 'none';
+    loadMoreBtn.style.padding = '6px 12px';
+    loadMoreBtn.style.margin = '0';
+
+    // 关闭按钮
+    const closeBtn = makeBtn('关闭', () => hideGistsPanel());
+    closeBtn.style.padding = '6px 12px';
+    closeBtn.style.margin = '0';
+
+    buttonGroup.appendChild(loadMoreBtn);
+    buttonGroup.appendChild(newGistBtn);
+    buttonGroup.appendChild(closeBtn);
+
+    footer.appendChild(status);
+    footer.appendChild(buttonGroup);
+
+    panel.appendChild(header);
+    panel.appendChild(content);
+    panel.appendChild(footer);
+
+    document.documentElement.appendChild(panel);
+
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(panel, 'GISTS');
+
+    return panel;
   }
 
-  try {
-    const result = await fetchUserGists(page);
-    const gists = result.gists;
-    if (gists.length === 0 && !append) {
-      content.innerHTML = '<div style="text-align: center; padding: 40px;">没有找到 Gists</div>';
-      status.textContent = '没有 Gists';
-      return;
+  function showGistsPanel() {
+    const panel = document.getElementById('__gh_gists_panel__') || createGistsPanel();
+    panel.style.display = 'flex';
+    loadUserGists(1);
+  }
+
+  function hideGistsPanel() {
+    const panel = document.getElementById('__gh_gists_panel__');
+    if (panel) {
+      panel.style.display = 'none';
+      // 清除内容，以便下次打开时重新加载
+      const content = document.getElementById('__gh_gists_content__');
+      if (content) {
+        content.innerHTML = '';
+      }
+      const status = document.getElementById('__gh_gists_status__');
+      if (status) {
+        status.textContent = '';
+      }
     }
-    GM_setValue(STORAGE_KEYS.GISTS_PAGE, page);
+  }
 
-    let html = '';
-    if (append) {
-      html = content.innerHTML;
-      // 移除"没有更多Gists了"的提示
-      html = html.replace('<div style="text-align: center; padding: 20px; color: #586069;">没有更多Gists了</div>', '');
-    } else {
-      html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">';
-    }
+  async function loadUserGists(page = 1, append = false) {
+    const content = document.getElementById('__gh_gists_content__');
+    const status = document.getElementById('__gh_gists_status__');
+    const loadMoreBtn = document.getElementById('__gh_load_more_btn__');
+    if (!content || !status) return;
 
-    gists.forEach(gist => {
-      const filename = Object.keys(gist.files)[0] || '无文件名';
-      const file = gist.files[filename];
-      const description = gist.description || '无描述';
-      const isPublic = gist.public;
-      const createdAt = new Date(gist.created_at).toLocaleDateString();
-      const updatedAt = new Date(gist.updated_at).toLocaleDateString();
+    const colors = getAdaptiveColors();
 
-      html += `
-        <div style="border: 1px solid ${colors.border}; border-radius: 8px; padding: 16px; background: ${colors.bgSecondary};">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-            <span style="font-weight: 500; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: ${colors.textPrimary};" title="${filename}">${filename}</span>
-            <span style="font-size: 12px; color: ${isPublic ? colors.link : colors.textSecondary}; padding: 2px 6px; border: 1px solid ${isPublic ? colors.link : colors.textSecondary}; border-radius: 12px;">
-              ${isPublic ? '公开' : '私有'}
-            </span>
-          </div>
-          <div style="font-size: 13px; color: ${colors.textSecondary}; margin-bottom: 10px; height: 40px; overflow: hidden; text-overflow: ellipsis;">${description}</div>
-          <div style="font-size: 11px; color: ${colors.textSecondary}; margin-bottom: 12px;">
-            <div>创建: ${createdAt}</div>
-            <div>更新: ${updatedAt}</div>
-          </div>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="${gist.html_url}" target="_blank" style="font-size: 12px; color: ${colors.link}; text-decoration: none; padding: 4px 8px; border: 1px solid ${colors.link}; border-radius: 4px;">查看</a>
-            <a href="${gist.html_url}/raw" target="_blank" style="font-size: 12px; color: ${colors.link}; text-decoration: none; padding: 4px 8px; border: 1px solid ${colors.link}; border-radius: 4px;">Raw</a>
-            ${file.language ? `<span style="font-size: 11px; color: ${colors.textSecondary}; padding: 4px 8px; background: ${colors.bgPrimary}; border-radius: 4px;">${file.language}</span>` : ''}
-          </div>
-        </div>
-      `;
-    });
-
-    if (!append) html += '</div>';
-
-    if (result.hasNextPage) {
-      loadMoreBtn.style.display = 'inline-block';
-      loadMoreBtn.onclick = () => loadUserGists(page + 1, true);
-    } else if (gists.length > 0) {
-      html += `<div style="text-align: center; padding: 20px; color: ${colors.textSecondary};">没有更多Gists了</div>`;
+    if (!append) {
+      content.innerHTML = '<div style="text-align: center; padding: 40px;">加载中...</div>';
       loadMoreBtn.style.display = 'none';
     }
 
-    content.innerHTML = html;
-    status.textContent = `已加载 ${gists.length * page} 个 Gist`;
-  } catch (error) {
-    console.error('加载Gists失败:', error);
-    content.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: #cb2431;">
-        <p style="margin-bottom: 16px;">加载Gists失败: ${error.message}</p>
-        <button onclick="location.reload()" style="margin: 5px; padding: 8px 16px; background: #2ea44f; color: white; border: none; border-radius: 4px; cursor: pointer;">
-          重试
-        </button>
-        <button onclick="showAuthDialog()" style="margin: 5px; padding: 8px 16px; background: #0366d6; color: white; border: none; border-radius: 4px; cursor: pointer;">
-          重新认证
-        </button>
-      </div>
-    `;
-    status.textContent = '加载失败';
+    try {
+      const result = await fetchUserGists(page);
+      const gists = result.gists;
+      if (gists.length === 0 && !append) {
+        content.innerHTML = '<div style="text-align: center; padding: 40px;">没有找到 Gists</div>';
+        status.textContent = '没有 Gists';
+        return;
+      }
+      GM_setValue(STORAGE_KEYS.GISTS_PAGE, page);
+
+      let html = '';
+      if (append) {
+        html = content.innerHTML;
+        // 移除"没有更多Gists了"的提示
+        html = html.replace('<div style="text-align: center; padding: 20px; color: #586069;">没有更多Gists了</div>', '');
+      } else {
+        html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">';
+      }
+
+      gists.forEach(gist => {
+        const filename = Object.keys(gist.files)[0] || '无文件名';
+        const file = gist.files[filename];
+        const description = gist.description || '无描述';
+        const isPublic = gist.public;
+        const createdAt = new Date(gist.created_at).toLocaleDateString();
+        const updatedAt = new Date(gist.updated_at).toLocaleDateString();
+
+        html += `
+          <div style="border: 1px solid ${colors.border}; border-radius: 8px; padding: 16px; background: ${colors.bgSecondary};">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <span style="font-weight: 500; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: ${colors.textPrimary};" title="${filename}">${filename}</span>
+              <span style="font-size: 12px; color: ${isPublic ? colors.link : colors.textSecondary}; padding: 2px 6px; border: 1px solid ${isPublic ? colors.link : colors.textSecondary}; border-radius: 12px;">
+                ${isPublic ? '公开' : '私有'}
+              </span>
+            </div>
+            <div style="font-size: 13px; color: ${colors.textSecondary}; margin-bottom: 10px; height: 40px; overflow: hidden; text-overflow: ellipsis;">${description}</div>
+            <div style="font-size: 11px; color: ${colors.textSecondary}; margin-bottom: 12px;">
+              <div>创建: ${createdAt}</div>
+              <div>更新: ${updatedAt}</div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <a href="${gist.html_url}" target="_blank" style="font-size: 12px; color: ${colors.link}; text-decoration: none; padding: 4px 8px; border: 1px solid ${colors.link}; border-radius: 4px;">查看</a>
+              <a href="${gist.html_url}/raw" target="_blank" style="font-size: 12px; color: ${colors.link}; text-decoration: none; padding: 4px 8px; border: 1px solid ${colors.link}; border-radius: 4px;">Raw</a>
+              ${file.language ? `<span style="font-size: 11px; color: ${colors.textSecondary}; padding: 4px 8px; background: ${colors.bgPrimary}; border-radius: 4px;">${file.language}</span>` : ''}
+            </div>
+          </div>
+        `;
+      });
+
+      if (!append) html += '</div>';
+
+      if (result.hasNextPage) {
+        loadMoreBtn.style.display = 'inline-block';
+        loadMoreBtn.onclick = () => loadUserGists(page + 1, true);
+      } else if (gists.length > 0) {
+        html += `<div style="text-align: center; padding: 20px; color: ${colors.textSecondary};">没有更多Gists了</div>`;
+        loadMoreBtn.style.display = 'none';
+      }
+
+      content.innerHTML = html;
+      status.textContent = `已加载 ${gists.length * page} 个 Gist`;
+    } catch (error) {
+      console.error('加载Gists失败:', error);
+      content.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: #cb2431;">
+          <p style="margin-bottom: 16px;">加载Gists失败: ${error.message}</p>
+          <button onclick="location.reload()" style="margin: 5px; padding: 8px 16px; background: #2ea44f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            重试
+          </button>
+          <button onclick="showAuthDialog()" style="margin: 5px; padding: 8px 16px; background: #0366d6; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            重新认证
+          </button>
+        </div>
+      `;
+      status.textContent = '加载失败';
+    }
   }
-}
-  
+
+  // ========== Actions 工作流功能 ==========
+  async function fetchWorkflows(owner, repo) {
+    try {
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows`, {
+        headers: getAuthHeaders()
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          clearGitHubToken();
+          updateUIWithAuthStatus();
+          throw new Error('Token已失效，请重新认证');
+        }
+        throw new Error('获取工作流失败: ' + response.status);
+      }
+
+      const data = await response.json();
+      return data.workflows || [];
+    } catch (error) {
+      console.error('获取工作流失败:', error);
+      throw error;
+    }
+  }
+
+  async function runWorkflow(owner, repo, workflowId, ref = 'main') {
+    try {
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowId}/dispatches`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          ref: ref
+        })
+      });
+
+      if (response.status === 204) {
+        return true;
+      } else if (response.status === 404) {
+        throw new Error('工作流不存在或没有权限访问');
+      } else {
+        const errorText = await response.text();
+        throw new Error(`GitHub API错误: ${response.status} - ${errorText}`);
+      }
+    } catch (error) {
+      console.error('触发工作流失败:', error);
+      throw error;
+    }
+  }
+
+  function createWorkflowsPanel() {
+    const panelId = '__gh_workflows_panel__';
+    if (document.getElementById(panelId)) return document.getElementById(panelId);
+
+    const colors = getAdaptiveColors();
+    const panel = document.createElement('div');
+    panel.id = panelId;
+    panel.style.cssText = `
+      position: fixed;
+      width: 80%;
+      height: 80%;
+      background: ${colors.bgPrimary};
+      color: ${colors.textPrimary};
+      z-index: 2147483646;
+      border: 1px solid ${colors.border};
+      box-shadow: ${colors.shadow};
+      display: none;
+      flex-direction: column;
+      border-radius: 8px;
+      overflow: hidden;
+    `;
+
+    // 创建头部布局
+    const header = document.createElement('div');
+    header.className = 'gh-gists-header';
+    
+    const title = document.createElement('span');
+    title.className = 'gh-gists-title';
+    title.textContent = '工作流 (Workflows)';
+    
+    header.appendChild(title);
+    
+    const content = document.createElement('div');
+    content.id = '__gh_workflows_content__';
+    content.style.cssText = `
+      flex: 1; 
+      padding: 15px; 
+      overflow-y: auto; 
+      position: relative;
+      background: ${colors.bgPrimary};
+    `;
+
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+      padding: 15px; 
+      background: ${colors.bgSecondary}; 
+      border-top: 1px solid ${colors.border}; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    `;
+
+    const status = document.createElement('div');
+    status.id = '__gh_workflows_status__';
+    status.style.fontSize = '13px';
+    status.style.color = colors.textSecondary;
+
+    const buttonGroup = document.createElement('div');
+    buttonGroup.style.display = 'flex';
+    buttonGroup.style.gap = '10px';
+    buttonGroup.style.flexWrap = 'wrap';
+
+    // 刷新按钮
+    const refreshBtn = makeBtn('刷新', () => loadWorkflows());
+    refreshBtn.style.padding = '6px 12px';
+    refreshBtn.style.margin = '0';
+
+    // 关闭按钮
+    const closeBtn = makeBtn('关闭', () => hideWorkflowsPanel());
+    closeBtn.style.padding = '6px 12px';
+    closeBtn.style.margin = '0';
+
+    buttonGroup.appendChild(refreshBtn);
+    buttonGroup.appendChild(closeBtn);
+
+    footer.appendChild(status);
+    footer.appendChild(buttonGroup);
+
+    panel.appendChild(header);
+    panel.appendChild(content);
+    panel.appendChild(footer);
+
+    document.documentElement.appendChild(panel);
+
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(panel, 'WORKFLOWS');
+
+    return panel;
+  }
+
+  function showWorkflowsPanel() {
+    const panel = document.getElementById('__gh_workflows_panel__') || createWorkflowsPanel();
+    panel.style.display = 'flex';
+    loadWorkflows();
+  }
+
+  function hideWorkflowsPanel() {
+    const panel = document.getElementById('__gh_workflows_panel__');
+    if (panel) {
+      panel.style.display = 'none';
+      // 清除内容，以便下次打开时重新加载
+      const content = document.getElementById('__gh_workflows_content__');
+      if (content) {
+        content.innerHTML = '';
+      }
+      const status = document.getElementById('__gh_workflows_status__');
+      if (status) {
+        status.textContent = '';
+      }
+    }
+  }
+
+  async function loadWorkflows() {
+    const content = document.getElementById('__gh_workflows_content__');
+    const status = document.getElementById('__gh_workflows_status__');
+    if (!content || !status) return;
+
+    const info = getRepoInfo();
+    if (!info.owner || !info.repo) {
+      content.innerHTML = '<div style="text-align: center; padding: 40px;">当前不是有效的仓库页面</div>';
+      return;
+    }
+
+    const colors = getAdaptiveColors();
+
+    content.innerHTML = '<div style="text-align: center; padding: 40px;">加载中...</div>';
+    status.textContent = '正在加载工作流...';
+
+    try {
+      const workflows = await fetchWorkflows(info.owner, info.repo);
+      if (workflows.length === 0) {
+        content.innerHTML = '<div style="text-align: center; padding: 40px;">没有找到工作流</div>';
+        status.textContent = '没有工作流';
+        return;
+      }
+
+      let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">';
+
+      workflows.forEach(workflow => {
+        const workflowName = workflow.name || '未命名工作流';
+        const workflowState = workflow.state || '未知状态';
+        const createdAt = workflow.created_at ? new Date(workflow.created_at).toLocaleDateString() : '未知';
+        const updatedAt = workflow.updated_at ? new Date(workflow.updated_at).toLocaleDateString() : '未知';
+        const workflowUrl = `https://github.com/${info.owner}/${info.repo}/actions/workflows/${workflow.path.split('/').pop()}`;
+
+        html += `
+          <div style="border: 1px solid ${colors.border}; border-radius: 8px; padding: 16px; background: ${colors.bgSecondary};">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <span style="font-weight: 500; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: ${colors.textPrimary};" title="${workflowName}">${workflowName}</span>
+              <span style="font-size: 12px; color: ${workflowState === 'active' ? '#28a745' : '#cb2431'}; padding: 2px 6px; border: 1px solid ${workflowState === 'active' ? '#28a745' : '#cb2431'}; border-radius: 12px;">
+                ${workflowState === 'active' ? '活跃' : '禁用'}
+              </span>
+            </div>
+            <div style="font-size: 11px; color: ${colors.textSecondary}; margin-bottom: 12px;">
+              <div>创建: ${createdAt}</div>
+              <div>更新: ${updatedAt}</div>
+              <div>文件: ${workflow.path}</div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <a href="${workflowUrl}" target="_blank" style="font-size: 12px; color: ${colors.link}; text-decoration: none; padding: 4px 8px; border: 1px solid ${colors.link}; border-radius: 4px;">查看</a>
+              <button class="gh-run-workflow" data-workflow-id="${workflow.id}" data-branch="${info.branch}" style="font-size: 12px; color: #28a745; background: none; border: 1px solid #28a745; border-radius: 4px; padding: 4px 8px; cursor: pointer;">运行</button>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+
+      content.innerHTML = html;
+      status.textContent = `已加载 ${workflows.length} 个工作流`;
+      
+      // 添加运行按钮的事件监听
+      content.querySelectorAll('.gh-run-workflow').forEach(button => {
+        button.addEventListener('click', function() {
+          const workflowId = this.getAttribute('data-workflow-id');
+          const branch = this.getAttribute('data-branch');
+          runSelectedWorkflow(workflowId, branch);
+        });
+      });
+    } catch (error) {
+      console.error('加载工作流失败:', error);
+      content.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: #cb2431;">
+          <p style="margin-bottom: 16px;">加载工作流失败: ${error.message}</p>
+          <button onclick="loadWorkflows()" style="margin: 5px; padding: 8px 16px; background: #2ea44f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            重试
+          </button>
+          ${error.message.includes('认证') ? `
+          <button onclick="showAuthDialog()" style="margin: 5px; padding: 8px 16px; background: #0366d6; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            重新认证
+          </button>
+          ` : ''}
+        </div>
+      `;
+      status.textContent = '加载失败';
+    }
+  }
+
+  // 全局函数，用于运行工作流
+  async function runSelectedWorkflow(workflowId, branch) {
+    const info = getRepoInfo();
+    if (!info.owner || !info.repo) {
+      alert('当前不是有效的仓库页面');
+      return;
+    }
+
+    if (!isAuthenticated()) {
+      alert('请先进行 GitHub 认证才能运行工作流');
+      showAuthDialog();
+      return;
+    }
+
+    try {
+      const result = await runWorkflow(info.owner, info.repo, workflowId, branch);
+      if (result) {
+        safeNotify('工作流已触发', '工作流已成功触发运行');
+        // 打开Actions页面查看详情
+        window.open(`https://github.com/${info.owner}/${info.repo}/actions`, '_blank');
+      }
+    } catch (error) {
+      console.error('运行工作流失败:', error);
+      alert('运行工作流失败: ' + error.message);
+    }
+  }
+
   // ========== Git URL 复制对话框 ==========
   function createGitUrlDialog() {
     const dialogId = '__gh_git_url_dialog__';
@@ -1664,6 +1986,9 @@ async function loadUserGists(page = 1, append = false) {
       fileSection.appendChild(fileTitle);
       fileSection.appendChild(fileName);
 
+      // 修复：构建正确的rawUrl
+      const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
+
       // 将"打开Raw文件"改为按钮格式
       const rawBtn = makeBtn('🌐 打开Raw文件', () => window.open(rawUrl, '_blank'), '在新标签页中打开Raw文件');
       fileSection.appendChild(rawBtn);
@@ -1680,6 +2005,30 @@ async function loadUserGists(page = 1, append = false) {
 
       wrap.appendChild(fileSection);
     }
+
+    // Actions工作流区
+    const actionsSection = document.createElement('div');
+    actionsSection.style.margin = '10px 0';
+    actionsSection.style.padding = '10px';
+    actionsSection.style.borderTop = `1px solid ${colors.border}`;
+    const actionsTitle = document.createElement('div');
+    actionsTitle.textContent = 'GitHub Actions:';
+    actionsTitle.style.fontWeight = 'bold';
+    actionsTitle.style.marginBottom = '8px';
+    actionsTitle.style.color = colors.textPrimary;
+    actionsSection.appendChild(actionsTitle);
+
+    const workflowsBtn = makeBtn('⚙️ Workflows', function () {
+      if (!isAuthenticated()) { 
+        alert('请先进行 GitHub 认证才能查看工作流'); 
+        showAuthDialog(); 
+        return; 
+      }
+      showWorkflowsPanel();
+    }, '查看和运行工作流');
+    actionsSection.appendChild(workflowsBtn);
+
+    wrap.appendChild(actionsSection);
 
     // 设置区
     const settingsSection = document.createElement('div');
@@ -1797,6 +2146,7 @@ async function loadUserGists(page = 1, append = false) {
     createEditor();
     createAuthDialog();
     createGistsPanel();
+    createWorkflowsPanel();
     createGitUrlDialog();
 
     console.log('GitHub Rescue 按钮和面板已初始化');
@@ -1835,28 +2185,28 @@ async function loadUserGists(page = 1, append = false) {
         url: url,
         responseType: 'blob',
         onload: function (response) {
-          try {
-            var blob = response.response;
-            var a = document.createElement('a');
-            var objectUrl = URL.createObjectURL(blob);
-            a.href = objectUrl;
-            a.download = (suggestedName && suggestedName.split('/').pop()) || 'download';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => { URL.revokeObjectURL(objectUrl); a.remove(); }, 3000);
-          } catch (e) {
-            window.open(url, '_blank');
-          }
-        },
-        onerror: function (err) {
-          console.error('下载失败:', err);
-          window.open(url, '_blank');
-        }
-      });
-    } catch (e) {
-      // 如果 GM_xmlhttpRequest 不可用，退回到直接打开链接
-      try { window.open(url, '_blank'); } catch (_) { console.error(e); }
+      try {
+        var blob = response.response;
+        var a = document.createElement('a');
+        var objectUrl = URL.createObjectURL(blob);
+        a.href = objectUrl;
+        a.download = (suggestedName && suggestedName.split('/').pop()) || 'download';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { URL.revokeObjectURL(objectUrl); a.remove(); }, 3000);
+      } catch (e) {
+        window.open(url, '_blank');
+      }
+    },
+    onerror: function (err) {
+      console.error('下载失败:', err);
+      window.open(url, '_blank');
     }
+  });
+} catch (e) {
+  // 如果 GM_xmlhttpRequest 不可用，退回到直接打开链接
+  try { window.open(url, '_blank'); } catch (_) { console.error(e); }
+}
   }
 
   // ========== Git URL 获取 ==========
@@ -1923,6 +2273,17 @@ async function loadUserGists(page = 1, append = false) {
           return;
         }
         showGistsPanel();
+      });
+    } catch (e) { /* no-op */ }
+
+    try {
+      GM_registerMenuCommand('管理工作流', function () {
+        if (!isAuthenticated()) {
+          alert('请先进行GitHub认证才能管理工作流');
+          showAuthDialog();
+          return;
+        }
+        showWorkflowsPanel();
       });
     } catch (e) { /* no-op */ }
 
@@ -2003,8 +2364,10 @@ async function loadUserGists(page = 1, append = false) {
   // 暴露方法供控制台/HTML 调用
   window.showAuthDialog = showAuthDialog;
   window.showGistsPanel = showGistsPanel;
+  window.showWorkflowsPanel = showWorkflowsPanel;
   window.showGitUrlDialog = showGitUrlDialog;
   window.clearGitHubToken = clearGitHubToken;
   window.syncForkWithUpstream = syncForkWithUpstream;
+  window.runSelectedWorkflow = runSelectedWorkflow;
 
 })();
