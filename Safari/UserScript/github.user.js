@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         GitHub 助手增强版
 // @namespace    https://github.com/
-// @version      6.0.19
+// @version      6.0.20
 // @author       Mr.Eric
 // @license      MIT
-// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流功能。
+// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流及编辑功能。
 // @icon         https://raw.githubusercontent.com/Alex0510/Eric/e8511263f6e8b232bc18ad4e8b221de3bf94f1a3/Icons/github.png
 // @match        https://github.com/*
 // @run-at       document-start
@@ -149,6 +149,36 @@
     .gh-ios-resize-active {
       background-color: rgba(0,0,0,0.1) !important;
     }
+
+.gh-header-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .gh-header-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  
+  @media (max-width: 768px) {
+    .gh-gists-header-buttons {
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .gh-header-btn {
+      font-size: 11px;
+      padding: 4px 8px;
+    }
+  }
+
   `);
 
   // ========== 检测iOS设备 ==========
@@ -1401,7 +1431,8 @@
     }
   }
 
-  function createWorkflowsPanel() {
+// ========== 修改Workflows面板创建函数 ==========
+function createWorkflowsPanel() {
     const panelId = '__gh_workflows_panel__';
     if (document.getElementById(panelId)) return document.getElementById(panelId);
 
@@ -1431,7 +1462,14 @@
     title.className = 'gh-gists-title';
     title.textContent = '工作流 (Workflows)';
     
+    // 添加关闭按钮
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.className = 'gh-gists-close-btn';
+    closeBtn.onclick = () => hideWorkflowsPanel();
+    
     header.appendChild(title);
+    header.appendChild(closeBtn);
     
     const content = document.createElement('div');
     content.id = '__gh_workflows_content__';
@@ -1470,13 +1508,19 @@
     refreshBtn.style.padding = '6px 12px';
     refreshBtn.style.margin = '0';
 
+    // 新建Workflow按钮
+    const newWorkflowBtn = makeBtn('新建 Workflow', () => showNewWorkflowEditor());
+    newWorkflowBtn.style.padding = '6px 12px';
+    newWorkflowBtn.style.margin = '0';
+
     // 关闭按钮
-    const closeBtn = makeBtn('关闭', () => hideWorkflowsPanel());
-    closeBtn.style.padding = '6px 12px';
-    closeBtn.style.margin = '0';
+    const closeBtn2 = makeBtn('关闭', () => hideWorkflowsPanel());
+    closeBtn2.style.padding = '6px 12px';
+    closeBtn2.style.margin = '0';
 
     buttonGroup.appendChild(refreshBtn);
-    buttonGroup.appendChild(closeBtn);
+    buttonGroup.appendChild(newWorkflowBtn);
+    buttonGroup.appendChild(closeBtn2);
 
     footer.appendChild(status);
     footer.appendChild(buttonGroup);
@@ -1491,7 +1535,283 @@
     addDragAndResizeFunctionality(panel, 'WORKFLOWS');
 
     return panel;
-  }
+}
+
+// ========== 创建新建Workflow编辑器 ==========
+function createNewWorkflowEditor() {
+    const editorId = '__gh_new_workflow_editor__';
+    if (document.getElementById(editorId)) return document.getElementById(editorId);
+
+    const colors = getAdaptiveColors();
+    const editor = document.createElement('div');
+    editor.id = editorId;
+    editor.style.cssText = `
+      position: fixed;
+      width: 70%;
+      height: 80%;
+      background: ${colors.bgPrimary};
+      color: ${colors.textPrimary};
+      z-index: 2147483647;
+      border: 1px solid ${colors.border};
+      box-shadow: ${colors.shadow};
+      display: none;
+      flex-direction: column;
+      border-radius: 8px;
+      overflow: hidden;
+    `;
+
+    const header = document.createElement('div');
+    header.style.cssText = `
+      padding: 15px;
+      background: ${colors.bgSecondary};
+      border-bottom: 1px solid ${colors.border};
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    `;
+
+    const title = document.createElement('span');
+    title.textContent = '新建 Workflow';
+    title.style.fontWeight = 'bold';
+    title.style.color = colors.textPrimary;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.cssText = `background: none; border: none; font-size: 20px; cursor: pointer; padding: 0; width: 24px; height: 24px; color: ${colors.textPrimary};`;
+    closeBtn.onclick = () => hideNewWorkflowEditor();
+
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    const content = document.createElement('div');
+    content.style.cssText = `
+      flex: 1;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+    `;
+
+    // 文件名输入
+    const fileNameContainer = document.createElement('div');
+    fileNameContainer.style.display = 'flex';
+    fileNameContainer.style.flexDirection = 'column';
+    fileNameContainer.style.gap = '5px';
+
+    const fileNameLabel = document.createElement('label');
+    fileNameLabel.textContent = '文件名 (自动添加 .yml 后缀)';
+    fileNameLabel.style.fontWeight = '500';
+    fileNameLabel.style.color = colors.textPrimary;
+
+    const fileNameInput = document.createElement('input');
+    fileNameInput.type = 'text';
+    fileNameInput.placeholder = '例如: ci-cd-workflow';
+    fileNameInput.style.cssText = `
+      padding: 8px;
+      border: 1px solid ${colors.border};
+      border-radius: 4px;
+      background: ${colors.bgSecondary};
+      color: ${colors.textPrimary};
+    `;
+
+    fileNameContainer.appendChild(fileNameLabel);
+    fileNameContainer.appendChild(fileNameInput);
+
+    // YAML编辑器
+    const editorContainer = document.createElement('div');
+    editorContainer.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 5px;
+    `;
+
+    const editorLabel = document.createElement('label');
+    editorLabel.textContent = 'Workflow YAML 内容';
+    editorLabel.style.fontWeight = '500';
+    editorLabel.style.color = colors.textPrimary;
+
+    const yamlEditor = document.createElement('textarea');
+    yamlEditor.id = '__gh_workflow_yaml_editor__';
+    yamlEditor.style.cssText = `
+      flex: 1;
+      padding: 12px;
+      border: 1px solid ${colors.border};
+      border-radius: 4px;
+      resize: none;
+      font-family: monospace;
+      font-size: 14px;
+      background: ${colors.bgSecondary};
+      color: ${colors.textPrimary};
+    `;
+    yamlEditor.placeholder = `name: CI/CD Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Run tests
+      run: npm test`;
+
+    editorContainer.appendChild(editorLabel);
+    editorContainer.appendChild(yamlEditor);
+
+    content.appendChild(fileNameContainer);
+    content.appendChild(editorContainer);
+
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+      padding: 15px;
+      background: ${colors.bgSecondary};
+      border-top: 1px solid ${colors.border};
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    `;
+
+    const cancelBtn = makeBtn('取消', () => hideNewWorkflowEditor());
+    cancelBtn.style.padding = '6px 12px';
+    cancelBtn.style.margin = '0';
+
+    const saveBtn = makeBtn('创建 Workflow', () => createNewWorkflow());
+    saveBtn.style.padding = '6px 12px';
+    saveBtn.style.margin = '0';
+
+    footer.appendChild(cancelBtn);
+    footer.appendChild(saveBtn);
+
+    editor.appendChild(header);
+    editor.appendChild(content);
+    editor.appendChild(footer);
+
+    document.documentElement.appendChild(editor);
+
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(editor, 'NEW_WORKFLOW_EDITOR');
+
+    return editor;
+}
+
+// ========== 显示新建Workflow编辑器 ==========
+function showNewWorkflowEditor() {
+    const editor = document.getElementById('__gh_new_workflow_editor__') || createNewWorkflowEditor();
+    editor.style.display = 'flex';
+    
+    // 清空编辑器内容
+    const fileNameInput = editor.querySelector('input[type="text"]');
+    const yamlEditor = document.getElementById('__gh_workflow_yaml_editor__');
+    
+    if (fileNameInput) fileNameInput.value = '';
+    if (yamlEditor) yamlEditor.value = '';
+}
+
+// ========== 隐藏新建Workflow编辑器 ==========
+function hideNewWorkflowEditor() {
+    const editor = document.getElementById('__gh_new_workflow_editor__');
+    if (editor) editor.style.display = 'none';
+}
+
+// ========== 创建新的Workflow ==========
+async function createNewWorkflow() {
+    const editor = document.getElementById('__gh_new_workflow_editor__');
+    if (!editor) return;
+    
+    const fileNameInput = editor.querySelector('input[type="text"]');
+    const yamlEditor = document.getElementById('__gh_workflow_yaml_editor__');
+    
+    if (!fileNameInput || !yamlEditor) return;
+    
+    const fileName = fileNameInput.value.trim();
+    const yamlContent = yamlEditor.value.trim();
+    
+    if (!fileName) {
+        alert('请输入文件名');
+        return;
+    }
+    
+    if (!yamlContent) {
+        alert('请输入Workflow YAML内容');
+        return;
+    }
+    
+    // 确保文件名以.yml结尾
+    const fullFileName = fileName.endsWith('.yml') || fileName.endsWith('.yaml') ? 
+        fileName : `${fileName}.yml`;
+    
+    const info = getRepoInfo();
+    if (!info.owner || !info.repo) {
+        alert('无法确定仓库信息，请确保您在正确的仓库页面');
+        return;
+    }
+    
+    if (!isAuthenticated()) {
+        alert('请先进行GitHub认证才能创建Workflow');
+        showAuthDialog();
+        return;
+    }
+    
+    try {
+        // 获取默认分支
+        const repoInfoUrl = `https://api.github.com/repos/${info.owner}/${info.repo}`;
+        const repoInfoResponse = await fetch(repoInfoUrl, { headers: getAuthHeaders() });
+        
+        if (!repoInfoResponse.ok) {
+            throw new Error(`获取仓库信息失败: ${repoInfoResponse.status}`);
+        }
+        
+        const repoInfo = await repoInfoResponse.json();
+        const defaultBranch = repoInfo.default_branch || 'main';
+        
+        // 创建workflow文件
+        const workflowPath = `.github/workflows/${fullFileName}`;
+        const createUrl = `https://api.github.com/repos/${info.owner}/${info.repo}/contents/${workflowPath}`;
+        
+        const createData = {
+            message: `Create ${fullFileName} workflow`,
+            content: btoa(unescape(encodeURIComponent(yamlContent))),
+            branch: defaultBranch
+        };
+        
+        const createResponse = await fetch(createUrl, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(createData)
+        });
+        
+        if (createResponse.ok) {
+            const result = await createResponse.json();
+            safeNotify('创建成功', `Workflow文件已创建: ${fullFileName}`);
+            hideNewWorkflowEditor();
+            
+            // 刷新workflow列表
+            setTimeout(() => loadWorkflows(), 1000);
+        } else {
+            const error = await createResponse.text();
+            throw new Error(`创建Workflow失败: ${createResponse.status} - ${error}`);
+        }
+    } catch (error) {
+        console.error('创建Workflow失败:', error);
+        alert('创建Workflow失败: ' + error.message);
+    }
+}
 
   function showWorkflowsPanel() {
     const panel = document.getElementById('__gh_workflows_panel__') || createWorkflowsPanel();
