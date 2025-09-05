@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         GitHub 助手增强版
 // @namespace    https://github.com/
-// @version      6.0.15
+// @version      6.0.16
 // @author       Mr.Eric
 // @license      MIT
-// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小。
+// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。
 // @icon         https://raw.githubusercontent.com/Alex0510/Eric/e8511263f6e8b232bc18ad4e8b221de3bf94f1a3/Icons/github.png
 // @match        https://github.com/*
 // @run-at       document-start
@@ -15,6 +15,7 @@
 // @grant        GM_notification
 // @grant        GM_registerMenuCommand
 // @grant        GM_setClipboard
+// @grant        GM_addStyle
 // @require      https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js
 // @require      https://cdn.jsdelivr.net/npm/core-js-bundle@3.38.1/minified.js
 // @require      https://cdn.jsdelivr.net/npm/regenerator-runtime@0.14.1/runtime.min.js
@@ -48,6 +49,74 @@
     GISTS_POSITION: 'github_gists_position',
     GISTS_SIZE: 'github_gists_size'
   };
+
+  // 添加触摸事件支持的CSS样式
+  GM_addStyle(`
+    .gh-panel {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    .gh-panel-header {
+      cursor: move;
+    }
+    
+    .gh-resize-handle {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 24px;
+      height: 24px;
+      cursor: nwse-resize;
+      z-index: 1000;
+    }
+    
+    .gh-resize-handle::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      width: 12px;
+      height: 12px;
+      border-right: 2px solid #a0a0a0;
+      border-bottom: 2px solid #a0a0a0;
+    }
+    
+    @media (max-width: 768px) {
+      .gh-panel {
+        min-width: 280px !important;
+        min-height: 180px !important;
+      }
+      
+      .gh-resize-handle {
+        width: 30px;
+        height: 30px;
+      }
+    }
+    
+    /* iOS特定优化 */
+    .gh-ios-drag-active {
+      background-color: rgba(0,0,0,0.1) !important;
+    }
+    
+    .gh-ios-resize-active {
+      background-color: rgba(0,0,0,0.1) !important;
+    }
+  `);
+
+  // ========== 检测iOS设备 ==========
+  function isIOS() {
+    return [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod'
+    ].includes(navigator.platform) || 
+    (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+  }
 
   // ========== 检测暗色模式 ==========
   function isDarkMode() {
@@ -106,13 +175,17 @@
     };
   }
 
-  // ========== 拖拽和调整大小功能 ==========
+  // ========== 拖拽和调整大小功能（增强版，支持iOS） ==========
   function addDragAndResizeFunctionality(panel, storageKeyPrefix) {
     if (!panel) return;
     
     const colors = getAdaptiveColors();
     const header = panel.querySelector('div:first-child');
     if (!header) return;
+    
+    // 添加iOS特定类名
+    panel.classList.add('gh-panel');
+    header.classList.add('gh-panel-header');
     
     // 恢复保存的位置和大小
     const savedPosition = GM_getValue(storageKeyPrefix + '_POSITION');
@@ -129,10 +202,6 @@
       panel.style.height = savedSize.height + 'px';
     }
     
-    // 添加拖拽功能
-    let isDragging = false;
-    let startX, startY, initialLeft, initialTop;
-    
     // 确保面板有定位和初始尺寸
     panel.style.position = 'fixed';
     if (!savedPosition) {
@@ -143,9 +212,66 @@
     panel.style.minWidth = '300px';
     panel.style.minHeight = '200px';
     
-    // 添加拖拽手柄（使用标题栏）
-    header.style.cursor = 'move';
+    // 添加触摸事件支持
+    let isDragging = false;
+    let isResizing = false;
+    let startX, startY, initialLeft, initialTop;
+    let startWidth, startHeight;
+    
+    // 添加调整大小手柄
+    const resizeHandle = document.createElement('div');
+    resizeHandle.className = 'gh-resize-handle';
+    
+    // 创建调整大小的三角形指示器
+    resizeHandle.innerHTML = `
+        <svg width="24" height="24" style="position:absolute; bottom:0; right:0;">
+            <path d="M24 0L0 24L24 24Z" 
+                  fill="${colors.textSecondary}"/>
+        </svg>
+    `;
+    
+    panel.appendChild(resizeHandle);
+    panel.style.resize = 'none'; // 确保CSS resize属性不会干扰
+    
+    // 鼠标事件处理
     header.addEventListener('mousedown', startDrag);
+    resizeHandle.addEventListener('mousedown', startResize);
+    
+    // 触摸事件处理（iOS支持）
+    header.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) { // 单指拖拽
+        startDrag(e.touches[0]);
+        if (isIOS()) {
+          header.classList.add('gh-ios-drag-active');
+        }
+        e.preventDefault();
+      }
+    }, { passive: false });
+    
+    resizeHandle.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 2 || (isIOS() && e.touches.length === 1)) { 
+        // iOS上可以使用单指调整大小，或者双指
+        startResize(e.touches[0]);
+        if (isIOS()) {
+          resizeHandle.classList.add('gh-ios-resize-active');
+        }
+        e.preventDefault();
+      }
+    }, { passive: false });
+    
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchmove', function(e) {
+      if (isDragging || isResizing) {
+        if (e.touches.length === 1) {
+          onDragMove(e.touches[0]);
+          e.preventDefault();
+        }
+      }
+    }, { passive: false });
+    
+    document.addEventListener('touchend', stopDrag);
+    document.addEventListener('touchcancel', stopDrag);
     
     function startDrag(e) {
       if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
@@ -163,69 +289,7 @@
       panel.style.transform = 'none';
       panel.style.left = initialLeft + 'px';
       panel.style.top = initialTop + 'px';
-      
-      document.addEventListener('mousemove', onDrag);
-      document.addEventListener('mouseup', stopDrag);
-      e.preventDefault();
     }
-    
-    function onDrag(e) {
-      if (!isDragging) return;
-      
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      
-      const newLeft = initialLeft + dx;
-      const newTop = initialTop + dy;
-      
-      // 确保面板不会完全移出视图
-      const maxLeft = window.innerWidth - 50;
-      const maxTop = window.innerHeight - 50;
-      
-      panel.style.left = Math.max(0, Math.min(newLeft, maxLeft)) + 'px';
-      panel.style.top = Math.max(0, Math.min(newTop, maxTop)) + 'px';
-    }
-    
-    function stopDrag() {
-      isDragging = false;
-      
-      // 保存位置
-      const left = parseInt(panel.style.left, 10);
-      const top = parseInt(panel.style.top, 10);
-      GM_setValue(storageKeyPrefix + '_POSITION', { left, top });
-      
-      document.removeEventListener('mousemove', onDrag);
-      document.removeEventListener('mouseup', stopDrag);
-    }
-    
-    // 添加调整大小功能
-    const resizeHandleSize = 12;
-    const resizeHandle = document.createElement('div');
-    resizeHandle.style.cssText = `
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: ${resizeHandleSize}px;
-        height: ${resizeHandleSize}px;
-        cursor: nwse-resize;
-        z-index: 1000;
-    `;
-    
-    // 创建调整大小的三角形指示器
-    resizeHandle.innerHTML = `
-        <svg width="${resizeHandleSize}" height="${resizeHandleSize}" style="position:absolute; bottom:0; right:0;">
-            <path d="M${resizeHandleSize} 0L0 ${resizeHandleSize}L${resizeHandleSize} ${resizeHandleSize}Z" 
-                  fill="${colors.textSecondary}"/>
-        </svg>
-    `;
-    
-    panel.appendChild(resizeHandle);
-    panel.style.resize = 'none'; // 确保CSS resize属性不会干扰
-    
-    let isResizing = false;
-    let startWidth, startHeight;
-    
-    resizeHandle.addEventListener('mousedown', startResize);
     
     function startResize(e) {
       isResizing = true;
@@ -233,36 +297,82 @@
       startY = e.clientY;
       startWidth = parseInt(document.defaultView.getComputedStyle(panel).width, 10);
       startHeight = parseInt(document.defaultView.getComputedStyle(panel).height, 10);
-      
-      document.addEventListener('mousemove', onResize);
-      document.addEventListener('mouseup', stopResize);
-      e.preventDefault();
     }
     
-    function onResize(e) {
-      if (!isResizing) return;
+    function onDragMove(e) {
+      if (isDragging) {
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        
+        const newLeft = initialLeft + dx;
+        const newTop = initialTop + dy;
+        
+        // 确保面板不会完全移出视图
+        const maxLeft = window.innerWidth - 50;
+        const maxTop = window.innerHeight - 50;
+        
+        panel.style.left = Math.max(0, Math.min(newLeft, maxLeft)) + 'px';
+        panel.style.top = Math.max(0, Math.min(newTop, maxTop)) + 'px';
+      }
       
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      
-      // 设置最小尺寸限制
-      const minWidth = 300;
-      const minHeight = 200;
-      
-      panel.style.width = Math.max(minWidth, startWidth + dx) + 'px';
-      panel.style.height = Math.max(minHeight, startHeight + dy) + 'px';
+      if (isResizing) {
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        
+        // 设置最小尺寸限制
+        const minWidth = 300;
+        const minHeight = 200;
+        
+        panel.style.width = Math.max(minWidth, startWidth + dx) + 'px';
+        panel.style.height = Math.max(minHeight, startHeight + dy) + 'px';
+      }
     }
     
-    function stopResize() {
+    function stopDrag() {
+      if (isDragging) {
+        // 保存位置
+        const left = parseInt(panel.style.left, 10);
+        const top = parseInt(panel.style.top, 10);
+        GM_setValue(storageKeyPrefix + '_POSITION', { left, top });
+      }
+      
+      if (isResizing) {
+        // 保存尺寸
+        const width = parseInt(panel.style.width, 10);
+        const height = parseInt(panel.style.height, 10);
+        GM_setValue(storageKeyPrefix + '_SIZE', { width, height });
+      }
+      
+      isDragging = false;
       isResizing = false;
       
-      // 保存尺寸
-      const width = parseInt(panel.style.width, 10);
-      const height = parseInt(panel.style.height, 10);
-      GM_setValue(storageKeyPrefix + '_SIZE', { width, height });
-      
-      document.removeEventListener('mousemove', onResize);
-      document.removeEventListener('mouseup', stopResize);
+      // 移除iOS激活状态
+      header.classList.remove('gh-ios-drag-active');
+      resizeHandle.classList.remove('gh-ios-resize-active');
+    }
+    
+    // 添加iOS特定优化
+    if (isIOS()) {
+      // 添加双击重置功能
+      let lastTap = 0;
+      header.addEventListener('touchend', function(e) {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+        if (tapLength < 300 && tapLength > 0) {
+          // 双击重置位置和大小
+          panel.style.left = '50%';
+          panel.style.top = '50%';
+          panel.style.transform = 'translate(-50%, -50%)';
+          panel.style.width = '80%';
+          panel.style.height = '80%';
+          
+          GM_setValue(storageKeyPrefix + '_POSITION', null);
+          GM_setValue(storageKeyPrefix + '_SIZE', null);
+          
+          e.preventDefault();
+        }
+        lastTap = currentTime;
+      });
     }
   }
 
@@ -628,6 +738,10 @@
     dialog.appendChild(buttonGroup);
 
     document.documentElement.appendChild(dialog);
+    
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(dialog, 'AUTH_DIALOG');
+    
     return dialog;
   }
 
@@ -706,9 +820,6 @@
     modal.id = editorId;
     modal.style.cssText = `
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       width: 80%;
       height: 80%;
       background: ${colors.bgPrimary};
@@ -946,256 +1057,255 @@
       alert('保存到GitHub失败: ' + error.message);
     }
   }
+// ========== Gists 功能（分页修复） ==========
+async function fetchUserGists(page = 1, perPage = 30) {
+  try {
+    const response = await fetch(`https://api.github.com/gists?page=${page}&per_page=${perPage}`, {
+      headers: getAuthHeaders()
+    });
 
-  // ========== Gists 功能（分页修复） ==========
-  async function fetchUserGists(page = 1, perPage = 30) {
-    try {
-      const response = await fetch(`https://api.github.com/gists?page=${page}&per_page=${perPage}`, {
-        headers: getAuthHeaders()
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          clearGitHubToken();
-          updateUIWithAuthStatus();
-          throw new Error('Token已失效，请重新认证');
-        }
-        throw new Error('获取Gists失败: ' + response.status);
+    if (!response.ok) {
+      if (response.status === 401) {
+        clearGitHubToken();
+        updateUIWithAuthStatus();
+        throw new Error('Token已失效，请重新认证');
       }
+      throw new Error('获取Gists失败: ' + response.status);
+    }
 
-      const gists = await response.json();
-      const linkHeader = response.headers.get('Link');
-      let hasNextPage = false;
-      let nextPage = page + 1;
-      if (linkHeader) {
-        const links = linkHeader.split(',');
-        hasNextPage = links.some(link => link.includes('rel="next"'));
-      }
+    const gists = await response.json();
+    const linkHeader = response.headers.get('Link');
+    let hasNextPage = false;
+    let nextPage = page + 1;
+    if (linkHeader) {
+      const links = linkHeader.split(',');
+      hasNextPage = links.some(link => link.includes('rel="next"'));
+    }
 
-      return { gists, hasNextPage, nextPage };
-    } catch (error) {
-      console.error('获取Gists失败:', error);
-      throw error;
+    return { gists, hasNextPage, nextPage };
+  } catch (error) {
+    console.error('获取Gists失败:', error);
+    throw error;
+  }
+}
+
+function createGistsPanel() {
+  const panelId = '__gh_gists_panel__';
+  if (document.getElementById(panelId)) return document.getElementById(panelId);
+
+  const colors = getAdaptiveColors();
+  const panel = document.createElement('div');
+  panel.id = panelId;
+  panel.style.cssText = `
+    position: fixed;
+    width: 80%;
+    height: 80%;
+    background: ${colors.bgPrimary};
+    color: ${colors.textPrimary};
+    z-index: 2147483646;
+    border: 1px solid ${colors.border};
+    box-shadow: ${colors.shadow};
+    display: none;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+  `;
+
+  // 创建头部布局
+  const header = document.createElement('div');
+  header.className = 'gh-gists-header';
+  
+  const title = document.createElement('span');
+  title.className = 'gh-gists-title';
+  title.textContent = 'Your Gists';
+  
+  // 头部只保留标题
+  header.appendChild(title);
+  
+  const content = document.createElement('div');
+  content.id = '__gh_gists_content__';
+  content.style.cssText = `
+    flex: 1; 
+    padding: 15px; 
+    overflow-y: auto; 
+    position: relative;
+    background: ${colors.bgPrimary};
+  `;
+
+  const footer = document.createElement('div');
+  footer.style.cssText = `
+    padding: 15px; 
+    background: ${colors.bgSecondary}; 
+    border-top: 1px solid ${colors.border}; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  `;
+
+  const status = document.createElement('div');
+  status.id = '__gh_gists_status__';
+  status.style.fontSize = '13px';
+  status.style.color = colors.textSecondary;
+
+  const buttonGroup = document.createElement('div');
+  buttonGroup.style.display = 'flex';
+  buttonGroup.style.gap = '10px';
+  buttonGroup.style.flexWrap = 'wrap';
+
+  // 新建Gist按钮
+  const newGistBtn = makeBtn('新建 Gist', () => window.open('https://gist.github.com', '_blank'));
+  newGistBtn.style.padding = '6px 12px';
+  newGistBtn.style.margin = '0';
+
+  // 加载更多按钮
+  const loadMoreBtn = makeBtn('加载更多', () => {
+    const currentPage = GM_getValue(STORAGE_KEYS.GISTS_PAGE, 1);
+    loadUserGists(currentPage + 1, true);
+  }, '加载更多Gist');
+  loadMoreBtn.id = '__gh_load_more_btn__';
+  loadMoreBtn.style.display = 'none';
+  loadMoreBtn.style.padding = '6px 12px';
+  loadMoreBtn.style.margin = '0';
+
+  // 关闭按钮
+  const closeBtn = makeBtn('关闭', () => hideGistsPanel());
+  closeBtn.style.padding = '6px 12px';
+  closeBtn.style.margin = '0';
+
+  buttonGroup.appendChild(loadMoreBtn);
+  buttonGroup.appendChild(newGistBtn);
+  buttonGroup.appendChild(closeBtn);
+
+  footer.appendChild(status);
+  footer.appendChild(buttonGroup);
+
+  panel.appendChild(header);
+  panel.appendChild(content);
+  panel.appendChild(footer);
+
+  document.documentElement.appendChild(panel);
+
+  // 添加拖拽和调整大小功能
+  addDragAndResizeFunctionality(panel, 'GISTS');
+
+  return panel;
+}
+
+function showGistsPanel() {
+  const panel = document.getElementById('__gh_gists_panel__') || createGistsPanel();
+  panel.style.display = 'flex';
+  loadUserGists(1);
+}
+
+function hideGistsPanel() {
+  const panel = document.getElementById('__gh_gists_panel__');
+  if (panel) {
+    panel.style.display = 'none';
+    // 清除内容，以便下次打开时重新加载
+    const content = document.getElementById('__gh_gists_content__');
+    if (content) {
+      content.innerHTML = '';
+    }
+    const status = document.getElementById('__gh_gists_status__');
+    if (status) {
+      status.textContent = '';
     }
   }
+}
 
-  function createGistsPanel() {
-    const panelId = '__gh_gists_panel__';
-    if (document.getElementById(panelId)) return document.getElementById(panelId);
+async function loadUserGists(page = 1, append = false) {
+  const content = document.getElementById('__gh_gists_content__');
+  const status = document.getElementById('__gh_gists_status__');
+  const loadMoreBtn = document.getElementById('__gh_load_more_btn__');
+  if (!content || !status) return;
 
-    const colors = getAdaptiveColors();
-    const panel = document.createElement('div');
-    panel.id = panelId;
-    panel.style.cssText = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80%;
-      height: 80%;
-      background: ${colors.bgPrimary};
-      color: ${colors.textPrimary};
-      z-index: 2147483646;
-      border: 1px solid ${colors.border};
-      box-shadow: ${colors.shadow};
-      display: none;
-      flex-direction: column;
-      border-radius: 8px;
-      overflow: hidden;
-    `;
+  const colors = getAdaptiveColors();
 
-    const header = document.createElement('div');
-    header.style.cssText = `
-      padding: 15px; 
-      background: ${colors.bgSecondary}; 
-      border-bottom: 1px solid ${colors.border}; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
-    `;
-
-    const title = document.createElement('span');
-    title.textContent = 'Your Gists';
-    title.style.fontWeight = 'bold';
-    title.style.fontSize = '16px';
-    title.style.color = colors.textPrimary;
-
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = '×';
-    closeBtn.style.cssText = `
-      background: none; 
-      border: none; 
-      font-size: 24px; 
-      cursor: pointer; 
-      padding: 0; 
-      width: 30px; 
-      height: 30px;
-      color: ${colors.textPrimary};
-    `;
-    closeBtn.onclick = () => hideGistsPanel();
-
-    header.appendChild(title);
-    header.appendChild(closeBtn);
-
-    const content = document.createElement('div');
-    content.id = '__gh_gists_content__';
-    content.style.cssText = `
-      flex: 1; 
-      padding: 15px; 
-      overflow-y: auto; 
-      position: relative;
-      background: ${colors.bgPrimary};
-    `;
-
-    const footer = document.createElement('div');
-    footer.style.cssText = `
-      padding: 15px; 
-      background: ${colors.bgSecondary}; 
-      border-top: 1px solid ${colors.border}; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
-    `;
-
-    const status = document.createElement('div');
-    status.id = '__gh_gists_status__';
-    status.style.fontSize = '13px';
-    status.style.color = colors.textSecondary;
-
-    const buttonGroup = document.createElement('div');
-    buttonGroup.style.display = 'flex';
-    buttonGroup.style.gap = '10px';
-
-    const newGistBtn = makeBtn('新建 Gist', () => window.open('https://gist.github.com', '_blank'));
-    newGistBtn.style.padding = '6px 12px';
-
-    const loadMoreBtn = makeBtn('加载更多', () => {
-      const currentPage = GM_getValue(STORAGE_KEYS.GISTS_PAGE, 1);
-      loadUserGists(currentPage + 1, true);
-    }, '加载更多Gist');
-    loadMoreBtn.id = '__gh_load_more_btn__';
+  if (!append) {
+    content.innerHTML = '<div style="text-align: center; padding: 40px;">加载中...</div>';
     loadMoreBtn.style.display = 'none';
-    loadMoreBtn.style.padding = '6px 12px';
-
-    buttonGroup.appendChild(newGistBtn);
-    buttonGroup.appendChild(loadMoreBtn);
-
-    footer.appendChild(status);
-    footer.appendChild(buttonGroup);
-
-    panel.appendChild(header);
-    panel.appendChild(content);
-    panel.appendChild(footer);
-
-    document.documentElement.appendChild(panel);
-
-    // 添加拖拽和调整大小功能
-    addDragAndResizeFunctionality(panel, 'GISTS');
-
-    return panel;
   }
 
-  function showGistsPanel() {
-    const panel = document.getElementById('__gh_gists_panel__') || createGistsPanel();
-    panel.style.display = 'flex';
-    loadUserGists(1);
-  }
+  try {
+    const result = await fetchUserGists(page);
+    const gists = result.gists;
+    if (gists.length === 0 && !append) {
+      content.innerHTML = '<div style="text-align: center; padding: 40px;">没有找到 Gists</div>';
+      status.textContent = '没有 Gists';
+      return;
+    }
+    GM_setValue(STORAGE_KEYS.GISTS_PAGE, page);
 
-  function hideGistsPanel() {
-    const panel = document.getElementById('__gh_gists_panel__');
-    if (panel) panel.style.display = 'none';
-  }
+    let html = '';
+    if (append) {
+      html = content.innerHTML;
+      // 移除"没有更多Gists了"的提示
+      html = html.replace('<div style="text-align: center; padding: 20px; color: #586069;">没有更多Gists了</div>', '');
+    } else {
+      html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">';
+    }
 
-  async function loadUserGists(page = 1, append = false) {
-    const content = document.getElementById('__gh_gists_content__');
-    const status = document.getElementById('__gh_gists_status__');
-    const loadMoreBtn = document.getElementById('__gh_load_more_btn__');
-    if (!content || !status) return;
+    gists.forEach(gist => {
+      const filename = Object.keys(gist.files)[0] || '无文件名';
+      const file = gist.files[filename];
+      const description = gist.description || '无描述';
+      const isPublic = gist.public;
+      const createdAt = new Date(gist.created_at).toLocaleDateString();
+      const updatedAt = new Date(gist.updated_at).toLocaleDateString();
 
-    const colors = getAdaptiveColors();
+      html += `
+        <div style="border: 1px solid ${colors.border}; border-radius: 8px; padding: 16px; background: ${colors.bgSecondary};">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <span style="font-weight: 500; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: ${colors.textPrimary};" title="${filename}">${filename}</span>
+            <span style="font-size: 12px; color: ${isPublic ? colors.link : colors.textSecondary}; padding: 2px 6px; border: 1px solid ${isPublic ? colors.link : colors.textSecondary}; border-radius: 12px;">
+              ${isPublic ? '公开' : '私有'}
+            </span>
+          </div>
+          <div style="font-size: 13px; color: ${colors.textSecondary}; margin-bottom: 10px; height: 40px; overflow: hidden; text-overflow: ellipsis;">${description}</div>
+          <div style="font-size: 11px; color: ${colors.textSecondary}; margin-bottom: 12px;">
+            <div>创建: ${createdAt}</div>
+            <div>更新: ${updatedAt}</div>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="${gist.html_url}" target="_blank" style="font-size: 12px; color: ${colors.link}; text-decoration: none; padding: 4px 8px; border: 1px solid ${colors.link}; border-radius: 4px;">查看</a>
+            <a href="${gist.html_url}/raw" target="_blank" style="font-size: 12px; color: ${colors.link}; text-decoration: none; padding: 4px 8px; border: 1px solid ${colors.link}; border-radius: 4px;">Raw</a>
+            ${file.language ? `<span style="font-size: 11px; color: ${colors.textSecondary}; padding: 4px 8px; background: ${colors.bgPrimary}; border-radius: 4px;">${file.language}</span>` : ''}
+          </div>
+        </div>
+      `;
+    });
 
-    if (!append) {
-      content.innerHTML = '<div style="text-align: center; padding: 40px;">加载中...</div>';
+    if (!append) html += '</div>';
+
+    if (result.hasNextPage) {
+      loadMoreBtn.style.display = 'inline-block';
+      loadMoreBtn.onclick = () => loadUserGists(page + 1, true);
+    } else if (gists.length > 0) {
+      html += `<div style="text-align: center; padding: 20px; color: ${colors.textSecondary};">没有更多Gists了</div>`;
       loadMoreBtn.style.display = 'none';
     }
 
-    try {
-      const result = await fetchUserGists(page);
-      const gists = result.gists;
-      if (gists.length === 0 && !append) {
-        content.innerHTML = '<div style="text-align: center; padding: 40px;">没有找到 Gists</div>';
-        status.textContent = '没有 Gists';
-        return;
-      }
-      GM_setValue(STORAGE_KEYS.GISTS_PAGE, page);
-
-      let html = '';
-      if (append) {
-        html = content.innerHTML;
-        html = html.replace('<div style="text-align: center; padding: 20px; color: #586069;">没有更多Gists了</div>', '');
-      } else {
-        html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">';
-      }
-
-      gists.forEach(gist => {
-        const filename = Object.keys(gist.files)[0] || '无文件名';
-        const file = gist.files[filename];
-        const description = gist.description || '无描述';
-        const isPublic = gist.public;
-        const createdAt = new Date(gist.created_at).toLocaleDateString();
-        const updatedAt = new Date(gist.updated_at).toLocaleDateString();
-
-        html += `
-          <div style="border: 1px solid ${colors.border}; border-radius: 8px; padding: 16px; background: ${colors.bgSecondary};">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-              <span style="font-weight: 500; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: ${colors.textPrimary};" title="${filename}">${filename}</span>
-              <span style="font-size: 12px; color: ${isPublic ? colors.link : colors.textSecondary}; padding: 2px 6px; border: 1px solid ${isPublic ? colors.link : colors.textSecondary}; border-radius: 12px;">
-                ${isPublic ? '公开' : '私有'}
-              </span>
-            </div>
-            <div style="font-size: 13px; color: ${colors.textSecondary}; margin-bottom: 10px; height: 40px; overflow: hidden; text-overflow: ellipsis;">${description}</div>
-            <div style="font-size: 11px; color: ${colors.textSecondary}; margin-bottom: 12px;">
-              <div>创建: ${createdAt}</div>
-              <div>更新: ${updatedAt}</div>
-            </div>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <a href="${gist.html_url}" target="_blank" style="font-size: 12px; color: ${colors.link}; text-decoration: none; padding: 4px 8px; border: 1px solid ${colors.link}; border-radius: 4px;">查看</a>
-              <a href="${gist.html_url}/raw" target="_blank" style="font-size: 12px; color: ${colors.link}; text-decoration: none; padding: 4px 8px; border: 1px solid ${colors.link}; border-radius: 4px;">Raw</a>
-              ${file.language ? `<span style="font-size: 11px; color: ${colors.textSecondary}; padding: 4px 8px; background: ${colors.bgPrimary}; border-radius: 4px;">${file.language}</span>` : ''}
-            </div>
-          </div>
-        `;
-      });
-
-      if (!append) html += '</div>';
-
-      if (result.hasNextPage) {
-        loadMoreBtn.style.display = 'inline-block';
-        loadMoreBtn.onclick = () => loadUserGists(page + 1, true);
-      } else if (gists.length > 0) {
-        html += `<div style="text-align: center; padding: 20px; color: ${colors.textSecondary};">没有更多Gists了</div>`;
-        loadMoreBtn.style.display = 'none';
-      }
-
-      content.innerHTML = html;
-      status.textContent = `已加载 ${gists.length * page} 个 Gist`;
-    } catch (error) {
-      console.error('加载Gists失败:', error);
-      content.innerHTML = `
-        <div style="text-align: center; padding: 40px; color: #cb2431;">
-          <p style="margin-bottom: 16px;">加载Gists失败: ${error.message}</p>
-          <button onclick="location.reload()" style="margin: 5px; padding: 8px 16px; background: #2ea44f; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            重试
-          </button>
-          <button onclick="showAuthDialog()" style="margin: 5px; padding: 8px 16px; background: #0366d6; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            重新认证
-          </button>
-        </div>
-      `;
-      status.textContent = '加载失败';
-    }
+    content.innerHTML = html;
+    status.textContent = `已加载 ${gists.length * page} 个 Gist`;
+  } catch (error) {
+    console.error('加载Gists失败:', error);
+    content.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #cb2431;">
+        <p style="margin-bottom: 16px;">加载Gists失败: ${error.message}</p>
+        <button onclick="location.reload()" style="margin: 5px; padding: 8px 16px; background: #2ea44f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+          重试
+        </button>
+        <button onclick="showAuthDialog()" style="margin: 5px; padding: 8px 16px; background: #0366d6; color: white; border: none; border-radius: 4px; cursor: pointer;">
+          重新认证
+        </button>
+      </div>
+    `;
+    status.textContent = '加载失败';
   }
-
+}
+  
   // ========== Git URL 复制对话框 ==========
   function createGitUrlDialog() {
     const dialogId = '__gh_git_url_dialog__';
@@ -1290,6 +1400,10 @@
     sshRadio.addEventListener('change', function () { updateGitUrlInDialog(); });
 
     document.documentElement.appendChild(dialog);
+    
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(dialog, 'GIT_URL_DIALOG');
+    
     return dialog;
   }
 
