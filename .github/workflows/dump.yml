@@ -7,7 +7,7 @@ on:
 
 jobs:
   analyze-ipa:
-    runs-on: macos-latest  # 使用 macOS 运行器，因为需要 macOS 特定工具
+    runs-on: macos-latest
     
     steps:
     - name: Checkout repository
@@ -20,8 +20,13 @@ jobs:
         
     - name: Install required tools
       run: |
-        # 安装 class-dump
-        brew install class-dump
+        # 安装 class-dump (从源码编译)
+        echo "安装 class-dump..."
+        git clone https://github.com/nygard/class-dump.git
+        cd class-dump
+        xcodebuild -project class-dump.xcodeproj -configuration Release
+        sudo cp build/Release/class-dump /usr/local/bin/
+        cd ..
         
         # 安装 SwiftDump (Python 工具)
         pip3 install swift-dump
@@ -133,7 +138,7 @@ jobs:
         zip -r "$ARCHIVE_NAME" output/
         
     - name: Upload results as artifact
-      uses: actions/upload-artifact@v4  # 更新到 v4 版本
+      uses: actions/upload-artifact@v4
       with:
         name: ipa-analysis-results
         path: analysis_results_*.zip
@@ -163,7 +168,7 @@ jobs:
         fi
         
     - name: Upload summary
-      uses: actions/upload-artifact@v4  # 更新到 v4 版本
+      uses: actions/upload-artifact@v4
       with:
         name: analysis-summary
         path: summary.md
