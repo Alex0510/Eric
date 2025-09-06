@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         GitHub 助手增强版
 // @namespace    https://github.com/
-// @version      6.0.20
+// @version      6.0.21
 // @author       Mr.Eric
 // @license      MIT
-// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流及编辑功能。
+// @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流功能。
 // @icon         https://raw.githubusercontent.com/Alex0510/Eric/e8511263f6e8b232bc18ad4e8b221de3bf94f1a3/Icons/github.png
 // @match        https://github.com/*
 // @run-at       document-start
@@ -150,37 +150,271 @@
       background-color: rgba(0,0,0,0.1) !important;
     }
 
-.gh-header-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 12px;
-    font-size: 12px;
-    border-radius: 6px;
-    border: 1px solid rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .gh-header-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-  }
-  
-  @media (max-width: 768px) {
-    .gh-gists-header-buttons {
-      flex-direction: column;
-      gap: 5px;
+    /* ========== Release检测样式 ========== */
+    .gh-releases-loading,
+    .gh-releases-message {
+        padding: 40px;
+        text-align: center;
+        color: #586069;
     }
     
-    .gh-header-btn {
-      font-size: 11px;
-      padding: 4px 8px;
+    .gh-releases-message.error {
+        color: #cb2431;
     }
-  }
-
-  `);
-
+    
+    .gh-releases-container {
+        padding: 20px;
+    }
+    
+    .gh-release-item {
+        border: 1px solid #e1e4e8;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        background: #f6f8fa;
+    }
+    
+    .gh-release-header {
+        padding: 16px;
+        border-bottom: 1px solid #e1e4e8;
+        background: white;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+    
+    .gh-release-title {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+        color: #24292e;
+    }
+    
+    .gh-release-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .gh-release-date {
+        color: #586069;
+        font-size: 14px;
+    }
+    
+    .gh-release-tag {
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+    
+    .gh-release-tag.prerelease {
+        background: #fcf8e3;
+        color: #8a6d3b;
+        border: 1px solid #faebcc;
+    }
+    
+    .gh-release-tag.draft {
+        background: #f8f9fa;
+        color: #586069;
+        border: 1px solid #e1e4e8;
+    }
+    
+    .gh-release-body {
+        padding: 16px;
+        background: white;
+        border-bottom: 1px solid #e1e4e8;
+        color: #24292e;
+        line-height: 1.5;
+    }
+    
+    .gh-release-assets {
+        padding: 16px;
+        background: white;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
+    
+    .gh-release-assets h4 {
+        margin: 0 0 12px 0;
+        color: #24292e;
+    }
+    
+    .gh-no-assets {
+        color: #586069;
+        font-style: italic;
+        margin: 0;
+    }
+    
+    .gh-assets-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .gh-asset-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #e1e4e8;
+    }
+    
+    .gh-asset-item.available {
+        background: #f0fff4;
+        border-color: #cbffd6;
+    }
+    
+    .gh-asset-item.unavailable {
+        background: #fff5f5;
+        border-color: #ffd7d7;
+    }
+    
+    .gh-asset-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    
+    .gh-asset-name {
+        font-weight: 500;
+        color: #24292e;
+    }
+    
+    .gh-asset-size {
+        font-size: 12px;
+        color: #586069;
+    }
+    
+    .gh-asset-status {
+        margin: 0 16px;
+        font-size: 14px;
+    }
+    
+    .gh-asset-item.available .gh-asset-status {
+        color: #22863a;
+    }
+    
+    .gh-asset-item.unavailable .gh-asset-status {
+        color: #cb2431;
+    }
+    
+    .gh-asset-actions {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .gh-download-btn,
+    .gh-copy-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+        border: 1px solid;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .gh-download-btn {
+        background: #22863a;
+        color: white;
+        border-color: #22863a;
+    }
+    
+    .gh-copy-btn {
+        background: #fafbfc;
+        color: #24292e;
+        border-color: #e1e4e8;
+    }
+    
+    .gh-retry-btn {
+        padding: 8px 16px;
+        background: #0366d6;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 12px;
+    }
+    
+    @media (max-width: 768px) {
+        .gh-asset-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .gh-asset-status {
+            margin: 0;
+        }
+        
+        .gh-asset-actions {
+            align-self: flex-end;
+        }
+    }
+    
+    /* 暗色模式适配 */
+    [data-color-mode="dark"] .gh-release-item,
+    [data-dark-theme] .gh-release-item {
+        background: #161b22;
+        border-color: #30363d;
+    }
+    
+    [data-color-mode="dark"] .gh-release-header,
+    [data-dark-theme] .gh-release-header {
+        background: #0d1117;
+        border-color: #30363d;
+    }
+    
+    [data-color-mode="dark"] .gh-release-title,
+    [data-dark-theme] .gh-release-title {
+        color: #f0f6fc;
+    }
+    
+    [data-color-mode="dark"] .gh-release-body,
+    [data-dark-theme] .gh-release-body {
+        background: #0d1117;
+        border-color: #30363d;
+        color: #f0f6fc;
+    }
+    
+    [data-color-mode="dark"] .gh-release-assets,
+    [data-dark-theme] .gh-release-assets {
+        background: #0d1117;
+        color: #f0f6fc;
+    }
+    
+    [data-color-mode="dark"] .gh-release-assets h4,
+    [data-dark-theme] .gh-release-assets h4 {
+        color: #f0f6fc;
+    }
+    
+    [data-color-mode="dark"] .gh-asset-item,
+    [data-dark-theme] .gh-asset-item {
+        background: #161b22;
+        border-color: #30363d;
+    }
+    
+    [data-color-mode="dark"] .gh-asset-item.available,
+    [data-dark-theme] .gh-asset-item.available {
+        background: rgba(35, 134, 54, 0.1);
+        border-color: rgba(35, 134, 54, 0.4);
+    }
+    
+    [data-color-mode="dark"] .gh-asset-item.unavailable,
+    [data-dark-theme] .gh-asset-item.unavailable {
+        background: rgba(203, 36, 49, 0.1);
+        border-color: rgba(203, 36, 49, 0.4);
+    }
+    
+    [data-color-mode="dark"] .gh-asset-name,
+    [data-dark-theme] .gh-asset-name {
+        color: #f0f6fc;
+    }
+    
+    [data-color-mode="dark"] .gh-copy-btn,
+    [data-dark-theme] .gh-copy-btn {
+        background: #21262d;
+        color: #f0f6fc;
+        border-color: #30363d;
+    }
+`);
   // ========== 检测iOS设备 ==========
   function isIOS() {
     return [
@@ -454,51 +688,153 @@
 
   // ========== 小工具 / 兼容剪贴板 ==========
   function copyToClipboard(text) {
+    // 检测iOS设备
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
     // 优先 GM_setClipboard（用户脚本管理器支持）
     try {
-      if (typeof GM_setClipboard === 'function') {
-        GM_setClipboard(text);
-        safeNotify('已复制', text);
-        return;
-      }
+        if (typeof GM_setClipboard === 'function') {
+            GM_setClipboard(text);
+            safeNotify('已复制', text);
+            return;
+        }
     } catch (e) {
-      // ignore
+        // ignore
+    }
+
+    // 对于iOS设备，使用特殊处理
+    if (isIOSDevice) {
+        copyToClipboardIOS(text);
+        return;
     }
 
     // 其次尝试 navigator.clipboard
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        safeNotify('已复制', text);
-      }).catch(() => {
-        fallbackCopy(text);
-      });
-      return;
+        navigator.clipboard.writeText(text).then(() => {
+            safeNotify('已复制', text);
+        }).catch(() => {
+            fallbackCopy(text);
+        });
+        return;
     }
 
     // 最后回退到 execCommand
     fallbackCopy(text);
-  }
+}
 
-  function fallbackCopy(text) {
+// iOS专用的复制方法
+function copyToClipboardIOS(text) {
     try {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.left = '-9999px';
-      document.body.appendChild(ta);
-      ta.select();
-      const ok = document.execCommand('copy');
-      document.body.removeChild(ta);
-      if (ok) {
-        safeNotify('已复制', text);
-      } else {
-        alert('复制失败，请手动复制:\n' + text);
-      }
-    } catch (e) {
-      alert('复制失败，请手动复制:\n' + text);
+        // 创建一个隐藏的textarea元素
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.top = 0;
+        textarea.style.left = 0;
+        textarea.style.width = '1px';
+        textarea.style.height = '1px';
+        textarea.style.opacity = 0;
+        textarea.style.pointerEvents = 'none';
+        textarea.style.userSelect = 'text';
+        
+        document.body.appendChild(textarea);
+        
+        // 选择文本
+        textarea.select();
+        textarea.setSelectionRange(0, textarea.value.length);
+        
+        // 尝试执行复制命令
+        const successful = document.execCommand('copy');
+        
+        // 移除textarea
+        document.body.removeChild(textarea);
+        
+        if (successful) {
+            safeNotify('已复制', text);
+        } else {
+            // 如果execCommand失败，显示手动复制提示
+            showManualCopyPrompt(text);
+        }
+    } catch (err) {
+        console.error('iOS复制失败:', err);
+        showManualCopyPrompt(text);
     }
-  }
+}
 
+// 显示手动复制提示
+function showManualCopyPrompt(text) {
+    const colors = getAdaptiveColors();
+    
+    // 创建提示框
+    const prompt = document.createElement('div');
+    prompt.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: ${colors.bgPrimary};
+        color: ${colors.textPrimary};
+        border: 1px solid ${colors.border};
+        border-radius: 8px;
+        padding: 20px;
+        z-index: 2147483647;
+        box-shadow: ${colors.shadow};
+        max-width: 90%;
+        width: 400px;
+    `;
+    
+    prompt.innerHTML = `
+        <h3 style="margin-top: 0; color: ${colors.textPrimary};">手动复制</h3>
+        <p style="color: ${colors.textSecondary}; margin-bottom: 15px;">iOS限制自动复制功能，请手动选择并复制以下文本：</p>
+        <textarea 
+            id="ios-copy-text" 
+            style="width: 100%; height: 100px; padding: 10px; border: 1px solid ${colors.border}; border-radius: 4px; background: ${colors.bgSecondary}; color: ${colors.textPrimary}; margin-bottom: 15px; resize: vertical;"
+        >${text}</textarea>
+        <div style="display: flex; justify-content: flex-end;">
+            <button id="ios-copy-close" style="padding: 8px 16px; background: ${colors.buttonBg}; color: ${colors.buttonText}; border: none; border-radius: 4px; cursor: pointer;">关闭</button>
+        </div>
+    `;
+    
+    document.body.appendChild(prompt);
+    
+    // 自动选择文本
+    const textarea = document.getElementById('ios-copy-text');
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+    
+    // 添加关闭按钮事件
+    document.getElementById('ios-copy-close').addEventListener('click', () => {
+        document.body.removeChild(prompt);
+    });
+    
+    // 添加点击外部关闭功能
+    prompt.addEventListener('click', (e) => {
+        if (e.target === prompt) {
+            document.body.removeChild(prompt);
+        }
+    });
+}
+
+function fallbackCopy(text) {
+    try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok) {
+            safeNotify('已复制', text);
+        } else {
+            // 如果execCommand失败，可能是iOS设备，提示用户手动复制
+            showManualCopyPrompt(text);
+        }
+    } catch (e) {
+        showManualCopyPrompt(text);
+    }
+}
   function safeNotify(title, text) {
     try {
       GM_notification({ title: title, text: text, timeout: 2000 });
@@ -1133,7 +1469,139 @@
       alert('保存到GitHub失败: ' + error.message);
     }
   }
+// ========== Release检测功能 ==========
+async function fetchRepoReleases(owner, repo) {
+    try {
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases`;
+        const response = await fetch(apiUrl, {
+            headers: isAuthenticated() ? getAuthHeaders() : { 'Accept': 'application/vnd.github.v3+json' }
+        });
+        
+        if (!response.ok) {
+            if (response.status === 404) {
+                return { releases: [], hasReleases: false };
+            }
+            throw new Error(`获取Releases失败: ${response.status}`);
+        }
+        
+        const releases = await response.json();
+        return { 
+            releases: releases || [], 
+            hasReleases: releases && releases.length > 0 
+        };
+    } catch (error) {
+        console.error('获取Releases失败:', error);
+        throw error;
+    }
+}
 
+async function checkReleaseAssetAvailability(assetUrl) {
+    try {
+        // 直接使用GET请求而不是HEAD，因为某些服务器可能不支持HEAD
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        try {
+            const response = await fetch(assetUrl, {
+                method: 'GET',
+                signal: controller.signal,
+                credentials: 'omit',
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Range': 'bytes=0-0' // 只请求第一个字节，减少数据传输
+                }
+            });
+
+            clearTimeout(timeoutId);
+            
+            return {
+                exists: response.ok || response.status === 206, // 206表示部分内容，也是可用的
+                status: response.status,
+                statusText: response.statusText,
+                size: response.headers.get('content-length') || '未知'
+            };
+        } catch (error) {
+            clearTimeout(timeoutId);
+            
+            if (error.name === 'AbortError') {
+                return {
+                    exists: false,
+                    status: 0,
+                    statusText: '请求超时',
+                    size: '未知'
+                };
+            }
+            
+            throw error;
+        }
+    } catch (error) {
+        console.error(`检查资源失败 ${assetUrl}:`, error);
+        return {
+            exists: false,
+            status: 0,
+            statusText: '检查失败',
+            size: '未知'
+        };
+    }
+}
+
+function formatFileSize(bytes) {
+    if (!bytes || bytes === 0 || bytes === '未知') return '未知大小';
+    if (typeof bytes === 'string') {
+        bytes = parseInt(bytes);
+    }
+    if (isNaN(bytes)) return '未知大小';
+    
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+function formatReleaseBody(body) {
+    if (!body) return '';
+    return body
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>')
+        .replace(/\n/g, '<br>');
+}
+
+function downloadReleaseAsset(url, filename) {
+    try {
+        // 直接打开下载链接
+        window.open(url, '_blank');
+        safeNotify('下载开始', `正在下载 ${filename}`);
+    } catch (e) {
+        console.error('下载失败:', e);
+        // 如果直接打开失败，尝试使用GM_xmlhttpRequest
+        try {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: url,
+                onload: function(response) {
+                    const blob = new Blob([response.response], {type: 'application/octet-stream'});
+                    const downloadUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(downloadUrl);
+                    }, 100);
+                },
+                onerror: function(error) {
+                    console.error('下载失败:', error);
+                    alert('下载失败，请手动访问: ' + url);
+                }
+            });
+        } catch (gmError) {
+            console.error('GM_xmlhttpRequest也失败:', gmError);
+            alert('下载失败，请手动访问: ' + url);
+        }
+    }
+}
   // ========== Gists 功能（分页修复） ==========
   async function fetchUserGists(page = 1, perPage = 30) {
     try {
@@ -1382,7 +1850,293 @@
       status.textContent = '加载失败';
     }
   }
+// ========== 创建Release检测面板 ==========
+function createReleasesPanel() {
+    const panelId = '__gh_releases_panel__';
+    if (document.getElementById(panelId)) return document.getElementById(panelId);
 
+    const colors = getAdaptiveColors();
+    const panel = document.createElement('div');
+    panel.id = panelId;
+    panel.style.cssText = `
+        position: fixed;
+        width: 85%;
+        height: 80%;
+        background: ${colors.bgPrimary};
+        color: ${colors.textPrimary};
+        z-index: 2147483646;
+        border: 1px solid ${colors.border};
+        box-shadow: ${colors.shadow};
+        display: none;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden;
+    `;
+
+    // 面板头部
+    const header = document.createElement('div');
+    header.className = 'gh-gists-header';
+    
+    const title = document.createElement('span');
+    title.className = 'gh-gists-title';
+    title.textContent = 'Release 文件检测';
+    title.id = '__gh_releases_title__';
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.className = 'gh-gists-close-btn';
+    closeBtn.onclick = () => hideReleasesPanel();
+    
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    // 内容区域
+    const content = document.createElement('div');
+    content.id = '__gh_releases_content__';
+    content.style.cssText = `
+        flex: 1; 
+        padding: 0;
+        overflow-y: auto; 
+        position: relative;
+        background: ${colors.bgPrimary};
+    `;
+
+    // 底部按钮区域
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+        padding: 15px; 
+        background: ${colors.bgSecondary}; 
+        border-top: 1px solid ${colors.border}; 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    `;
+
+    const status = document.createElement('div');
+    status.id = '__gh_releases_status__';
+    status.style.fontSize = '13px';
+    status.style.color = colors.textSecondary;
+
+    const buttonGroup = document.createElement('div');
+    buttonGroup.style.display = 'flex';
+    buttonGroup.style.gap = '10px';
+    buttonGroup.style.flexWrap = 'wrap';
+
+    const refreshBtn = makeBtn('重新检测', () => loadRepoReleases());
+    const closeBtn2 = makeBtn('关闭', () => hideReleasesPanel());
+
+    [refreshBtn, closeBtn2].forEach(btn => {
+        btn.style.padding = '6px 12px';
+        btn.style.margin = '0';
+    });
+
+    buttonGroup.appendChild(refreshBtn);
+    buttonGroup.appendChild(closeBtn2);
+
+    footer.appendChild(status);
+    footer.appendChild(buttonGroup);
+
+    panel.appendChild(header);
+    panel.appendChild(content);
+    panel.appendChild(footer);
+
+    document.documentElement.appendChild(panel);
+    addDragAndResizeFunctionality(panel, 'RELEASES');
+    
+    return panel;
+}
+
+// ========== 加载和显示Release信息 ==========
+async function loadRepoReleases() {
+    const content = document.getElementById('__gh_releases_content__');
+    const status = document.getElementById('__gh_releases_status__');
+    const title = document.getElementById('__gh_releases_title__');
+    
+    if (!content || !status) return;
+    
+    const info = getRepoInfo();
+    if (!info.owner || !info.repo) {
+        content.innerHTML = '<div class="gh-releases-message">当前不是有效的仓库页面</div>';
+        return;
+    }
+    
+    if (title) {
+        title.textContent = `Release 文件检测: ${info.owner}/${info.repo}`;
+    }
+    
+    content.innerHTML = '<div class="gh-releases-loading">检测中...</div>';
+    status.textContent = '正在检测Release信息...';
+    
+    try {
+        const result = await fetchRepoReleases(info.owner, info.repo);
+        
+        if (!result.hasReleases) {
+            content.innerHTML = `
+                <div class="gh-releases-message">
+                    <h3>暂无 Releases</h3>
+                    <p>该仓库目前没有发布任何版本</p>
+                </div>
+            `;
+            status.textContent = '未找到Release信息';
+            return;
+        }
+        
+        let html = `<div class="gh-releases-container">`;
+        
+        // 处理每个release
+        for (const release of result.releases) {
+            const releaseDate = new Date(release.published_at || release.created_at).toLocaleDateString();
+            const isPrerelease = release.prerelease ? '<span class="gh-release-tag prerelease">预发布</span>' : '';
+            const isDraft = release.draft ? '<span class="gh-release-tag draft">草稿</span>' : '';
+            
+            let releaseHtml = `
+                <div class="gh-release-item">
+                    <div class="gh-release-header">
+                        <h3 class="gh-release-title">${release.name || release.tag_name}</h3>
+                        <div class="gh-release-meta">
+                            <span class="gh-release-date">${releaseDate}</span>
+                            ${isPrerelease}
+                            ${isDraft}
+                        </div>
+                    </div>
+                    
+                    ${release.body ? `<div class="gh-release-body">${formatReleaseBody(release.body)}</div>` : ''}
+                    
+                    <div class="gh-release-assets">
+                        <h4>可下载资源 (${release.assets.length})</h4>
+            `;
+            
+            if (release.assets.length === 0) {
+                releaseHtml += `<p class="gh-no-assets">此版本没有可下载资源</p>`;
+            } else {
+                releaseHtml += `<div class="gh-assets-list">`;
+                
+                // 检查每个资源
+                for (const asset of release.assets) {
+                    // 对于GitHub Release资源，我们假设它们总是可用的
+                    // 因为GitHub会确保发布的资源可用
+                    const statusClass = 'available';
+                    const statusText = `可用 (${formatFileSize(asset.size)})`;
+                    
+                    // 转义URL和文件名中的特殊字符，防止XSS
+                    const safeUrl = asset.browser_download_url.replace(/"/g, '&quot;');
+                    const safeName = asset.name.replace(/"/g, '&quot;');
+                    
+                    releaseHtml += `
+                        <div class="gh-asset-item ${statusClass}">
+                            <div class="gh-asset-info">
+                                <span class="gh-asset-name">${asset.name}</span>
+                                <span class="gh-asset-size">${formatFileSize(asset.size)}</span>
+                            </div>
+                            <div class="gh-asset-status">${statusText}</div>
+                            <div class="gh-asset-actions">
+                                <button class="gh-download-btn" data-url="${safeUrl}" data-filename="${safeName}">
+                                    下载
+                                </button>
+                                <button class="gh-copy-btn" data-url="${safeUrl}">
+                                    复制链接
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                releaseHtml += `</div>`; // 关闭gh-assets-list
+            }
+            
+            releaseHtml += `</div></div>`; // 关闭gh-release-assets和gh-release-item
+            html += releaseHtml;
+        }
+        
+        html += `</div>`; // 关闭gh-releases-container
+        
+        content.innerHTML = html;
+        status.textContent = `检测完成，共 ${result.releases.length} 个版本`;
+        
+        // 添加事件监听器
+        content.querySelectorAll('.gh-download-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                const filename = this.getAttribute('data-filename');
+                downloadReleaseAsset(url, filename);
+            });
+        });
+        
+        content.querySelectorAll('.gh-copy-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                copyToClipboard(url);
+            });
+        });
+        
+    } catch (error) {
+        console.error('加载Release信息失败:', error);
+        content.innerHTML = `
+            <div class="gh-releases-message error">
+                <h3>检测失败</h3>
+                <p>${error.message || '加载Release信息时发生错误'}</p>
+                <button onclick="loadRepoReleases()" class="gh-retry-btn">重试</button>
+            </div>
+        `;
+        status.textContent = '检测失败';
+    }
+}
+// ========== 下载Release资源 ==========
+function downloadReleaseAsset(url, filename) {
+    try {
+        // 直接打开下载链接
+        window.open(url, '_blank');
+        safeNotify('下载开始', `正在下载 ${filename}`);
+    } catch (e) {
+        console.error('下载失败:', e);
+        // 如果直接打开失败，尝试使用GM_xmlhttpRequest
+        try {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: url,
+                responseType: 'blob',
+                onload: function(response) {
+                    try {
+                        const blob = response.response;
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(downloadUrl);
+                        }, 100);
+                    } catch (e) {
+                        console.error('Blob下载失败:', e);
+                        window.open(url, '_blank');
+                    }
+                },
+                onerror: function(error) {
+                    console.error('下载失败:', error);
+                    window.open(url, '_blank');
+                }
+            });
+        } catch (gmError) {
+            console.error('GM_xmlhttpRequest也失败:', gmError);
+            window.open(url, '_blank');
+        }
+    }
+}
+// ========== 显示和隐藏Release面板 ==========
+function showReleasesPanel() {
+    const panel = document.getElementById('__gh_releases_panel__') || createReleasesPanel();
+    panel.style.display = 'flex';
+    loadRepoReleases();
+}
+
+function hideReleasesPanel() {
+    const panel = document.getElementById('__gh_releases_panel__');
+    if (panel) panel.style.display = 'none';
+}
   // ========== Actions 工作流功能 ==========
   async function fetchWorkflows(owner, repo) {
     try {
@@ -1431,8 +2185,7 @@
     }
   }
 
-// ========== 修改Workflows面板创建函数 ==========
-function createWorkflowsPanel() {
+  function createWorkflowsPanel() {
     const panelId = '__gh_workflows_panel__';
     if (document.getElementById(panelId)) return document.getElementById(panelId);
 
@@ -1462,14 +2215,7 @@ function createWorkflowsPanel() {
     title.className = 'gh-gists-title';
     title.textContent = '工作流 (Workflows)';
     
-    // 添加关闭按钮
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = '×';
-    closeBtn.className = 'gh-gists-close-btn';
-    closeBtn.onclick = () => hideWorkflowsPanel();
-    
     header.appendChild(title);
-    header.appendChild(closeBtn);
     
     const content = document.createElement('div');
     content.id = '__gh_workflows_content__';
@@ -1508,19 +2254,13 @@ function createWorkflowsPanel() {
     refreshBtn.style.padding = '6px 12px';
     refreshBtn.style.margin = '0';
 
-    // 新建Workflow按钮
-    const newWorkflowBtn = makeBtn('新建 Workflow', () => showNewWorkflowEditor());
-    newWorkflowBtn.style.padding = '6px 12px';
-    newWorkflowBtn.style.margin = '0';
-
     // 关闭按钮
-    const closeBtn2 = makeBtn('关闭', () => hideWorkflowsPanel());
-    closeBtn2.style.padding = '6px 12px';
-    closeBtn2.style.margin = '0';
+    const closeBtn = makeBtn('关闭', () => hideWorkflowsPanel());
+    closeBtn.style.padding = '6px 12px';
+    closeBtn.style.margin = '0';
 
     buttonGroup.appendChild(refreshBtn);
-    buttonGroup.appendChild(newWorkflowBtn);
-    buttonGroup.appendChild(closeBtn2);
+    buttonGroup.appendChild(closeBtn);
 
     footer.appendChild(status);
     footer.appendChild(buttonGroup);
@@ -1535,283 +2275,7 @@ function createWorkflowsPanel() {
     addDragAndResizeFunctionality(panel, 'WORKFLOWS');
 
     return panel;
-}
-
-// ========== 创建新建Workflow编辑器 ==========
-function createNewWorkflowEditor() {
-    const editorId = '__gh_new_workflow_editor__';
-    if (document.getElementById(editorId)) return document.getElementById(editorId);
-
-    const colors = getAdaptiveColors();
-    const editor = document.createElement('div');
-    editor.id = editorId;
-    editor.style.cssText = `
-      position: fixed;
-      width: 70%;
-      height: 80%;
-      background: ${colors.bgPrimary};
-      color: ${colors.textPrimary};
-      z-index: 2147483647;
-      border: 1px solid ${colors.border};
-      box-shadow: ${colors.shadow};
-      display: none;
-      flex-direction: column;
-      border-radius: 8px;
-      overflow: hidden;
-    `;
-
-    const header = document.createElement('div');
-    header.style.cssText = `
-      padding: 15px;
-      background: ${colors.bgSecondary};
-      border-bottom: 1px solid ${colors.border};
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    `;
-
-    const title = document.createElement('span');
-    title.textContent = '新建 Workflow';
-    title.style.fontWeight = 'bold';
-    title.style.color = colors.textPrimary;
-
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = '×';
-    closeBtn.style.cssText = `background: none; border: none; font-size: 20px; cursor: pointer; padding: 0; width: 24px; height: 24px; color: ${colors.textPrimary};`;
-    closeBtn.onclick = () => hideNewWorkflowEditor();
-
-    header.appendChild(title);
-    header.appendChild(closeBtn);
-
-    const content = document.createElement('div');
-    content.style.cssText = `
-      flex: 1;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      overflow-y: auto;
-    `;
-
-    // 文件名输入
-    const fileNameContainer = document.createElement('div');
-    fileNameContainer.style.display = 'flex';
-    fileNameContainer.style.flexDirection = 'column';
-    fileNameContainer.style.gap = '5px';
-
-    const fileNameLabel = document.createElement('label');
-    fileNameLabel.textContent = '文件名 (自动添加 .yml 后缀)';
-    fileNameLabel.style.fontWeight = '500';
-    fileNameLabel.style.color = colors.textPrimary;
-
-    const fileNameInput = document.createElement('input');
-    fileNameInput.type = 'text';
-    fileNameInput.placeholder = '例如: ci-cd-workflow';
-    fileNameInput.style.cssText = `
-      padding: 8px;
-      border: 1px solid ${colors.border};
-      border-radius: 4px;
-      background: ${colors.bgSecondary};
-      color: ${colors.textPrimary};
-    `;
-
-    fileNameContainer.appendChild(fileNameLabel);
-    fileNameContainer.appendChild(fileNameInput);
-
-    // YAML编辑器
-    const editorContainer = document.createElement('div');
-    editorContainer.style.cssText = `
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      gap: 5px;
-    `;
-
-    const editorLabel = document.createElement('label');
-    editorLabel.textContent = 'Workflow YAML 内容';
-    editorLabel.style.fontWeight = '500';
-    editorLabel.style.color = colors.textPrimary;
-
-    const yamlEditor = document.createElement('textarea');
-    yamlEditor.id = '__gh_workflow_yaml_editor__';
-    yamlEditor.style.cssText = `
-      flex: 1;
-      padding: 12px;
-      border: 1px solid ${colors.border};
-      border-radius: 4px;
-      resize: none;
-      font-family: monospace;
-      font-size: 14px;
-      background: ${colors.bgSecondary};
-      color: ${colors.textPrimary};
-    `;
-    yamlEditor.placeholder = `name: CI/CD Workflow
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v2
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-        
-    - name: Install dependencies
-      run: npm install
-      
-    - name: Run tests
-      run: npm test`;
-
-    editorContainer.appendChild(editorLabel);
-    editorContainer.appendChild(yamlEditor);
-
-    content.appendChild(fileNameContainer);
-    content.appendChild(editorContainer);
-
-    const footer = document.createElement('div');
-    footer.style.cssText = `
-      padding: 15px;
-      background: ${colors.bgSecondary};
-      border-top: 1px solid ${colors.border};
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    `;
-
-    const cancelBtn = makeBtn('取消', () => hideNewWorkflowEditor());
-    cancelBtn.style.padding = '6px 12px';
-    cancelBtn.style.margin = '0';
-
-    const saveBtn = makeBtn('创建 Workflow', () => createNewWorkflow());
-    saveBtn.style.padding = '6px 12px';
-    saveBtn.style.margin = '0';
-
-    footer.appendChild(cancelBtn);
-    footer.appendChild(saveBtn);
-
-    editor.appendChild(header);
-    editor.appendChild(content);
-    editor.appendChild(footer);
-
-    document.documentElement.appendChild(editor);
-
-    // 添加拖拽和调整大小功能
-    addDragAndResizeFunctionality(editor, 'NEW_WORKFLOW_EDITOR');
-
-    return editor;
-}
-
-// ========== 显示新建Workflow编辑器 ==========
-function showNewWorkflowEditor() {
-    const editor = document.getElementById('__gh_new_workflow_editor__') || createNewWorkflowEditor();
-    editor.style.display = 'flex';
-    
-    // 清空编辑器内容
-    const fileNameInput = editor.querySelector('input[type="text"]');
-    const yamlEditor = document.getElementById('__gh_workflow_yaml_editor__');
-    
-    if (fileNameInput) fileNameInput.value = '';
-    if (yamlEditor) yamlEditor.value = '';
-}
-
-// ========== 隐藏新建Workflow编辑器 ==========
-function hideNewWorkflowEditor() {
-    const editor = document.getElementById('__gh_new_workflow_editor__');
-    if (editor) editor.style.display = 'none';
-}
-
-// ========== 创建新的Workflow ==========
-async function createNewWorkflow() {
-    const editor = document.getElementById('__gh_new_workflow_editor__');
-    if (!editor) return;
-    
-    const fileNameInput = editor.querySelector('input[type="text"]');
-    const yamlEditor = document.getElementById('__gh_workflow_yaml_editor__');
-    
-    if (!fileNameInput || !yamlEditor) return;
-    
-    const fileName = fileNameInput.value.trim();
-    const yamlContent = yamlEditor.value.trim();
-    
-    if (!fileName) {
-        alert('请输入文件名');
-        return;
-    }
-    
-    if (!yamlContent) {
-        alert('请输入Workflow YAML内容');
-        return;
-    }
-    
-    // 确保文件名以.yml结尾
-    const fullFileName = fileName.endsWith('.yml') || fileName.endsWith('.yaml') ? 
-        fileName : `${fileName}.yml`;
-    
-    const info = getRepoInfo();
-    if (!info.owner || !info.repo) {
-        alert('无法确定仓库信息，请确保您在正确的仓库页面');
-        return;
-    }
-    
-    if (!isAuthenticated()) {
-        alert('请先进行GitHub认证才能创建Workflow');
-        showAuthDialog();
-        return;
-    }
-    
-    try {
-        // 获取默认分支
-        const repoInfoUrl = `https://api.github.com/repos/${info.owner}/${info.repo}`;
-        const repoInfoResponse = await fetch(repoInfoUrl, { headers: getAuthHeaders() });
-        
-        if (!repoInfoResponse.ok) {
-            throw new Error(`获取仓库信息失败: ${repoInfoResponse.status}`);
-        }
-        
-        const repoInfo = await repoInfoResponse.json();
-        const defaultBranch = repoInfo.default_branch || 'main';
-        
-        // 创建workflow文件
-        const workflowPath = `.github/workflows/${fullFileName}`;
-        const createUrl = `https://api.github.com/repos/${info.owner}/${info.repo}/contents/${workflowPath}`;
-        
-        const createData = {
-            message: `Create ${fullFileName} workflow`,
-            content: btoa(unescape(encodeURIComponent(yamlContent))),
-            branch: defaultBranch
-        };
-        
-        const createResponse = await fetch(createUrl, {
-            method: 'PUT',
-            headers: getAuthHeaders(),
-            body: JSON.stringify(createData)
-        });
-        
-        if (createResponse.ok) {
-            const result = await createResponse.json();
-            safeNotify('创建成功', `Workflow文件已创建: ${fullFileName}`);
-            hideNewWorkflowEditor();
-            
-            // 刷新workflow列表
-            setTimeout(() => loadWorkflows(), 1000);
-        } else {
-            const error = await createResponse.text();
-            throw new Error(`创建Workflow失败: ${createResponse.status} - ${error}`);
-        }
-    } catch (error) {
-        console.error('创建Workflow失败:', error);
-        alert('创建Workflow失败: ' + error.message);
-    }
-}
+  }
 
   function showWorkflowsPanel() {
     const panel = document.getElementById('__gh_workflows_panel__') || createWorkflowsPanel();
@@ -2162,11 +2626,10 @@ async function createNewWorkflow() {
     const colors = getAdaptiveColors();
 
     if (!owner || !repo) {
-      wrap.textContent = '当前不是仓库页。';
-      wrap.style.color = colors.textPrimary;
-      return wrap;
+        wrap.textContent = '当前不是仓库页。';
+        wrap.style.color = colors.textPrimary;
+        return wrap;
     }
-
     // 认证状态显示
     const authStatus = document.createElement('div');
     authStatus.style.marginBottom = '10px';
@@ -2325,7 +2788,33 @@ async function createNewWorkflow() {
 
       wrap.appendChild(fileSection);
     }
-
+// ========== 添加Release检测区域 ==========
+    const releasesSection = document.createElement('div');
+    releasesSection.style.margin = '10px 0';
+    releasesSection.style.padding = '10px';
+    releasesSection.style.borderTop = `1px solid ${colors.border}`;
+    
+    const releasesTitle = document.createElement('div');
+    releasesTitle.textContent = 'Release 检测:';
+    releasesTitle.style.fontWeight = 'bold';
+    releasesTitle.style.marginBottom = '8px';
+    releasesTitle.style.color = colors.textPrimary;
+    
+    const releasesDesc = document.createElement('div');
+    releasesDesc.textContent = '检测当前仓库的Release文件可用性';
+    releasesDesc.style.fontSize = '12px';
+    releasesDesc.style.color = colors.textSecondary;
+    releasesDesc.style.marginBottom = '8px';
+    
+    const checkReleasesBtn = makeBtn('🔍 检测Release文件', () => {
+        showReleasesPanel();
+    }, '检测当前仓库的Release文件可用性');
+    
+    releasesSection.appendChild(releasesTitle);
+    releasesSection.appendChild(releasesDesc);
+    releasesSection.appendChild(checkReleasesBtn);
+    wrap.appendChild(releasesSection);
+		
     // Actions工作流区
     const actionsSection = document.createElement('div');
     actionsSection.style.margin = '10px 0';
@@ -2644,50 +3133,45 @@ async function createNewWorkflow() {
   }
 
   // ========== 初始化入口 ==========
-  async function safeFixAll() {
-    try { ensureRescueButtonAndPanel(); } catch (e) { console.error('初始化救援按钮失败:', e); }
-  }
+async function safeFixAll() {
+  try { ensureRescueButtonAndPanel(); } catch (e) { console.error('初始化救援按钮失败:', e); }
+}
 
-  function init() {
-    console.log('GitHub Rescue 脚本开始初始化');
-
-    // 自动验证保存的 Token（如果有）
-    if (GM_getValue(STORAGE_KEYS.GITHUB_TOKEN, '')) {
+function init() {
+  console.log('GitHub Rescue 脚本开始初始化');
+  
+  // 自动验证保存的 Token（如果有）
+  if (GM_getValue(STORAGE_KEYS.GITHUB_TOKEN, '')) {
       verifyToken(getGitHubToken()).then(result => {
-        if (!result.success) {
-          console.log('保存的Token可能已失效，需要重新认证');
-          safeNotify('Token 已失效', '请重新进行 GitHub 认证');
-          clearGitHubToken();
-          updateUIWithAuthStatus();
-        }
+          if (!result.success) {
+              console.log('保存的Token可能已失效，需要重新认证');
+              safeNotify('Token 已失效', '请重新进行 GitHub 认证');
+              clearGitHubToken();
+              updateUIWithAuthStatus();
+          }
       });
-    }
+  }
 
-    ['DOMContentLoaded', 'turbo:load', 'pjax:end', 'load'].forEach(ev => {
+  ['DOMContentLoaded', 'turbo:load', 'pjax:end', 'load'].forEach(ev => {
       document.addEventListener(ev, safeFixAll, { passive: true });
-    });
+  });
 
-    try { registerMenuCommands(); } catch (e) { console.error('注册菜单命令失败:', e); }
+  try { registerMenuCommands(); } catch (e) { console.error('注册菜单命令失败:', e); }
 
-    setTimeout(safeFixAll, 1000);
-    setInterval(safeFixAll, 5000);
+  setTimeout(safeFixAll, 1000);
+  setInterval(safeFixAll, 5000);
 
-    console.log('GitHub Rescue 脚本初始化完成');
-  }
+  console.log('GitHub Rescue 脚本初始化完成');
+  
+  // 暴露Release检测方法到全局对象
+  window.showReleasesPanel = showReleasesPanel;
+  window.hideReleasesPanel = hideReleasesPanel;
+  window.loadRepoReleases = loadRepoReleases;
+  window.downloadReleaseAsset = downloadReleaseAsset;
+	window.downloadReleaseAsset = downloadReleaseAsset;
+  window.copyToClipboard = copyToClipboard;
+}
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-
-  // 暴露方法供控制台/HTML 调用
-  window.showAuthDialog = showAuthDialog;
-  window.showGistsPanel = showGistsPanel;
-  window.showWorkflowsPanel = showWorkflowsPanel;
-  window.showGitUrlDialog = showGitUrlDialog;
-  window.clearGitHubToken = clearGitHubToken;
-  window.syncForkWithUpstream = syncForkWithUpstream;
-  window.runSelectedWorkflow = runSelectedWorkflow;
-
+// 添加这一行来调用 init 函数
+init();
 })();
