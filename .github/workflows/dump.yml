@@ -3,10 +3,10 @@ name: IPA Dump
 on:
   workflow_dispatch:
     inputs:
-      ipa_path:
-        description: "上传的 IPA 文件路径（必须已砸壳）"
+      ipa_url:
+        description: "IPA 文件下载地址（必须已砸壳）"
         required: true
-        default: "MyApp.ipa"
+        default: "https://github.com/Alex0510/Eric/raw/refs/heads/master/ipa/App.ipa"
 
 jobs:
   dump:
@@ -31,18 +31,23 @@ jobs:
           swift build -c release
           sudo cp .build/release/swift-dump /usr/local/bin/
 
+      # 下载 IPA
+      - name: Download IPA
+        run: |
+          curl -L "${{ github.event.inputs.ipa_url }}" -o App.ipa
+
       # 解压 IPA
       - name: Unzip IPA
         run: |
           mkdir work
-          unzip -q ${{ github.event.inputs.ipa_path }} -d work
+          unzip -q App.ipa -d work
           APPDIR=$(find work -name "*.app" | head -n 1)
           echo "APPDIR=$APPDIR" >> $GITHUB_ENV
           BINARY=$(basename "$APPDIR" .app)
           echo "BINARY=$BINARY" >> $GITHUB_ENV
           echo "BINPATH=$APPDIR/$BINARY" >> $GITHUB_ENV
 
-      # 提取 arm64 架构（class-dump/swift-dump 都更适配 arm64）
+      # 提取 arm64 架构
       - name: Extract arm64 binary
         run: |
           if lipo -info "$BINPATH" | grep -q arm64; then
@@ -62,7 +67,7 @@ jobs:
           mkdir -p DumpResult/SwiftSymbols
           swift-dump all "$BINPATH" > DumpResult/SwiftSymbols/swift_all.txt || echo "No Swift symbols"
 
-      # 上传结果 (artifact)
+      # 上传结果
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
