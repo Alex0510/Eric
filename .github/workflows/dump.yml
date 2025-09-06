@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       ipa_path:
-        description: "上传的 IPA 文件路径"
+        description: "上传的 IPA 文件路径（已砸壳）"
         required: true
         default: "App.ipa"
 
@@ -15,10 +15,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install tools
+      # 安装 class-dump-z
+      - name: Install class-dump-z
+        run: brew install class-dump-z
+
+      # 安装 swift-dump（源码编译，避免 brew tap 出错）
+      - name: Install swift-dump
         run: |
-          brew install aidansteele/tap/swift-dump
-          brew install class-dump-z
+          git clone https://github.com/aidansteele/swift-dump.git
+          cd swift-dump
+          swift build -c release
+          sudo cp .build/release/swift-dump /usr/local/bin/
 
       - name: Unzip IPA
         run: |
@@ -26,7 +33,7 @@ jobs:
           unzip -q ${{ github.event.inputs.ipa_path }} -d work
           APPDIR=$(find work -name "*.app" | head -n 1)
           echo "APPDIR=$APPDIR" >> $GITHUB_ENV
-          BINARY=$(basename $APPDIR .app)
+          BINARY=$(basename "$APPDIR" .app)
           echo "BINARY=$BINARY" >> $GITHUB_ENV
           echo "BINPATH=$APPDIR/$BINARY" >> $GITHUB_ENV
 
