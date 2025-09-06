@@ -6,7 +6,7 @@ on:
       ipa_url:
         description: "IPA 文件下载地址（必须已砸壳）"
         required: true
-        default: "https://github.com/Alex0510/Eric/raw/refs/heads/master/ipa/App.ipa"
+        default: "https://raw.githubusercontent.com/Alex0510/Eric/raw/master/ipa/App.ipa"
 
 jobs:
   dump:
@@ -18,8 +18,8 @@ jobs:
       # 安装 class-dump-z (下载 Release 二进制)
       - name: Install class-dump-z
         run: |
-          curl -L https://github.com/zhlynn/class-dump-z/releases/download/0.2/class-dump-z.zip -o cdz.zip
-          unzip cdz.zip
+          curl -L -o class-dump-z.zip https://github.com/zhlynn/class-dump-z/raw/refs/tags/0.2/class-dump-z.zip
+          unzip class-dump-z.zip
           chmod +x class-dump-z
           sudo mv class-dump-z /usr/local/bin/
 
