@@ -2,8 +2,6 @@ name: IPA Class-Dump and Swift-Dump Analysis
 
 on:
   workflow_dispatch:  # 允许手动触发工作流
-  schedule:
-    - cron: '0 0 * * 0'  # 每周日午夜运行一次（可选）
 
 jobs:
   analyze-ipa:
@@ -20,13 +18,25 @@ jobs:
         
     - name: Install required tools
       run: |
-        # 安装 class-dump (从源码编译)
+        # 安装 class-dump (使用预编译版本)
         echo "安装 class-dump..."
-        git clone https://github.com/nygard/class-dump.git
-        cd class-dump
-        xcodebuild -project class-dump.xcodeproj -configuration Release
+        curl -L -o class-dump.zip "https://github.com/nygard/class-dump/archive/refs/tags/4.5.tar.gz"
+        tar -xzf class-dump.zip
+        cd class-dump-4.5
+        
+        # 设置正确的 SDK 路径
+        SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+        echo "Using SDK: $SDKROOT"
+        
+        # 编译 class-dump
+        xcodebuild -project class-dump.xcodeproj -configuration Release SDKROOT="$SDKROOT"
+        
+        # 安装到系统路径
         sudo cp build/Release/class-dump /usr/local/bin/
         cd ..
+        
+        # 验证安装
+        class-dump --version || echo "class-dump not available"
         
         # 安装 SwiftDump (Python 工具)
         pip3 install swift-dump
@@ -104,6 +114,8 @@ jobs:
           class-dump -H -o output/Objective-C "$BINARY_PATH" || echo "class-dump failed or no Objective-C classes found"
         else
           echo "class-dump not available"
+          # 使用替代方法提取信息
+          nm -g "$BINARY_PATH" > output/Objective-C/symbols.txt
         fi
         
         # 执行 Swift 符号提取
@@ -118,10 +130,6 @@ jobs:
         # 提取其他信息
         echo "Extracting framework references..."
         strings "$BINARY_PATH" | grep -E "UIKit|Foundation|Swift|CoreData|CoreGraphics" > output/frameworks_references.txt
-        
-        # 提取所有字符串（可选，可能很大）
-        echo "Extracting all strings..."
-        strings "$BINARY_PATH" > output/all_strings.txt 2>/dev/null || echo "strings extraction failed"
         
         # 使用 otool 提取加载命令信息
         echo "Extracting load commands..."
