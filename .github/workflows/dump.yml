@@ -1,75 +1,107 @@
-name: IPA Dump
+name: IPA Class-Dump and Swift-Dump
 
 on:
   workflow_dispatch:
     inputs:
       ipa_url:
-        description: "IPA 文件下载地址（必须已砸壳）"
+        description: 'URL to the IPA file'
         required: true
-        default: "https://raw.githubusercontent.com/Alex0510/Eric/raw/master/ipa/App.ipa"
+        type: string
+      output_name:
+        description: 'Output archive name'
+        required: false
+        default: 'dump_results'
+        type: string
 
 jobs:
-  dump:
+  dump-headers:
     runs-on: macos-latest
+    
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      # 安装 class-dump-z (下载 Release 二进制)
-      - name: Install class-dump-z
-        run: |
-          curl -L -o class-dump-z.zip https://github.com/zhlynn/class-dump-z/raw/refs/tags/0.2/class-dump-z.zip
-          unzip class-dump-z.zip
-          chmod +x class-dump-z
-          sudo mv class-dump-z /usr/local/bin/
-
-      # 安装 swift-dump (源码编译)
-      - name: Install swift-dump
-        run: |
-          git clone https://github.com/aidansteele/swift-dump.git
-          cd swift-dump
-          swift build -c release
-          sudo cp .build/release/swift-dump /usr/local/bin/
-
-      # 下载 IPA
-      - name: Download IPA
-        run: |
-          curl -L "${{ github.event.inputs.ipa_url }}" -o App.ipa
-
-      # 解压 IPA
-      - name: Unzip IPA
-        run: |
-          mkdir work
-          unzip -q App.ipa -d work
-          APPDIR=$(find work -name "*.app" | head -n 1)
-          echo "APPDIR=$APPDIR" >> $GITHUB_ENV
-          BINARY=$(basename "$APPDIR" .app)
-          echo "BINARY=$BINARY" >> $GITHUB_ENV
-          echo "BINPATH=$APPDIR/$BINARY" >> $GITHUB_ENV
-
-      # 提取 arm64 架构
-      - name: Extract arm64 binary
-        run: |
-          if lipo -info "$BINPATH" | grep -q arm64; then
-            lipo "$BINPATH" -thin arm64 -output work/${BINARY}.arm64
-            echo "BINPATH=work/${BINARY}.arm64" >> $GITHUB_ENV
-          fi
-
-      # Objective-C 头文件导出
-      - name: Class-dump (ObjC headers)
-        run: |
-          mkdir -p DumpResult/ObjCHeaders
-          class-dump-z -H "$BINPATH" -o DumpResult/ObjCHeaders || echo "No ObjC classes"
-
-      # Swift 符号导出
-      - name: Swift-dump (Swift symbols)
-        run: |
-          mkdir -p DumpResult/SwiftSymbols
-          swift-dump all "$BINPATH" > DumpResult/SwiftSymbols/swift_all.txt || echo "No Swift symbols"
-
-      # 上传结果
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ipa-dump-result
-          path: DumpResult
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install required tools
+      run: |
+        # 安装 class-dump
+        brew install class-dump
+        
+        # 安装 SwiftDump (Python 工具)
+        pip3 install swift-dump
+        
+        # 安装其他依赖
+        pip3 install requests
+        
+    - name: Download IPA file
+      run: |
+        echo "Downloading IPA from ${{ github.event.inputs.ipa_url }}"
+        curl -L -o app.ipa "${{ github.event.inputs.ipa_url }}"
+        
+    - name: Create output directory
+      run: |
+        mkdir -p output
+        
+    - name: Extract and analyze IPA
+      run: |
+        # 创建临时目录
+        TEMP_DIR=$(mktemp -d)
+        
+        # 解压 IPA
+        unzip -q app.ipa -d "$TEMP_DIR"
+        
+        # 查找 .app 包
+        APP_BUNDLE=$(find "$TEMP_DIR" -name "*.app" -type d | head -n 1)
+        if [ -z "$APP_BUNDLE" ]; then
+          echo "Error: No .app bundle found"
+          exit 1
+        fi
+        
+        # 查找主二进制文件
+        BINARY_NAME=$(defaults read "$APP_BUNDLE/Info.plist" CFBundleExecutable)
+        BINARY_PATH="$APP_BUNDLE/$BINARY_NAME"
+        
+        if [ ! -f "$BINARY_PATH" ]; then
+          echo "Error: No executable found"
+          exit 1
+        fi
+        
+        # 创建输出目录
+        mkdir -p output/Objective-C
+        mkdir -p output/Swift
+        
+        # 执行 class-dump (Objective-C)
+        echo "Running class-dump..."
+        class-dump -H -o output/Objective-C "$BINARY_PATH" || echo "class-dump failed or no Objective-C classes found"
+        
+        # 执行 Swift 符号提取
+        echo "Extracting Swift symbols..."
+        swift-dump "$BINARY_PATH" > output/Swift/swift_symbols.txt 2>/dev/null || echo "swift-dump failed"
+        
+        # 提取其他信息
+        echo "Extracting framework references..."
+        strings "$BINARY_PATH" | grep -E "UIKit|Foundation|Swift" > output/frameworks_references.txt
+        
+        # 清理临时文件
+        rm -rf "$TEMP_DIR"
+        
+    - name: Package results
+      run: |
+        # 创建带有时间戳的归档文件
+        TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+        ARCHIVE_NAME="${{ github.event.inputs.output_name }}_$TIMESTAMP.zip"
+        zip -r "$ARCHIVE_NAME" output/
+        
+    - name: Upload results as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: dump-results
+        path: ${{ github.event.inputs.output_name }}_*.zip
+        
+    - name: Clean up
+      run: |
+        rm -rf output app.ipa
