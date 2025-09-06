@@ -133,7 +133,7 @@ jobs:
         zip -r "$ARCHIVE_NAME" output/
         
     - name: Upload results as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # 更新到 v4 版本
       with:
         name: ipa-analysis-results
         path: analysis_results_*.zip
@@ -162,11 +162,8 @@ jobs:
           echo "## Swift Symbols: $SWIFT_COUNT" >> summary.md
         fi
         
-        # 上传摘要报告
-        echo "summary.md" >> summary.md
-        
     - name: Upload summary
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # 更新到 v4 版本
       with:
         name: analysis-summary
         path: summary.md
