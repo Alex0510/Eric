@@ -1,0 +1,54 @@
+name: IPA Dump
+
+on:
+  workflow_dispatch:
+    inputs:
+      ipa_path:
+        description: "上传的 IPA 文件路径"
+        required: true
+        default: "App.ipa"
+
+jobs:
+  dump:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          brew install aidansteele/tap/swift-dump
+          brew install class-dump-z
+
+      - name: Unzip IPA
+        run: |
+          mkdir work
+          unzip -q ${{ github.event.inputs.ipa_path }} -d work
+          APPDIR=$(find work -name "*.app" | head -n 1)
+          echo "APPDIR=$APPDIR" >> $GITHUB_ENV
+          BINARY=$(basename $APPDIR .app)
+          echo "BINARY=$BINARY" >> $GITHUB_ENV
+          echo "BINPATH=$APPDIR/$BINARY" >> $GITHUB_ENV
+
+      - name: Extract arm64 binary
+        run: |
+          if lipo -info "$BINPATH" | grep -q arm64; then
+            lipo "$BINPATH" -thin arm64 -output work/${BINARY}.arm64
+            echo "BINPATH=work/${BINARY}.arm64" >> $GITHUB_ENV
+          fi
+
+      - name: Class-dump (ObjC headers)
+        run: |
+          mkdir -p DumpResult/ObjCHeaders
+          class-dump-z -H "$BINPATH" -o DumpResult/ObjCHeaders || echo "No ObjC classes"
+
+      - name: Swift-dump (Swift symbols)
+        run: |
+          mkdir -p DumpResult/SwiftSymbols
+          swift-dump all "$BINPATH" > DumpResult/SwiftSymbols/swift_all.txt || echo "No Swift symbols"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipa-dump-result
+          path: DumpResult
