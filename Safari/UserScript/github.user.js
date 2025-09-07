@@ -4232,7 +4232,20 @@ wrap.appendChild(workflowReleaseSection);
     settingsSection.appendChild(settingsBtn);
 
     wrap.appendChild(settingsSection);
-
+// 作者信息 - 添加在面板最底部
+  const authorInfo = document.createElement('div');
+  authorInfo.style.marginTop = '10px';
+  authorInfo.style.paddingTop = '10px';
+  authorInfo.style.textAlign = 'center';
+  
+  const authorText = document.createElement('div');
+  authorText.textContent = 'GitHub助手增强版 by Mr.Eric';
+  authorText.style.color = colors.textSecondary;
+  authorText.style.fontSize = '12px';
+  authorText.style.fontStyle = 'italic';
+  
+  authorInfo.appendChild(authorText);
+  wrap.appendChild(authorInfo);
     // 事件绑定（登录/登出）
     setTimeout(() => {
       const loginBtn = document.getElementById('__gh_login__');
