@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub 助手增强版
 // @namespace    https://github.com/
-// @version      6.0.23
+// @version      6.0.24
 // @author       Mr.Eric
 // @license      MIT
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流及编辑功能。
@@ -519,7 +519,7 @@
     if (!panel) return;
     
     const colors = getAdaptiveColors();
-    const header = panel.querySelector('div:first-child');
+    const header = panel.querySelector('h3') || panel.querySelector('.gh-gists-title') || panel.querySelector('div:first-child');
     if (!header) return;
     
     // 添加iOS特定类名
@@ -531,25 +531,34 @@
     const savedSize = GM_getValue(storageKeyPrefix + '_SIZE');
     
     if (savedPosition) {
-      panel.style.left = savedPosition.left + 'px';
-      panel.style.top = savedPosition.top + 'px';
-      panel.style.transform = 'none';
+        panel.style.left = savedPosition.left + 'px';
+        panel.style.top = savedPosition.top + 'px';
+        panel.style.transform = 'none';
     }
     
     if (savedSize) {
-      panel.style.width = savedSize.width + 'px';
-      panel.style.height = savedSize.height + 'px';
+        panel.style.width = savedSize.width + 'px';
+        panel.style.height = savedSize.height + 'px';
     }
     
     // 确保面板有定位和初始尺寸
     panel.style.position = 'fixed';
     if (!savedPosition) {
-      panel.style.left = '50%';
-      panel.style.top = '50%';
-      panel.style.transform = 'translate(-50%, -50%)';
+        panel.style.left = '50%';
+        panel.style.top = '50%';
+        panel.style.transform = 'translate(-50%, -50%)';
     }
-    panel.style.minWidth = '300px';
-    panel.style.minHeight = '200px';
+    
+    // 针对Git URL对话框的特殊尺寸设置
+    if (storageKeyPrefix === 'GIT_URL_DIALOG') {
+        panel.style.minWidth = isIOS() ? '280px' : '400px';
+        panel.style.minHeight = isIOS() ? '200px' : '250px';
+        panel.style.maxWidth = isIOS() ? '400px' : '600px';
+        panel.style.maxHeight = isIOS() ? '300px' : '400px';
+    } else {
+        panel.style.minWidth = '300px';
+        panel.style.minHeight = '200px';
+    }
     
     // 添加触摸事件支持
     let isDragging = false;
@@ -659,8 +668,8 @@
         const dy = e.clientY - startY;
         
         // 设置最小尺寸限制
-        const minWidth = 300;
-        const minHeight = 200;
+        const minWidth = storageKeyPrefix === 'GIT_URL_DIALOG' && isIOS() ? 280 : 300;
+        const minHeight = storageKeyPrefix === 'GIT_URL_DIALOG' && isIOS() ? 200 : 200;
         
         panel.style.width = Math.max(minWidth, startWidth + dx) + 'px';
         panel.style.height = Math.max(minHeight, startHeight + dy) + 'px';
@@ -702,8 +711,15 @@
           panel.style.left = '50%';
           panel.style.top = '50%';
           panel.style.transform = 'translate(-50%, -50%)';
-          panel.style.width = '80%';
-          panel.style.height = '80%';
+          
+          // 根据面板类型设置不同的大小
+          if (storageKeyPrefix === 'GIT_URL_DIALOG') {
+            panel.style.width = '80%';
+            panel.style.height = 'auto';
+          } else {
+            panel.style.width = '80%';
+            panel.style.height = '80%';
+          }
           
           GM_setValue(storageKeyPrefix + '_POSITION', null);
           GM_setValue(storageKeyPrefix + '_SIZE', null);
@@ -713,8 +729,7 @@
         lastTap = currentTime;
       });
     }
-  }
-
+}
   // ========== 小工具 / 兼容剪贴板 ==========
   function copyToClipboard(text) {
     // 检测iOS设备
@@ -2732,7 +2747,7 @@ async function createNewWorkflow() {
   }
 
   // ========== Git URL 复制对话框 ==========
-  function createGitUrlDialog() {
+function createGitUrlDialog() {
     const dialogId = '__gh_git_url_dialog__';
     if (document.getElementById(dialogId)) return document.getElementById(dialogId);
 
@@ -2744,7 +2759,8 @@ async function createNewWorkflow() {
       top: 50%; 
       left: 50%; 
       transform: translate(-50%, -50%); 
-      width: 500px; 
+      width: ${isIOS() ? '80%' : '500px'}; 
+      max-width: 90vw;
       background: ${colors.bgPrimary}; 
       color: ${colors.textPrimary};
       z-index: 2147483647; 
@@ -2829,8 +2845,17 @@ async function createNewWorkflow() {
     // 添加拖拽和调整大小功能
     addDragAndResizeFunctionality(dialog, 'GIT_URL_DIALOG');
     
+    // 针对iOS设备优化初始大小
+    if (isIOS()) {
+        dialog.style.width = '80%';
+        dialog.style.minWidth = '280px';
+        dialog.style.maxWidth = '400px';
+        dialog.style.minHeight = '200px';
+    }
+    
     return dialog;
-  }
+}
+    
 
   function updateGitUrlInDialog() {
     const dialog = document.getElementById('__gh_git_url_dialog__');
