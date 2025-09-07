@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub 助手增强版
 // @namespace    https://github.com/
-// @version      6.0.21
+// @version      6.0.22
 // @author       Mr.Eric
 // @license      MIT
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流及编辑功能。
@@ -2936,7 +2936,731 @@ async function createNewWorkflow() {
     }
   }
 
-  // ========== Rescue 面板与按钮 ==========
+  // ========== 上传文件功能 ==========
+function createUploadPanel() {
+    const panelId = '__gh_upload_panel__';
+    if (document.getElementById(panelId)) return document.getElementById(panelId);
+
+    const colors = getAdaptiveColors();
+    const panel = document.createElement('div');
+    panel.id = panelId;
+    panel.style.cssText = `
+        position: fixed;
+        width: 400px;
+        background: ${colors.bgPrimary};
+        color: ${colors.textPrimary};
+        z-index: 2147483647;
+        border: 1px solid ${colors.border};
+        box-shadow: ${colors.shadow};
+        display: none;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden;
+    `;
+
+    const header = document.createElement('div');
+    header.style.cssText = `
+        padding: 15px;
+        background: ${colors.bgSecondary};
+        border-bottom: 1px solid ${colors.border};
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    `;
+
+    const title = document.createElement('span');
+    title.textContent = '上传文件到仓库';
+    title.style.fontWeight = 'bold';
+    title.style.color = colors.textPrimary;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.cssText = `background: none; border: none; font-size: 20px; cursor: pointer; padding: 0; width: 24px; height: 24px; color: ${colors.textPrimary};`;
+    closeBtn.onclick = () => hideUploadPanel();
+
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    const content = document.createElement('div');
+    content.style.cssText = `
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    `;
+
+    // 文件选择区域
+    const fileSection = document.createElement('div');
+    fileSection.style.display = 'flex';
+    fileSection.style.flexDirection = 'column';
+    fileSection.style.gap = '8px';
+
+    const fileLabel = document.createElement('label');
+    fileLabel.textContent = '选择文件';
+    fileLabel.style.fontWeight = '500';
+    fileLabel.style.color = colors.textPrimary;
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = '__gh_upload_file_input__';
+    fileInput.style.cssText = `
+        padding: 8px;
+        border: 1px solid ${colors.border};
+        border-radius: 4px;
+        background: ${colors.bgSecondary};
+        color: ${colors.textPrimary};
+    `;
+
+    fileSection.appendChild(fileLabel);
+    fileSection.appendChild(fileInput);
+
+    // 路径输入区域
+    const pathSection = document.createElement('div');
+    pathSection.style.display = 'flex';
+    pathSection.style.flexDirection = 'column';
+    pathSection.style.gap = '8px';
+
+    const pathLabel = document.createElement('label');
+    pathLabel.textContent = '目标路径 (可选)';
+    pathLabel.style.fontWeight = '500';
+    pathLabel.style.color = colors.textPrimary;
+
+    const pathInput = document.createElement('input');
+    pathInput.type = 'text';
+    pathInput.id = '__gh_upload_path_input__';
+    pathInput.placeholder = '例如: folder/file.txt (留空则使用文件名)';
+    pathInput.style.cssText = `
+        padding: 8px;
+        border: 1px solid ${colors.border};
+        border-radius: 4px;
+        background: ${colors.bgSecondary};
+        color: ${colors.textPrimary};
+    `;
+
+    pathSection.appendChild(pathLabel);
+    pathSection.appendChild(pathInput);
+
+    // 提交信息区域
+    const messageSection = document.createElement('div');
+    messageSection.style.display = 'flex';
+    messageSection.style.flexDirection = 'column';
+    messageSection.style.gap = '8px';
+
+    const messageLabel = document.createElement('label');
+    messageLabel.textContent = '提交信息';
+    messageLabel.style.fontWeight = '500';
+    messageLabel.style.color = colors.textPrimary;
+
+    const messageInput = document.createElement('input');
+    messageInput.type = 'text';
+    messageInput.id = '__gh_upload_message_input__';
+    messageInput.value = '添加文件 via GitHub助手';
+    messageInput.style.cssText = `
+        padding: 8px;
+        border: 1px solid ${colors.border};
+        border-radius: 4px;
+        background: ${colors.bgSecondary};
+        color: ${colors.textPrimary};
+    `;
+
+    messageSection.appendChild(messageLabel);
+    messageSection.appendChild(messageInput);
+
+    // 分支选择区域
+    const branchSection = document.createElement('div');
+    branchSection.style.display = 'flex';
+    branchSection.style.flexDirection = 'column';
+    branchSection.style.gap = '8px';
+
+    const branchLabel = document.createElement('label');
+    branchLabel.textContent = '目标分支';
+    branchLabel.style.fontWeight = '500';
+    branchLabel.style.color = colors.textPrimary;
+
+    const branchSelect = document.createElement('select');
+    branchSelect.id = '__gh_upload_branch_select__';
+    branchSelect.style.cssText = `
+        padding: 8px;
+        border: 1px solid ${colors.border};
+        border-radius: 4px;
+        background: ${colors.bgSecondary};
+        color: ${colors.textPrimary};
+    `;
+
+    branchSection.appendChild(branchLabel);
+    branchSection.appendChild(branchSelect);
+
+    // 状态显示
+    const status = document.createElement('div');
+    status.id = '__gh_upload_status__';
+    status.style.fontSize = '13px';
+    status.style.color = colors.textSecondary;
+    status.style.minHeight = '20px';
+
+    content.appendChild(fileSection);
+    content.appendChild(pathSection);
+    content.appendChild(messageSection);
+    content.appendChild(branchSection);
+    content.appendChild(status);
+
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+        padding: 15px;
+        background: ${colors.bgSecondary};
+        border-top: 1px solid ${colors.border};
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    `;
+
+    const cancelBtn = makeBtn('取消', () => hideUploadPanel());
+    cancelBtn.style.padding = '6px 12px';
+    cancelBtn.style.margin = '0';
+
+    const uploadBtn = makeBtn('上传文件', () => uploadFileToGitHub());
+    uploadBtn.style.padding = '6px 12px';
+    uploadBtn.style.margin = '0';
+
+    footer.appendChild(cancelBtn);
+    footer.appendChild(uploadBtn);
+
+    panel.appendChild(header);
+    panel.appendChild(content);
+    panel.appendChild(footer);
+
+    document.documentElement.appendChild(panel);
+
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(panel, 'UPLOAD');
+
+    // 文件选择时自动填充路径
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            const fileName = this.files[0].name;
+            if (!pathInput.value) {
+                pathInput.value = fileName;
+            }
+        }
+    });
+
+    return panel;
+}
+
+function showUploadPanel() {
+    const panel = document.getElementById('__gh_upload_panel__') || createUploadPanel();
+    panel.style.display = 'flex';
+    
+    // 重置表单
+    document.getElementById('__gh_upload_file_input__').value = '';
+    document.getElementById('__gh_upload_path_input__').value = '';
+    document.getElementById('__gh_upload_message_input__').value = '添加文件 via GitHub助手';
+    document.getElementById('__gh_upload_status__').textContent = '';
+    
+    // 加载分支选项
+    loadBranchesForUpload();
+}
+
+function hideUploadPanel() {
+    const panel = document.getElementById('__gh_upload_panel__');
+    if (panel) panel.style.display = 'none';
+}
+
+async function loadBranchesForUpload() {
+    const info = getRepoInfo();
+    if (!info.owner || !info.repo) return;
+    
+    const branchSelect = document.getElementById('__gh_upload_branch_select__');
+    if (!branchSelect) return;
+    
+    branchSelect.innerHTML = '<option value="">加载中...</option>';
+    
+    try {
+        const branches = await fetchAllBranches(info.owner, info.repo);
+        branchSelect.innerHTML = '';
+        
+        // 设置当前分支为默认选项
+        const currentBranch = info.branch || getDefaultBranch();
+        
+        branches.forEach(branch => {
+            const option = document.createElement('option');
+            option.value = branch;
+            option.textContent = branch;
+            if (branch === currentBranch) {
+                option.selected = true;
+            }
+            branchSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('加载分支失败:', error);
+        branchSelect.innerHTML = '<option value="">加载失败</option>';
+    }
+}
+
+async function uploadFileToGitHub() {
+    const fileInput = document.getElementById('__gh_upload_file_input__');
+    const pathInput = document.getElementById('__gh_upload_path_input__');
+    const messageInput = document.getElementById('__gh_upload_message_input__');
+    const branchSelect = document.getElementById('__gh_upload_branch_select__');
+    const status = document.getElementById('__gh_upload_status__');
+    
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        status.textContent = '请选择要上传的文件';
+        status.style.color = '#cb2431';
+        return;
+    }
+    
+    const file = fileInput.files[0];
+    const targetPath = pathInput.value.trim() || file.name;
+    const commitMessage = messageInput.value.trim() || `添加文件 ${file.name}`;
+    const targetBranch = branchSelect.value;
+    
+    if (!targetBranch) {
+        status.textContent = '请选择目标分支';
+        status.style.color = '#cb2431';
+        return;
+    }
+    
+    if (!isAuthenticated()) {
+        status.textContent = '请先进行GitHub认证';
+        status.style.color = '#cb2431';
+        showAuthDialog();
+        return;
+    }
+    
+    const info = getRepoInfo();
+    if (!info.owner || !info.repo) {
+        status.textContent = '无法确定仓库信息';
+        status.style.color = '#cb2431';
+        return;
+    }
+    
+    status.textContent = '上传中...';
+    status.style.color = getAdaptiveColors().textSecondary;
+    
+    try {
+        // 读取文件内容
+        const fileContent = await readFileAsBase64(file);
+        
+        // 检查文件是否已存在
+        let sha = null;
+        try {
+            const fileInfoUrl = `https://api.github.com/repos/${info.owner}/${info.repo}/contents/${encodeURIComponent(targetPath)}?ref=${targetBranch}`;
+            const fileInfoResponse = await fetch(fileInfoUrl, { headers: getAuthHeaders() });
+            if (fileInfoResponse.ok) {
+                const fileInfo = await fileInfoResponse.json();
+                sha = fileInfo.sha;
+            }
+        } catch (e) {
+            // 文件不存在，不需要sha
+            console.log('文件不存在，将创建新文件:', e);
+        }
+        
+        // 上传文件
+        const uploadUrl = `https://api.github.com/repos/${info.owner}/${info.repo}/contents/${encodeURIComponent(targetPath)}`;
+        const uploadData = {
+            message: commitMessage,
+            content: fileContent,
+            branch: targetBranch
+        };
+        
+        if (sha) {
+            uploadData.sha = sha;
+        }
+        
+        const uploadResponse = await fetch(uploadUrl, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(uploadData)
+        });
+        
+        if (uploadResponse.ok) {
+            const result = await uploadResponse.json();
+            status.textContent = '上传成功!';
+            status.style.color = '#28a745';
+            
+            safeNotify('上传成功', `文件已上传到 ${targetPath}`);
+            
+            // 3秒后关闭面板
+            setTimeout(() => {
+                hideUploadPanel();
+                // 刷新页面以显示新文件
+                setTimeout(() => location.reload(), 1000);
+            }, 3000);
+        } else {
+            const error = await uploadResponse.text();
+            throw new Error(`上传失败: ${uploadResponse.status} - ${error}`);
+        }
+    } catch (error) {
+        console.error('上传文件失败:', error);
+        status.textContent = `上传失败: ${error.message}`;
+        status.style.color = '#cb2431';
+    }
+}
+
+function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            // 移除data URL前缀，只保留base64数据
+            const base64 = reader.result.replace(/^data:.+;base64,/, '');
+            resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// ========== 删除文件功能 ==========
+function createDeletePanel() {
+    const panelId = '__gh_delete_panel__';
+    if (document.getElementById(panelId)) return document.getElementById(panelId);
+
+    const colors = getAdaptiveColors();
+    const panel = document.createElement('div');
+    panel.id = panelId;
+    panel.style.cssText = `
+        position: fixed;
+        width: 80%;
+        height: 80%;
+        background: ${colors.bgPrimary};
+        color: ${colors.textPrimary};
+        z-index: 2147483647;
+        border: 1px solid ${colors.border};
+        box-shadow: ${colors.shadow};
+        display: none;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden;
+    `;
+
+    const header = document.createElement('div');
+    header.style.cssText = `
+        padding: 15px;
+        background: ${colors.bgSecondary};
+        border-bottom: 1px solid ${colors.border};
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    `;
+
+    const title = document.createElement('span');
+    title.textContent = '删除仓库文件';
+    title.style.fontWeight = 'bold';
+    title.style.color = colors.textPrimary;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.cssText = `background: none; border: none; font-size: 20px; cursor: pointer; padding: 0; width: 24px; height: 24px; color: ${colors.textPrimary};`;
+    closeBtn.onclick = () => hideDeletePanel();
+
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    const content = document.createElement('div');
+    content.id = '__gh_delete_content__';
+    content.style.cssText = `
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    `;
+
+    // 搜索框
+    const searchContainer = document.createElement('div');
+    searchContainer.style.cssText = `display: flex; gap: 10px; align-items: center; margin-bottom: 10px;`;
+
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = '搜索文件...';
+    searchInput.id = '__gh_delete_search__';
+    searchInput.style.cssText = `
+        flex: 1;
+        padding: 8px;
+        border: 1px solid ${colors.border};
+        border-radius: 4px;
+        background: ${colors.bgSecondary};
+        color: ${colors.textPrimary};
+    `;
+
+    const selectAllBtn = makeBtn('全选', () => toggleSelectAll());
+    selectAllBtn.style.padding = '6px 12px';
+    selectAllBtn.style.margin = '0';
+
+    searchContainer.appendChild(searchInput);
+    searchContainer.appendChild(selectAllBtn);
+
+    // 文件列表容器
+    const fileListContainer = document.createElement('div');
+    fileListContainer.id = '__gh_delete_file_list__';
+    fileListContainer.style.cssText = `
+        flex: 1;
+        overflow-y: auto;
+        border: 1px solid ${colors.border};
+        border-radius: 4px;
+        padding: 10px;
+        background: ${colors.bgSecondary};
+    `;
+
+    content.appendChild(searchContainer);
+    content.appendChild(fileListContainer);
+
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+        padding: 15px;
+        background: ${colors.bgSecondary};
+        border-top: 1px solid ${colors.border};
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    `;
+
+    const status = document.createElement('div');
+    status.id = '__gh_delete_status__';
+    status.style.fontSize = '13px';
+    status.style.color = colors.textSecondary;
+
+    const buttonGroup = document.createElement('div');
+    buttonGroup.style.display = 'flex';
+    buttonGroup.style.gap = '10px';
+
+    const cancelBtn = makeBtn('取消', () => hideDeletePanel());
+    cancelBtn.style.padding = '6px 12px';
+    cancelBtn.style.margin = '0';
+
+    const deleteBtn = makeBtn('删除选中', () => deleteSelectedFiles());
+    deleteBtn.style.padding = '6px 12px';
+    deleteBtn.style.margin = '0';
+    deleteBtn.style.background = '#cb2431';
+
+    buttonGroup.appendChild(cancelBtn);
+    buttonGroup.appendChild(deleteBtn);
+
+    footer.appendChild(status);
+    footer.appendChild(buttonGroup);
+
+    panel.appendChild(header);
+    panel.appendChild(content);
+    panel.appendChild(footer);
+
+    document.documentElement.appendChild(panel);
+
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(panel, 'DELETE');
+
+    // 添加搜索功能
+    searchInput.addEventListener('input', function() {
+        filterFiles(this.value);
+    });
+
+    return panel;
+}
+
+function showDeletePanel() {
+    const panel = document.getElementById('__gh_delete_panel__') || createDeletePanel();
+    panel.style.display = 'flex';
+    loadRepoFiles();
+}
+
+function hideDeletePanel() {
+    const panel = document.getElementById('__gh_delete_panel__');
+    if (panel) panel.style.display = 'none';
+}
+
+async function loadRepoFiles() {
+    const content = document.getElementById('__gh_delete_file_list__');
+    const status = document.getElementById('__gh_delete_status__');
+    
+    if (!content || !status) return;
+    
+    const info = getRepoInfo();
+    if (!info.owner || !info.repo) {
+        content.innerHTML = '<div style="text-align: center; padding: 20px;">当前不是有效的仓库页面</div>';
+        return;
+    }
+    
+    content.innerHTML = '<div style="text-align: center; padding: 40px;">加载文件列表中...</div>';
+    status.textContent = '正在加载文件列表...';
+    
+    try {
+        // 获取仓库文件树
+        const files = await fetchRepoTree(info.owner, info.repo, info.branch);
+        
+        if (files.length === 0) {
+            content.innerHTML = '<div style="text-align: center; padding: 20px;">仓库中没有文件</div>';
+            status.textContent = '没有文件';
+            return;
+        }
+        
+        renderFileList(files);
+        status.textContent = `已加载 ${files.length} 个文件/文件夹`;
+    } catch (error) {
+        console.error('加载文件列表失败:', error);
+        content.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #cb2431;">
+                <p>加载文件列表失败: ${error.message}</p>
+                <button onclick="loadRepoFiles()" style="margin-top: 10px; padding: 8px 16px; background: #2ea44f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    重试
+                </button>
+            </div>
+        `;
+        status.textContent = '加载失败';
+    }
+}
+
+async function fetchRepoTree(owner, repo, branch, path = '') {
+    try {
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}${path ? `:${path}` : ''}?recursive=1`;
+        const response = await fetch(apiUrl, {
+            headers: getAuthHeaders()
+        });
+        
+        if (!response.ok) {
+            throw new Error(`获取文件树失败: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data.tree || [];
+    } catch (error) {
+        console.error('获取文件树失败:', error);
+        throw error;
+    }
+}
+
+function renderFileList(files) {
+    const content = document.getElementById('__gh_delete_file_list__');
+    const colors = getAdaptiveColors();
+    
+    let html = '<div style="display: flex; flex-direction: column; gap: 5px;">';
+    
+    // 过滤掉文件夹，只显示文件
+    const fileItems = files.filter(item => item.type === 'blob');
+    
+    fileItems.forEach(file => {
+        html += `
+            <div style="display: flex; align-items: center; padding: 8px; border-bottom: 1px solid ${colors.border};">
+                <input type="checkbox" class="gh-file-checkbox" data-path="${file.path}" data-sha="${file.sha}" style="margin-right: 10px;">
+                <span style="margin-right: 8px;">📄</span>
+                <span style="flex: 1; font-size: 14px;">${file.path}</span>
+                <span style="font-size: 12px; color: ${colors.textSecondary};">${formatFileSize(file.size || 0)}</span>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    content.innerHTML = html;
+    
+    if (fileItems.length === 0) {
+        content.innerHTML = '<div style="text-align: center; padding: 20px;">仓库中没有文件</div>';
+    }
+}
+
+function filterFiles(searchTerm) {
+    const fileItems = document.querySelectorAll('.gh-file-checkbox');
+    const term = searchTerm.toLowerCase();
+    
+    fileItems.forEach(item => {
+        const path = item.getAttribute('data-path').toLowerCase();
+        const parent = item.parentElement;
+        
+        if (path.includes(term)) {
+            parent.style.display = 'flex';
+        } else {
+            parent.style.display = 'none';
+        }
+    });
+}
+
+function toggleSelectAll() {
+    const checkboxes = document.querySelectorAll('.gh-file-checkbox');
+    const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+    
+    checkboxes.forEach(checkbox => {
+        // 只切换可见的文件
+        if (checkbox.parentElement.style.display !== 'none') {
+            checkbox.checked = !allChecked;
+        }
+    });
+}
+
+async function deleteSelectedFiles() {
+    const selectedFiles = Array.from(document.querySelectorAll('.gh-file-checkbox:checked'));
+    
+    if (selectedFiles.length === 0) {
+        alert('请至少选择一个文件进行删除');
+        return;
+    }
+    
+    if (!confirm(`确定要删除选中的 ${selectedFiles.length} 个文件吗？此操作不可撤销！`)) {
+        return;
+    }
+    
+    const status = document.getElementById('__gh_delete_status__');
+    status.textContent = `正在删除 ${selectedFiles.length} 个文件...`;
+    status.style.color = '#cb2431';
+    
+    const info = getRepoInfo();
+    let successCount = 0;
+    let failCount = 0;
+    
+    for (const fileCheckbox of selectedFiles) {
+        const filePath = fileCheckbox.getAttribute('data-path');
+        const sha = fileCheckbox.getAttribute('data-sha');
+        
+        try {
+            const result = await deleteFileFromRepo(info.owner, info.repo, filePath, sha, info.branch);
+            if (result) {
+                successCount++;
+                fileCheckbox.parentElement.style.textDecoration = 'line-through';
+                fileCheckbox.parentElement.style.opacity = '0.6';
+            } else {
+                failCount++;
+            }
+        } catch (error) {
+            console.error(`删除文件 ${filePath} 失败:`, error);
+            failCount++;
+        }
+    }
+    
+    status.textContent = `删除完成: ${successCount} 成功, ${failCount} 失败`;
+    
+    if (failCount === 0) {
+        status.style.color = '#28a745';
+    }
+}
+
+async function deleteFileFromRepo(owner, repo, path, sha, branch) {
+    try {
+        const deleteUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`;
+        const deleteData = {
+            message: `删除文件: ${path}`,
+            sha: sha,
+            branch: branch
+        };
+        
+        const response = await fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(deleteData)
+        });
+        
+        if (response.ok) {
+            return true;
+        } else {
+            const error = await response.text();
+            console.error(`删除文件失败: ${response.status} - ${error}`);
+            return false;
+        }
+    } catch (error) {
+        console.error('删除文件失败:', error);
+        return false;
+    }
+}
+
+
+
+	// ========== Rescue 面板与按钮 ==========
   async function buildRescueLinks() {
     var wrap = document.createElement('div');
     var info = getRepoInfo();
@@ -3108,56 +3832,106 @@ async function createNewWorkflow() {
 
       wrap.appendChild(fileSection);
     }
-// ========== 添加Release检测区域 ==========
-    const releasesSection = document.createElement('div');
-    releasesSection.style.margin = '10px 0';
-    releasesSection.style.padding = '10px';
-    releasesSection.style.borderTop = `1px solid ${colors.border}`;
-    
-    const releasesTitle = document.createElement('div');
-    releasesTitle.textContent = 'Release 检测:';
-    releasesTitle.style.fontWeight = 'bold';
-    releasesTitle.style.marginBottom = '8px';
-    releasesTitle.style.color = colors.textPrimary;
-    
-    const releasesDesc = document.createElement('div');
-    releasesDesc.textContent = '检测当前仓库的Release文件可用性';
-    releasesDesc.style.fontSize = '12px';
-    releasesDesc.style.color = colors.textSecondary;
-    releasesDesc.style.marginBottom = '8px';
-    
-    const checkReleasesBtn = makeBtn('🔍 检测Release文件', () => {
-        showReleasesPanel();
-    }, '检测当前仓库的Release文件可用性');
-    
-    releasesSection.appendChild(releasesTitle);
-    releasesSection.appendChild(releasesDesc);
-    releasesSection.appendChild(checkReleasesBtn);
-    wrap.appendChild(releasesSection);
-		
-    // Actions工作流区
-    const actionsSection = document.createElement('div');
-    actionsSection.style.margin = '10px 0';
-    actionsSection.style.padding = '10px';
-    actionsSection.style.borderTop = `1px solid ${colors.border}`;
-    const actionsTitle = document.createElement('div');
-    actionsTitle.textContent = 'GitHub Actions:';
-    actionsTitle.style.fontWeight = 'bold';
-    actionsTitle.style.marginBottom = '8px';
-    actionsTitle.style.color = colors.textPrimary;
-    actionsSection.appendChild(actionsTitle);
+// ========== 添加上传和删除文件区域（并排） ==========
+const fileOperationsSection = document.createElement('div');
+fileOperationsSection.style.margin = '10px 0';
+fileOperationsSection.style.padding = '10px';
+fileOperationsSection.style.borderTop = `1px solid ${colors.border}`;
 
-    const workflowsBtn = makeBtn('⚙️ Workflows', function () {
-      if (!isAuthenticated()) { 
-        alert('请先进行 GitHub 认证才能查看工作流'); 
-        showAuthDialog(); 
-        return; 
-      }
-      showWorkflowsPanel();
-    }, '查看和运行工作流');
-    actionsSection.appendChild(workflowsBtn);
+const fileOperationsTitle = document.createElement('div');
+fileOperationsTitle.textContent = '文件操作:';
+fileOperationsTitle.style.fontWeight = 'bold';
+fileOperationsTitle.style.marginBottom = '8px';
+fileOperationsTitle.style.color = colors.textPrimary;
+fileOperationsSection.appendChild(fileOperationsTitle);
 
-    wrap.appendChild(actionsSection);
+const fileOperationsDesc = document.createElement('div');
+fileOperationsDesc.textContent = '上传或删除仓库文件';
+fileOperationsDesc.style.fontSize = '12px';
+fileOperationsDesc.style.color = colors.textSecondary;
+fileOperationsDesc.style.marginBottom = '8px';
+fileOperationsSection.appendChild(fileOperationsDesc);
+
+// 创建按钮容器并设置flex布局
+const fileOperationsButtons = document.createElement('div');
+fileOperationsButtons.style.display = 'flex';
+fileOperationsButtons.style.gap = '10px';
+fileOperationsButtons.style.flexWrap = 'wrap';
+
+// 上传文件按钮
+const uploadBtn = makeBtn('📤 上传文件', () => {
+    if (!isAuthenticated()) {
+        alert('请先进行 GitHub 认证才能上传文件');
+        showAuthDialog();
+        return;
+    }
+    showUploadPanel();
+}, '上传文件到当前仓库');
+uploadBtn.style.flex = '1';
+fileOperationsButtons.appendChild(uploadBtn);
+
+// 删除文件按钮
+const deleteBtn = makeBtn('🗑️ 删除文件', () => {
+    if (!isAuthenticated()) {
+        alert('请先进行 GitHub 认证才能删除文件');
+        showAuthDialog();
+        return;
+    }
+    showDeletePanel();
+}, '批量选择并删除仓库文件');
+deleteBtn.style.flex = '1';
+fileOperationsButtons.appendChild(deleteBtn);
+
+fileOperationsSection.appendChild(fileOperationsButtons);
+wrap.appendChild(fileOperationsSection);
+
+// ========== 添加Workflow和Release检测区域（并排） ==========
+const workflowReleaseSection = document.createElement('div');
+workflowReleaseSection.style.margin = '10px 0';
+workflowReleaseSection.style.padding = '10px';
+workflowReleaseSection.style.borderTop = `1px solid ${colors.border}`;
+
+const workflowReleaseTitle = document.createElement('div');
+workflowReleaseTitle.textContent = '高级功能:';
+workflowReleaseTitle.style.fontWeight = 'bold';
+workflowReleaseTitle.style.marginBottom = '8px';
+workflowReleaseTitle.style.color = colors.textPrimary;
+workflowReleaseSection.appendChild(workflowReleaseTitle);
+
+const workflowReleaseDesc = document.createElement('div');
+workflowReleaseDesc.textContent = '工作流管理和Release检测';
+workflowReleaseDesc.style.fontSize = '12px';
+workflowReleaseDesc.style.color = colors.textSecondary;
+workflowReleaseDesc.style.marginBottom = '8px';
+workflowReleaseSection.appendChild(workflowReleaseDesc);
+
+// 创建按钮容器并设置flex布局
+const workflowReleaseButtons = document.createElement('div');
+workflowReleaseButtons.style.display = 'flex';
+workflowReleaseButtons.style.gap = '10px';
+workflowReleaseButtons.style.flexWrap = 'wrap';
+
+// Workflow按钮
+const workflowsBtn = makeBtn('⚙️ Workflows', function () {
+  if (!isAuthenticated()) { 
+    alert('请先进行 GitHub 认证才能查看工作流'); 
+    showAuthDialog(); 
+    return; 
+  }
+  showWorkflowsPanel();
+}, '查看和运行工作流');
+workflowsBtn.style.flex = '1';
+workflowReleaseButtons.appendChild(workflowsBtn);
+
+// Release检测按钮
+const checkReleasesBtn = makeBtn('🔍 检测Release', () => {
+    showReleasesPanel();
+}, '检测当前仓库的Release文件可用性');
+checkReleasesBtn.style.flex = '1';
+workflowReleaseButtons.appendChild(checkReleasesBtn);
+
+workflowReleaseSection.appendChild(workflowReleaseButtons);
+wrap.appendChild(workflowReleaseSection);
 
     // 设置区
     const settingsSection = document.createElement('div');
@@ -3459,7 +4233,9 @@ async function createNewWorkflow() {
 
   function init() {
   console.log('GitHub Rescue 脚本开始初始化');
-  
+  // 确保创建上传面板
+createUploadPanel();
+
   // 自动验证保存的 Token（如果有）
   if (GM_getValue(STORAGE_KEYS.GITHUB_TOKEN, '')) {
       verifyToken(getGitHubToken()).then(result => {
@@ -3490,6 +4266,10 @@ async function createNewWorkflow() {
   window.downloadReleaseAsset = downloadReleaseAsset;
 	window.downloadReleaseAsset = downloadReleaseAsset;
   window.copyToClipboard = copyToClipboard;
+  window.showDeletePanel = showDeletePanel;
+  window.hideDeletePanel = hideDeletePanel;
+  window.loadRepoFiles = loadRepoFiles;
+  window.deleteSelectedFiles = deleteSelectedFiles;
 }
 
 // 添加这一行来调用 init 函数
