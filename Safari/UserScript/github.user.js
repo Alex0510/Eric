@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub 助手增强版
 // @namespace    https://github.com/
-// @version      6.0.22
+// @version      6.0.23
 // @author       Mr.Eric
 // @license      MIT
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流及编辑功能。
@@ -3509,14 +3509,21 @@ async function loadRepoFiles() {
     }
 }
 
+// ========== 删除文件功能优化 ==========
 async function fetchRepoTree(owner, repo, branch, path = '') {
     try {
-        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}${path ? `:${path}` : ''}?recursive=1`;
+        // 使用递归参数获取完整文件树
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}${path ? ':' + path : ''}?recursive=true`;
         const response = await fetch(apiUrl, {
             headers: getAuthHeaders()
         });
         
         if (!response.ok) {
+            // 如果递归获取失败，尝试非递归方式并手动构建树
+            if (response.status === 409) {
+                console.log('仓库太大，使用递归方式获取失败，尝试分层获取');
+                return await fetchRepoTreeLayered(owner, repo, branch, path);
+            }
             throw new Error(`获取文件树失败: ${response.status}`);
         }
         
@@ -3528,137 +3535,405 @@ async function fetchRepoTree(owner, repo, branch, path = '') {
     }
 }
 
-function renderFileList(files) {
+// 分层获取文件树（处理大型仓库）
+async function fetchRepoTreeLayered(owner, repo, branch, path = '') {
+    try {
+        // 首先获取根目录
+        const rootUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}${path ? ':' + path : ''}`;
+        const rootResponse = await fetch(rootUrl, {
+            headers: getAuthHeaders()
+        });
+        
+        if (!rootResponse.ok) {
+            throw new Error(`获取根目录失败: ${rootResponse.status}`);
+        }
+        
+        const rootData = await rootResponse.json();
+        let allFiles = [];
+        
+        // 处理根目录中的每个项目
+        for (const item of rootData.tree) {
+            if (item.type === 'blob') {
+                // 如果是文件，直接添加到列表
+                allFiles.push(item);
+            } else if (item.type === 'tree') {
+                // 如果是文件夹，递归获取其内容
+                const subFiles = await fetchRepoTreeLayered(owner, repo, branch, 
+                    path ? `${path}/${item.path}` : item.path);
+                allFiles = allFiles.concat(subFiles);
+            }
+        }
+        
+        return allFiles;
+    } catch (error) {
+        console.error('分层获取文件树失败:', error);
+        throw error;
+    }
+}
+
+// 修改删除面板，添加分支选择
+function createDeletePanel() {
+    const panelId = '__gh_delete_panel__';
+    if (document.getElementById(panelId)) return document.getElementById(panelId);
+
+    const colors = getAdaptiveColors();
+    const panel = document.createElement('div');
+    panel.id = panelId;
+    panel.style.cssText = `
+        position: fixed;
+        width: 80%;
+        height: 80%;
+        background: ${colors.bgPrimary};
+        color: ${colors.textPrimary};
+        z-index: 2147483647;
+        border: 1px solid ${colors.border};
+        box-shadow: ${colors.shadow};
+        display: none;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden;
+    `;
+
+    const header = document.createElement('div');
+    header.style.cssText = `
+        padding: 15px;
+        background: ${colors.bgSecondary};
+        border-bottom: 1px solid ${colors.border};
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    `;
+
+    const title = document.createElement('span');
+    title.textContent = '删除仓库文件';
+    title.style.fontWeight = 'bold';
+    title.style.color = colors.textPrimary;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.cssText = `background: none; border: none; font-size: 20px; cursor: pointer; padding: 0; width: 24px; height: 24px; color: ${colors.textPrimary};`;
+    closeBtn.onclick = () => hideDeletePanel();
+
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    const content = document.createElement('div');
+    content.id = '__gh_delete_content__';
+    content.style.cssText = `
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    `;
+
+    // 添加分支选择
+    const branchContainer = document.createElement('div');
+    branchContainer.style.cssText = `display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;`;
+
+    const branchLabel = document.createElement('span');
+    branchLabel.textContent = '选择分支:';
+    branchLabel.style.color = colors.textPrimary;
+
+    const branchSelect = document.createElement('select');
+    branchSelect.id = '__gh_delete_branch_select__';
+    branchSelect.style.cssText = `
+        padding: 8px;
+        border: 1px solid ${colors.border};
+        border-radius: 4px;
+        background: ${colors.bgSecondary};
+        color: ${colors.textPrimary};
+        min-width: 150px;
+    `;
+
+    const refreshBtn = makeBtn('刷新分支', () => loadBranchesForDelete());
+    refreshBtn.style.padding = '6px 12px';
+    refreshBtn.style.margin = '0';
+
+    branchContainer.appendChild(branchLabel);
+    branchContainer.appendChild(branchSelect);
+    branchContainer.appendChild(refreshBtn);
+
+    // 搜索框
+    const searchContainer = document.createElement('div');
+    searchContainer.style.cssText = `display: flex; gap: 10px; align-items: center; margin-bottom: 10px;`;
+
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = '搜索文件...';
+    searchInput.id = '__gh_delete_search__';
+    searchInput.style.cssText = `
+        flex: 1;
+        padding: 8px;
+        border: 1px solid ${colors.border};
+        border-radius: 4px;
+        background: ${colors.bgSecondary};
+        color: ${colors.textPrimary};
+    `;
+
+    const selectAllBtn = makeBtn('全选', () => toggleSelectAll());
+    selectAllBtn.style.padding = '6px 12px';
+    selectAllBtn.style.margin = '0';
+
+    searchContainer.appendChild(searchInput);
+    searchContainer.appendChild(selectAllBtn);
+
+    // 文件列表容器
+    const fileListContainer = document.createElement('div');
+    fileListContainer.id = '__gh_delete_file_list__';
+    fileListContainer.style.cssText = `
+        flex: 1;
+        overflow-y: auto;
+        border: 1px solid ${colors.border};
+        border-radius: 4px;
+        padding: 10px;
+        background: ${colors.bgSecondary};
+    `;
+
+    // 分页控件
+    const paginationContainer = document.createElement('div');
+    paginationContainer.id = '__gh_delete_pagination__';
+    paginationContainer.style.cssText = `
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    `;
+
+    content.appendChild(branchContainer);
+    content.appendChild(searchContainer);
+    content.appendChild(fileListContainer);
+    content.appendChild(paginationContainer);
+
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+        padding: 15px;
+        background: ${colors.bgSecondary};
+        border-top: 1px solid ${colors.border};
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    `;
+
+    const status = document.createElement('div');
+    status.id = '__gh_delete_status__';
+    status.style.fontSize = '13px';
+    status.style.color = colors.textSecondary;
+
+    const buttonGroup = document.createElement('div');
+    buttonGroup.style.display = 'flex';
+    buttonGroup.style.gap = '10px';
+
+    const cancelBtn = makeBtn('取消', () => hideDeletePanel());
+    cancelBtn.style.padding = '6px 12px';
+    cancelBtn.style.margin = '0';
+
+    const deleteBtn = makeBtn('删除选中', () => deleteSelectedFiles());
+    deleteBtn.style.padding = '6px 12px';
+    deleteBtn.style.margin = '0';
+    deleteBtn.style.background = '#cb2431';
+
+    buttonGroup.appendChild(cancelBtn);
+    buttonGroup.appendChild(deleteBtn);
+
+    footer.appendChild(status);
+    footer.appendChild(buttonGroup);
+
+    panel.appendChild(header);
+    panel.appendChild(content);
+    panel.appendChild(footer);
+
+    document.documentElement.appendChild(panel);
+
+    // 添加拖拽和调整大小功能
+    addDragAndResizeFunctionality(panel, 'DELETE');
+
+    // 添加搜索功能
+    searchInput.addEventListener('input', function() {
+        filterFiles(this.value);
+    });
+
+    // 添加分支变更事件
+    branchSelect.addEventListener('change', function() {
+        loadRepoFiles();
+    });
+
+    return panel;
+}
+
+// 加载分支选项
+async function loadBranchesForDelete() {
+    const branchSelect = document.getElementById('__gh_delete_branch_select__');
+    if (!branchSelect) return;
+    
+    const info = getRepoInfo();
+    if (!info.owner || !info.repo) return;
+    
+    branchSelect.innerHTML = '<option value="">加载中...</option>';
+    
+    try {
+        const branches = await fetchAllBranches(info.owner, info.repo);
+        branchSelect.innerHTML = '';
+        
+        // 设置当前分支为默认选项
+        const currentBranch = info.branch || getDefaultBranch();
+        
+        branches.forEach(branch => {
+            const option = document.createElement('option');
+            option.value = branch;
+            option.textContent = branch;
+            if (branch === currentBranch) {
+                option.selected = true;
+            }
+            branchSelect.appendChild(option);
+        });
+        
+        // 加载文件列表
+        loadRepoFiles();
+    } catch (error) {
+        console.error('加载分支失败:', error);
+        branchSelect.innerHTML = '<option value="">加载失败</option>';
+    }
+}
+
+// 修改文件加载函数，添加分页支持
+let currentPage = 1;
+const filesPerPage = 50;
+let allFiles = [];
+
+async function loadRepoFiles() {
+    const content = document.getElementById('__gh_delete_file_list__');
+    const status = document.getElementById('__gh_delete_status__');
+    const branchSelect = document.getElementById('__gh_delete_branch_select__');
+    
+    if (!content || !status || !branchSelect) return;
+    
+    const info = getRepoInfo();
+    if (!info.owner || !info.repo) {
+        content.innerHTML = '<div style="text-align: center; padding: 20px;">当前不是有效的仓库页面</div>';
+        return;
+    }
+    
+    const selectedBranch = branchSelect.value || info.branch || getDefaultBranch();
+    
+    content.innerHTML = '<div style="text-align: center; padding: 40px;">加载文件列表中...</div>';
+    status.textContent = '正在加载文件列表...';
+    currentPage = 1;
+    
+    try {
+        // 获取仓库文件树
+        allFiles = await fetchRepoTree(info.owner, info.repo, selectedBranch);
+        
+        if (allFiles.length === 0) {
+            content.innerHTML = '<div style="text-align: center; padding: 20px;">仓库中没有文件</div>';
+            status.textContent = '没有文件';
+            return;
+        }
+        
+        renderFileList();
+        updatePagination();
+        status.textContent = `已加载 ${allFiles.length} 个文件/文件夹`;
+    } catch (error) {
+        console.error('加载文件列表失败:', error);
+        content.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #cb2431;">
+                <p>加载文件列表失败: ${error.message}</p>
+                <button onclick="loadRepoFiles()" style="margin-top: 10px; padding: 8px 16px; background: #2ea44f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    重试
+                </button>
+            </div>
+        `;
+        status.textContent = '加载失败';
+    }
+}
+
+// 渲染文件列表（分页）
+function renderFileList() {
     const content = document.getElementById('__gh_delete_file_list__');
     const colors = getAdaptiveColors();
+    
+    // 计算当前页的文件
+    const startIndex = (currentPage - 1) * filesPerPage;
+    const endIndex = Math.min(startIndex + filesPerPage, allFiles.length);
+    const currentFiles = allFiles.slice(startIndex, endIndex);
     
     let html = '<div style="display: flex; flex-direction: column; gap: 5px;">';
     
     // 过滤掉文件夹，只显示文件
-    const fileItems = files.filter(item => item.type === 'blob');
+    const fileItems = currentFiles.filter(item => item.type === 'blob');
     
-    fileItems.forEach(file => {
-        html += `
-            <div style="display: flex; align-items: center; padding: 8px; border-bottom: 1px solid ${colors.border};">
-                <input type="checkbox" class="gh-file-checkbox" data-path="${file.path}" data-sha="${file.sha}" style="margin-right: 10px;">
-                <span style="margin-right: 8px;">📄</span>
-                <span style="flex: 1; font-size: 14px;">${file.path}</span>
-                <span style="font-size: 12px; color: ${colors.textSecondary};">${formatFileSize(file.size || 0)}</span>
-            </div>
-        `;
-    });
+    if (fileItems.length === 0) {
+        html += '<div style="text-align: center; padding: 20px;">当前页面没有文件</div>';
+    } else {
+        fileItems.forEach(file => {
+            html += `
+                <div style="display: flex; align-items: center; padding: 8px; border-bottom: 1px solid ${colors.border};">
+                    <input type="checkbox" class="gh-file-checkbox" data-path="${file.path}" data-sha="${file.sha}" style="margin-right: 10px;">
+                    <span style="margin-right: 8px;">📄</span>
+                    <span style="flex: 1; font-size: 14px;">${file.path}</span>
+                    <span style="font-size: 12px; color: ${colors.textSecondary};">${formatFileSize(file.size || 0)}</span>
+                </div>
+            `;
+        });
+    }
     
     html += '</div>';
     content.innerHTML = html;
-    
-    if (fileItems.length === 0) {
-        content.innerHTML = '<div style="text-align: center; padding: 20px;">仓库中没有文件</div>';
-    }
 }
 
-function filterFiles(searchTerm) {
-    const fileItems = document.querySelectorAll('.gh-file-checkbox');
-    const term = searchTerm.toLowerCase();
+// 更新分页控件
+function updatePagination() {
+    const paginationContainer = document.getElementById('__gh_delete_pagination__');
+    if (!paginationContainer) return;
     
-    fileItems.forEach(item => {
-        const path = item.getAttribute('data-path').toLowerCase();
-        const parent = item.parentElement;
-        
-        if (path.includes(term)) {
-            parent.style.display = 'flex';
-        } else {
-            parent.style.display = 'none';
-        }
-    });
-}
-
-function toggleSelectAll() {
-    const checkboxes = document.querySelectorAll('.gh-file-checkbox');
-    const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+    const totalPages = Math.ceil(allFiles.length / filesPerPage);
     
-    checkboxes.forEach(checkbox => {
-        // 只切换可见的文件
-        if (checkbox.parentElement.style.display !== 'none') {
-            checkbox.checked = !allChecked;
-        }
-    });
-}
-
-async function deleteSelectedFiles() {
-    const selectedFiles = Array.from(document.querySelectorAll('.gh-file-checkbox:checked'));
-    
-    if (selectedFiles.length === 0) {
-        alert('请至少选择一个文件进行删除');
+    if (totalPages <= 1) {
+        paginationContainer.innerHTML = '';
         return;
     }
     
-    if (!confirm(`确定要删除选中的 ${selectedFiles.length} 个文件吗？此操作不可撤销！`)) {
-        return;
+    const colors = getAdaptiveColors();
+    
+    let html = '';
+    
+    // 上一页按钮
+    if (currentPage > 1) {
+        html += `<button onclick="changePage(${currentPage - 1})" style="padding: 6px 12px; border: 1px solid ${colors.border}; border-radius: 4px; background: ${colors.bgSecondary}; color: ${colors.textPrimary}; cursor: pointer;">上一页</button>`;
     }
     
-    const status = document.getElementById('__gh_delete_status__');
-    status.textContent = `正在删除 ${selectedFiles.length} 个文件...`;
-    status.style.color = '#cb2431';
+    // 页码信息
+    html += `<span style="color: ${colors.textPrimary}; margin: 0 10px;">第 ${currentPage} 页 / 共 ${totalPages} 页</span>`;
     
-    const info = getRepoInfo();
-    let successCount = 0;
-    let failCount = 0;
-    
-    for (const fileCheckbox of selectedFiles) {
-        const filePath = fileCheckbox.getAttribute('data-path');
-        const sha = fileCheckbox.getAttribute('data-sha');
-        
-        try {
-            const result = await deleteFileFromRepo(info.owner, info.repo, filePath, sha, info.branch);
-            if (result) {
-                successCount++;
-                fileCheckbox.parentElement.style.textDecoration = 'line-through';
-                fileCheckbox.parentElement.style.opacity = '0.6';
-            } else {
-                failCount++;
-            }
-        } catch (error) {
-            console.error(`删除文件 ${filePath} 失败:`, error);
-            failCount++;
-        }
+    // 下一页按钮
+    if (currentPage < totalPages) {
+        html += `<button onclick="changePage(${currentPage + 1})" style="padding: 6px 12px; border: 1px solid ${colors.border}; border-radius: 4px; background: ${colors.bgSecondary}; color: ${colors.textPrimary}; cursor: pointer;">下一页</button>`;
     }
     
-    status.textContent = `删除完成: ${successCount} 成功, ${failCount} 失败`;
+    paginationContainer.innerHTML = html;
+}
+
+// 切换页面
+function changePage(page) {
+    currentPage = page;
+    renderFileList();
+    updatePagination();
     
-    if (failCount === 0) {
-        status.style.color = '#28a745';
+    // 滚动到顶部
+    const content = document.getElementById('__gh_delete_file_list__');
+    if (content) {
+        content.scrollTop = 0;
     }
 }
 
-async function deleteFileFromRepo(owner, repo, path, sha, branch) {
-    try {
-        const deleteUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`;
-        const deleteData = {
-            message: `删除文件: ${path}`,
-            sha: sha,
-            branch: branch
-        };
-        
-        const response = await fetch(deleteUrl, {
-            method: 'DELETE',
-            headers: getAuthHeaders(),
-            body: JSON.stringify(deleteData)
-        });
-        
-        if (response.ok) {
-            return true;
-        } else {
-            const error = await response.text();
-            console.error(`删除文件失败: ${response.status} - ${error}`);
-            return false;
-        }
-    } catch (error) {
-        console.error('删除文件失败:', error);
-        return false;
-    }
+// 修改显示删除面板函数
+function showDeletePanel() {
+    const panel = document.getElementById('__gh_delete_panel__') || createDeletePanel();
+    panel.style.display = 'flex';
+    loadBranchesForDelete();
 }
-
-
 
 	// ========== Rescue 面板与按钮 ==========
   async function buildRescueLinks() {
