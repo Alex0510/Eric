@@ -1,4 +1,4 @@
-主播：薇薇
+主播：薇薇vv
 图片：https://77live.ynolbs.com/7702/liveHost/9f139d1ecabeafeb619be720e460fd27
 直播地址：http://02b.sz-bbw.com/live/cx_352611.flv?auth_key=1630659619-33688-0-2b7955c3f631fecc1f124f4028ee3079
 
