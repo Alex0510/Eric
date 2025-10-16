@@ -9,5 +9,5 @@ hostname =  %APPEND% *.kugou.com
 
 
 [Script]
-酷狗领取VIP = type=cron,cronexp=10 0 * * *,script-path=https://gist.githubusercontent.com/Alex0510/8b958bcf53ed1271e03bb5130b2206ec/raw/kugou_auto.js
-酷狗数据 = type=http-request,pattern=https://(gateway|gatewayretry|gateway3).kugou.com/youth/v1/(recharge/receive_vip_listen_song|activity/get_month_vip_record).*,requires-body=0,script-path=https://gist.githubusercontent.com/Alex0510/8b958bcf53ed1271e03bb5130b2206ec/raw/kugou.js
+酷狗领取VIP = type=cron,cronexp=10 0 * * *,script-path=https://gist.githubusercontent.com/Alex0510/8b958bcf53ed1271e03bb5130b2206ec/raw/kugou.js
+酷狗数据 = type=http-request,pattern=https://(gateway|gatewayretry|gateway3).kugou.com/youth/v1/(recharge/receive_vip_listen_song|activity/get_month_vip_record).*,requires-body=0,script-path=https://gist.githubusercontent.com/Alex0510/8b958bcf53ed1271e03bb5130b2206ec/raw/kugou_auto.js
