@@ -35,6 +35,10 @@
             {
               "key": "zoeplay",
               "label": "Zoe播放器"
+            },
+            {
+              "key": "addons",
+              "label": "addons"
             }
           ],
           "desc": "请选择浏览器"
