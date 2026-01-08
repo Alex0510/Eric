@@ -3,7 +3,7 @@
 
 
 [MITM]
-hostname = %APPEND% cean.kr
+hostname = %APPEND% cean.kr,trvn.kr,co.kr
 
 [Script]
-pandanvpn = type=http-response,pattern=https://cean.kr/api/getVpnServerlist,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/refs/heads/master/surge/Script/pandanvpn.js,script-update-interval=0
+pandanvpn = type=http-response,pattern=https://(trvn|(gpanda|terravpn).co|cean).kr/(getVpnServerlist|api/getVpnServerlist),requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/Alex0510/Eric/refs/heads/master/surge/Script/pandanvpn.js,script-update-interval=0
