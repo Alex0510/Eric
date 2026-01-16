@@ -39,6 +39,10 @@
             {
               "key": "addons",
               "label": "addons"
+            },
+            {
+              "key": "M3U8 Mpjex",
+              "label": "m3u8"
             }
           ],
           "desc": "请选择浏览器"
