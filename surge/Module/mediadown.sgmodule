@@ -1,0 +1,7 @@
+
+
+
+
+
+
+medi下载器 = type=http-response,pattern=https?:\/\/.*\.(m3u8|mp4|mp3|flac|wam|wav|aac|ogg|webm|avi|mov|mkv|flv)(\?.*)?$,requires-body=0,max-size=0,binary-body-mode=0,script-path=
