@@ -37,7 +37,7 @@
               "label": "Zoe播放器"
             },
             {
-              "key": "addons",
+              "key": "addons://download?src=",
               "label": "addons"
             },
             {
