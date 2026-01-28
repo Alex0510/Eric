@@ -2,7 +2,7 @@
 #!name=🌐视频音频下载器--🅜🅡.🅔🅡🅘🅒
 #!desc=支持'm3u8', 'mp4', 'mp3', 'flac', 'wam', 'wav','aac', 'ogg', 'webm', 'avi', 'mov', 'mkv', 'flv'等格式视频音频，免费分享，转载注明出处
 #!category=🌐视频音频下载器
-#!本脚本搭配Addons进行下载自行解决，适配Surge、quantumults、loon客户端
+#!本脚本搭配Addons进行下载自行解决，适配Surge、quantumults、loon客户端自行开启抓包模式
 
 
 [Script]
