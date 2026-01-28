@@ -1,7 +1,9 @@
 
+#!name=🌐万能下载器--🅜🅡.🅔🅡🅘🅒
+#!desc=支持'm3u8', 'mp4', 'mp3', 'flac', 'wam', 'wav','aac', 'ogg', 'webm', 'avi', 'mov', 'mkv', 'flv'等格式视频音频，免费分享，转载注明出处
+#!category=🌐万能下载器
+#!适配Surge、quantumults、loon客户端
 
 
-
-
-
-medi下载器 = type=http-response,pattern=https?:\/\/.*\.(m3u8|mp4|mp3|flac|wam|wav|aac|ogg|webm|avi|mov|mkv|flv)(\?.*)?$,requires-body=0,max-size=0,binary-body-mode=0,script-path=
+[Script]
+medi下载器 = type=http-response,pattern=https?:\/\/.*\.(m3u8|mp4|mp3|flac|wam|wav|aac|ogg|webm|avi|mov|mkv|flv)(\?.*)?$,requires-body=0,max-size=0,binary-body-mode=0,script-path=https://gist.githubusercontent.com/Alex0510/6074562eed5ac95983ed07de0ee416f2/raw/media.js
