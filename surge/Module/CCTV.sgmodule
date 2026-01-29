@@ -1,0 +1,8 @@
+#!name=CCTVmediadown-Eric
+#!desc=Mr.Eric转载注明出处
+
+[mitm] 
+hostname = %APPEND% vdn.apps.cntv.cn
+
+[Script]
+CCTVnews = type=http-response,pattern=https://vdn.apps.cntv.cn/api/getHttpVideoInfo.do,requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Alex0510/6074562eed5ac95983ed07de0ee416f2/raw/cctvnews.js
