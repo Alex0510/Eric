@@ -1,5 +1,7 @@
-#!name=CCTVmediadown-Eric
+#!name=CCTV新闻网-Eric
 #!desc=Mr.Eric转载注明出处
+#!category=🌐CCTV新闻网视频下载器
+#!本脚本搭配Addons进行下载自行解决，适配Surge、quantumults、loon客户端
 
 [mitm] 
 hostname = %APPEND% vdn.apps.cntv.cn
