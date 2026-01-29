@@ -37,12 +37,12 @@
               "label": "Zoe播放器"
             },
             {
-              "key": "addons://download?src=",
-              "label": "addons"
+              "key": "Addons",
+              "label": "Addons下载"
             },
             {
               "key": "m3u8",
-              "label": "M3U8 Mpjex"
+              "label": "M3U8 Mpjex下载"
             },
             {
               "key": "m3u8app",
