@@ -166,3 +166,12 @@ function md5(str) {
     }
     return wordToHex(a) + wordToHex(b) + wordToHex(c) + wordToHex(d);
 }
+(function () {
+function createEnv() {
+  return typeof Env !== "undefined" ? Env : null;
+}
+
+if (typeof module !== "undefined") {
+  module.exports = { createEnv };
+}
+})();
