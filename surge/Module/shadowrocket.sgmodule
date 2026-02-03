@@ -1,0 +1,13 @@
+#!name=shadowrocket--Eric
+#!desc=某v自动更新并获取最新节点，适配surge
+
+#手动添加策略组[Proxy Group]
+#shadowrocket = select, url=http://captive.apple.com/generate_204, policy-path=http://cnc07api.cnc07.com/api/cnc07iuapis, update-interval=0, no-alert=0, hidden=0, include-all-proxies=0
+
+[MITM]
+hostname =  %APPEND% cnc07api.cnc07.com
+
+
+[Script]
+
+shadowrocket = type=http-response,pattern=http://cnc07api.cnc07.com/api/cnc07iuapis,requires-body=1,script-path=https://gist.githubusercontent.com/Alex0510/774c157c0614f64356eedca75f556fa0/raw/shadowrocket.js,max-size=0,binary-body-mode=0
