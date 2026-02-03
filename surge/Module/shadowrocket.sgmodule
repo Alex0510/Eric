@@ -1,9 +1,10 @@
 #!name=shadowrocket--Eric
 #!desc=某v自动更新并获取最新节点，适配surge
 
-#手动添加策略组[Proxy Group]
+#surge手动添加策略组[Proxy Group]下方
 #shadowrocket = select, url=http://captive.apple.com/generate_204, policy-path=http://cnc07api.cnc07.com/api/cnc07iuapis, update-interval=0, no-alert=0, hidden=0, include-all-proxies=0
-
+#quantumults策略组[server_remote]下方
+#http://cnc07api.cnc07.com/api/cnc07iuapis, tag=shadowrocket, update-interval=172800, opt-parser=true, enabled=true
 [MITM]
 hostname =  %APPEND% cnc07api.cnc07.com
 
