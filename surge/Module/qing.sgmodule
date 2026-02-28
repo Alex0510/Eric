@@ -1,10 +1,9 @@
-#!name=Blued增强脚本--Eric，转载请注明出处
-#!desc=聊天页面查看会员隐藏距离，显示会员保密的最后登录时间而不是最后在线时间，此功能仅供参考，地图找人次数到期，地图显示头像和影子功能，修改定位(网上自行搜索位置经纬度填写到下方url重写修改经纬度)等功能
-#https://jingweidu.bmcx.com可查看具体位置的经纬度网站默认已改为北京
-#说明：2024-07-08更新：因为blued的网址太多无法确认具体的，默认mitm全部网址，会导致聊天无无法发送信息等问题，及部分APP解析失败，不使用时请禁用此规则
-#避免影响其他APP解析问题，mitm已删除*,如匹配不到手动自行添加mitm：*默认全部解析，不使用时禁用即可
-#由于定位默认为北京，建议添加本地脚本，方便更改参数，使用链接无法更改参数
-#更新说明；2024-07-09可查看会员模糊真实头像功能;感谢@ios151大佬提供更新自定义修改经纬度坐标需使用boxjs工具添加修改经纬度坐标或直接修改城市；https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/boxjs.json
-#更新说明；2024-07-10更新闪照捕获功能
-[Rule]
-URL-REGEX,https://argo.blued.cn/blued/promote.*,REJECT
+#!name=Qing--Eric
+#!desc=解锁vip及闪照获取
+
+[MITM]
+hostname =  %APPEND% *.qing2000.com
+
+
+[Script]
+Qing = type=http-response,pattern=https://api.qing2000.com/api/users/(chat/flash-photo|profile/(basic|details)|preferences),requires-body=1,max-size=0,binary-body-mode=0,script-path=https://gist.githubusercontent.com/Alex0510/f4cb2f311b499428db8cf29f88fdae74/raw/qing.js
