@@ -2,7 +2,7 @@
 #!desc=解锁vip及闪照获取
 
 [MITM]
-hostname =  %APPEND% *.qing2000.com
+hostname =  %APPEND% api.qing2000.com
 
 
 [Script]
